@@ -39,3 +39,21 @@ luac.out
 *.x86_64
 *.hex
 
+# Visual Source Code Test Deployment
+/.deploy
+
+# BigWigMods/packager
+/.build
+/.release/
+
+# keep the empty dir
+/_Interface/
+!_Interface/.keep
+/Interface/
+!Interface/.keep
+
+# External Lib Dir
+Gears/External/Lib
+
+# Ignore Saved Variables folder with symlinks
+/_SV
