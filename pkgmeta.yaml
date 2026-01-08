@@ -1,0 +1,34 @@
+package-as: Gears
+# --------------------------
+enable-nolib-creation: no
+enable-toc-creation: no
+# --------------------------
+license-output: LICENSE.txt
+
+externals:
+  Gears/ThirdParty/Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
+  Gears/ThirdParty/Libs/Kapresoft-LibUtil: https://github.com/kapresoft/wow-lib-util
+  Gears/ThirdParty/Libs/Ace3: https://repos.wowace.com/wow/ace3/trunk
+  Gears/ThirdParty/Libs/LibSharedMedia/LibSharedMedia-3.0: https://repos.wowace.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
+
+ignore:
+  - README.md
+  - doc
+  - dev
+  - pkgmeta.yaml
+  - "*.toc"
+  - Gears/ThirdParty/Libs/LibStub/tests
+  - Gears/ThirdParty/Libs/Ace3/Ace3.lua
+  - Gears/ThirdParty/Libs/Ace3/Ace3.toc
+  - Gears/ThirdParty/Libs/Ace3/tests
+  - Gears/ThirdParty/Libs/Ace3/Bindings.xml
+  - Gears/ThirdParty/Libs/Ace3/README.md
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/External
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/dev
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/doc
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.yaml
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.sh
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
+
+move-folders:
+  Gears/Gears: Gears

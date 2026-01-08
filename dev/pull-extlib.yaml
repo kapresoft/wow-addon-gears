@@ -1,0 +1,42 @@
+# This is used for development to pull external libraries.
+# @see also: ./dev/pull-extlib.sh
+
+# --------------------------
+package-as: Pull-Ext-Lib
+manual-changelog: false
+
+# Files and directories beginning with a dot (such as .git) are automatically ignored, as is the pgkmeta file itself.
+#ignore:
+#  - .git
+#  - .idea
+
+externals:
+  Gears-ThirdParty-Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
+  Gears-ThirdParty-Libs/Kapresoft-LibUtil: https://github.com/kapresoft/wow-lib-util
+  Gears-ThirdParty-Libs/Ace3: https://repos.wowace.com/wow/ace3/trunk
+  Gears-ThirdParty-Libs/LibSharedMedia/LibSharedMedia-3.0: https://repos.wowace.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
+
+ignore:
+  - "*.sh"
+  - "*.md"
+  - "*.yaml"
+  - "*.yml"
+  - "*.toc"
+  - dev
+  - doc
+  - scripts
+  - Interface
+  - Gears
+  - Gears-OptionsUI
+  - Gears-ThirdParty-Libs/LibStub/tests
+  - Gears-ThirdParty-Libs/Ace3/Ace3.lua
+  - Gears-ThirdParty-Libs/Ace3/Bindings.xml
+  - Gears-ThirdParty-Libs/Ace3/changelog.txt
+  - Gears-ThirdParty-Libs/Ace3/LICENSE.txt
+  - Gears-ThirdParty-Libs/Ace3/LibStub
+  - Gears-ThirdParty-Libs/Kapresoft-LibUtil/External
+  - Gears-ThirdParty-Libs/Kapresoft-LibUtil/LICENSE
+  - Gears-ThirdParty-Libs/Kapresoft-LibUtil/dev
+  - Gears-ThirdParty-Libs/Kapresoft-LibUtil/doc
+move-folders:
+  Pull-Ext-Lib/Gears-ThirdParty-Libs: ../Gears/ThirdParty/Libs

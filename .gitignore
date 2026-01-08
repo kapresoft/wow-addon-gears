@@ -51,7 +51,7 @@ _Interface/
 Interface/
 
 # External Lib Dir
-Gears/External/Lib
+Gears/ThirdParty/Libs
 
 # Ignore Saved Variables folder with symlinks
 _SV/

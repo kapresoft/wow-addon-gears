@@ -7,9 +7,11 @@
 ## SavedVariables: GEARS_DB
 ## SavedVariablesPerCharacter: GEARS_CHARACTER_DB
 
+## Dependencies: Ace3
+## Group: Gears
 ## DefaultState: enabled
-## OptionalDeps: Ace3
 
+## Category: Combat
 ## Category-enUS: Combat
 ## Category-deDE: Kampf
 ## Category-esES: Combate
@@ -42,7 +44,7 @@
 # To get the Interface/Build Info.
 # /dump select(4, GetBuildInfo())
 
-External\_ExtLib.xml
+ThirdParty\_Libs.xml
 Core\_Core.xml
 Core\Vanilla.lua
 Core\Gears.lua

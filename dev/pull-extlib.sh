@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
 ADDON_NAME=Gears
-
-BUILD_DIR=./.build
+REL_CONFIG=pull-extlib.yaml
+BUILD_DIR=./.release
 SCRIPT_DIR=./dev
 RELEASE_SCRIPT=${SCRIPT_DIR}/release.sh
 PACKAGE_NAME=Pull-Ext-Lib
@@ -35,4 +35,4 @@ _PostBuild() {
     eval "${cmd1}" && echo "Execution Complete: ${cmd1}"
 }
 
-_Release pkgmeta-dev.yaml
+_Release "${REL_CONFIG}"

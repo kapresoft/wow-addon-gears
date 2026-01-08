@@ -5,6 +5,10 @@ Type: CoreNamespace
 --- @field private addonLogName string
 --- @field private xml table
 local ns = select(2, ...); GEARS_NS = ns
+--local p = ns:Log('Namespace')
+--C_Timer.After(1, function()
+--    p('hello','there')
+--end)
 
 local K = ns.Kapresoft_LibUtil
 K:MixinWithDefExc(ns, K.Objects.CoreNamespaceMixin, K.Objects.NamespaceAceLibraryMixin)

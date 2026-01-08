@@ -3,13 +3,18 @@
 ..\FrameXML\UI.xsd">
 
     <Script file='_Core.lua'/>
-    <!--@do-not-package@-->
-    <!--<Include file='Lib\Developer\_DeveloperComponents.xml'/>-->
-    <!--@end-do-not-package@-->
-    <!--<Include file='Lib\_Lib.xml'/>&ndash;&gt;-->
-    <!--@do-not-package@-->
+    <Include file="Util\_Util.xml"/>
 
-<!--    <Include file='Lib\Developer\_Developer.xml'/>-->
+    <!--@do-not-package@-->
+    <Include file='Developer\_DeveloperSetup.xml'/>
+    <!--@end-do-not-package@-->
+
+    <!--<Include file="Locales\_Locales.xml"/>-->
+
+    <!--@do-not-package@-->
+    <Include file='Developer\_Developer.xml'/>
+
+    <!--@end-do-not-package@-->
 
 
 </Ui>

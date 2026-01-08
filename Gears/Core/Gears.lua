@@ -1,3 +1,7 @@
+--- @type Namespace
+local ns = select(2, ...)
+
+local p = ns:Log('Gears')
 C_Timer.After(1, function()
-    print('xxx Gears.lua loaded.')
+    p('loaded...')
 end)
