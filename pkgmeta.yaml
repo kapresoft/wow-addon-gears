@@ -48,3 +48,4 @@ ignore:
 # ⚠️ Do not change unless you also change the repo/addon layout.
 move-folders:
   Gears/Gears: Gears
+  Gears/Gears-OptionsUI: Gears-OptionsUI
