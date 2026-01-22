@@ -32,12 +32,12 @@ ignore:
   - ThirdParty-Libs/Ace3/changelog.txt
   - ThirdParty-Libs/Ace3/LICENSE.txt
   - ThirdParty-Libs/Ace3/LibStub
+  - ThirdParty-Libs/LibPrettyPrint/dev
+  - ThirdParty-Libs/LibPrettyPrint/doc
   - ThirdParty-Libs/Kapresoft-LibUtil/External
   - ThirdParty-Libs/Kapresoft-LibUtil/LICENSE
   - ThirdParty-Libs/Kapresoft-LibUtil/dev
   - ThirdParty-Libs/Kapresoft-LibUtil/doc
-  - ThirdParty-Libs/LibPrettyPrint/dev
-  - ThirdParty-Libs/LibPrettyPrint/doc
 
 # Base path is .release/
 move-folders:

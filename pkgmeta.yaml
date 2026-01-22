@@ -7,6 +7,7 @@ license-output: LICENSE.txt
 
 externals:
   Gears/ThirdParty/Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
+  Gears/ThirdParty/LibPrettyPrint: https://github.com/kapresoft/wow-addon-LibPrettyPrint
   Gears/ThirdParty/Libs/Kapresoft-LibUtil: https://github.com/kapresoft/wow-lib-util
   Gears/ThirdParty/Libs/Ace3: https://repos.wowace.com/wow/ace3/trunk
   Gears/ThirdParty/Libs/LibSharedMedia/LibSharedMedia-3.0: https://repos.wowace.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
@@ -23,6 +24,8 @@ ignore:
   - Gears/ThirdParty/Libs/Ace3/tests
   - Gears/ThirdParty/Libs/Ace3/Bindings.xml
   - Gears/ThirdParty/Libs/Ace3/README.md
+  - Gears/ThirdParty/Libs/LibPrettyPrint/dev
+  - Gears/ThirdParty/Libs/LibPrettyPrint/doc
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/External
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/dev
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/doc
@@ -30,5 +33,18 @@ ignore:
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.sh
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
 
+# REQUIRED for CurseForge packager (non-obvious):
+# The LEFT side MUST be <repo-folder>/<addon-folder>
+#   - <addon-folder> MUST be the folder that contains the .toc files
+# The RIGHT side MUST be the addon name:
+#   - Must match the .toc filename (AddonName.toc)
+#   - Must match `package-as`
+#
+# NOTE:
+# CurseForge release.sh (poorly) relies on `move-folders` for *addon discovery*,
+# not just post-processing. If this does not exactly match
+# <repo>/<addon>, `toc_root_paths` will be empty and packaging WILL fail.
+#
+# ⚠️ Do not change unless you also change the repo/addon layout.
 move-folders:
   Gears/Gears: Gears
