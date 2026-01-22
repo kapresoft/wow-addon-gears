@@ -7,7 +7,8 @@
 ## SavedVariables: GEARS_DB
 ## SavedVariablesPerCharacter: GEARS_CHARACTER_DB
 
-## Dependencies: Ace3
+## OptionalDeps: Ace3
+
 ## Group: Gears
 ## DefaultState: enabled
 
@@ -44,7 +45,7 @@
 # To get the Interface/Build Info.
 # /dump select(4, GetBuildInfo())
 
-ThirdParty\_Libs.xml
+ThirdParty\ThirdParty.xml
 Core\_Core.xml
 Core\Retail.lua
 Core\Gears.lua

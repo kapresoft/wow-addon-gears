@@ -1,3 +1,15 @@
+-- Gears-OptionsUI/Init.lua
+local gears = GEARS
+if not gears then return end
+
+--- @type string
+local addon
+--- @type any
+local ns
+addon, ns = ...
+
+local p = GEARS_NS:Log(addon)
+
 C_Timer.After(1, function()
-    print('xx Gears-OptionsUI loaded...')
+    p(('[00:00:00] {{%s}}: xxx loaded...'):format(addon))
 end)

@@ -1,3 +1,7 @@
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded or IsAddOnLoaded
+local LoadAddOn = C_AddOns.LoadAddOn or LoadAddOn
+local EVENT_TRACE_ADDON = 'Blizzard_EventTrace'
+
 --[[-----------------------------------------------------------------------------
 Type: CoreNamespace
 -------------------------------------------------------------------------------]]
@@ -20,7 +24,7 @@ ns.addonLogName   = 'GEARS'
 --- Example: <OnLoad>GEARS_XML:[TypeName]_OnLoad(self)</OnLoad>
 ns.xml = {}; GEARS_XML = ns.xml
 
---- @type GlobalObjects
+--- @type NamespaceObjects
 local O = ns.O or {}; ns.O = O
 
 --- @type Kapresoft_LibUtil_ColorDefinition
@@ -54,13 +58,47 @@ Namespace: Methods
 local function NamespaceMethods(n)
 
     n.sformat = string.format
+    n.fmt = LibPrettyPrint:Formatter()
     n.settings = settings
+    n.eventBasename = string.upper(ns.addon)
     n.O = {}; NSO(ns.O)
+
+    function ns:t(prefix, ...) return self:evt():t(prefix, ...) end
+    function ns:tf(prefix, ...) return self:evt():t(prefix, ...) end
+    function ns:td(...) return self:evt():t(...) end
+    function ns:tdf(...) return self:evt():t(...) end
+
+    function ns:evt()
+        if not self.eventTracer then
+            self.eventTracer = ns.O.EventTracePrinter:New(ns.addon, function() return self:IsDev() end)
+        end
+        return self.eventTracer
+    end
 
     function ns:K() return ns.Kapresoft_LibUtil end
 
     --- @return boolean
     function n:IsDev() return ns.settings.developer == true end
+
+--[[    --- @param name Name
+    function n.evt(name, ...)
+        if not n:IsDev() then return end
+        local addOnName = EVENT_TRACE_ADDON
+        if not IsAddOnLoaded(addOnName) then
+            local success, reason = LoadAddOn(addOnName)
+            if not success then
+                return print(('%s:: Failed to load[%s], reason=%s'):format(
+                             ns.addon, addOnName, reason))
+            end
+            --EventTrace:Hide()
+        end
+
+        --- @type EventTraceInstance
+        local e       = EventTrace
+        local evtName = ('%s_%s'):format(ns.eventBasename, string.upper(name))
+        e:LogEvent(evtName, ...)
+
+    end]]
 
 end; NamespaceMethods(ns)
 

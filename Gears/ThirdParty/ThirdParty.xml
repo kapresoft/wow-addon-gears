@@ -6,6 +6,8 @@
     Dependencies: LibStub - All Libraries
     For Development:
     Install Ace3 AddOn from CurseForge for CPU/Mem isolation
+    Libraries Embedded On Release
+      - Ace3, LibPrettyPrint
     #########################################################
     --><!--@end-do-not-package@-->
 
@@ -13,8 +15,10 @@
     <!--@non-debug@
     <Include file="Libs\Ace3.xml"/>
     @end-non-debug@-->
+    <!-- TMP: LibPrettyPrint should be in non-debug block -->
+    <Include file='LibPrettyPrint.xml'/>
+
     <Include file="Libs\LibSharedMedia\LibSharedMedia-3.0\lib.xml"/>
     <Include file='Libs\Kapresoft-LibUtil\_Lib.xml'/>
-    <Include file='Libs\LibPrettyPrint\LibPrettyPrint.xml'/>
 
 </Ui>

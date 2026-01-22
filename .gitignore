@@ -45,6 +45,7 @@ luac.out
 # BigWigMods/packager
 .build/
 .release/
+.ext/
 
 # Interface (non-deployed) files are placed here
 _Interface/

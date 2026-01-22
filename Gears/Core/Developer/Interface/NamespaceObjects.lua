@@ -1,5 +1,3 @@
 --- @class NamespaceObjects
-local o = {
-
-}
+--- @field EventTracePrinter EventTracePrinter
 

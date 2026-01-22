@@ -3,5 +3,6 @@
 ..\FrameXML\UI.xsd">
 
     <Script file="SimpleLogger.lua"/>
+    <Script file="EventTracePrinter.lua"/>
 
 </Ui>
