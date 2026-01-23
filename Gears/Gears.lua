@@ -32,7 +32,7 @@ local api = {
 
 C_Timer.After(1, function()
     p('loaded...')
-    ns.tracer('hello', 'there')
-    ns:t('hello', 'there', { 1, 2, 3})
+    --ns.tracer('hello', 'there')
+    --ns:t('hello', 'there', { 1, 2, 3})
 end)
 

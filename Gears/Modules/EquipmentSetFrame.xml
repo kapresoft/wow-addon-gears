@@ -1,0 +1,92 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+    <Script file="EquipmentSetFrame.lua"/>
+
+    <Font name="Gears_LabelFont" inherits="GameFontWhiteTiny"
+          justifyH="LEFT" virtual="true">
+        <Color color="WHITE_FONT_COLOR"/>
+    </Font>
+
+    <!--<Frame name="Gears_IconRowTemplate" virtual="true">
+        <Size x="1" y="36"/>
+        <Scripts>
+            <OnLoad>Gears_EquipmentSetFrameMixin.OnLoadRow(self)</OnLoad>
+        </Scripts>
+    </Frame>-->
+
+    <Frame name="Gears_EquipmentSetFrameTemplate" virtual="true"
+           mixin="Gears_EquipmentSetFrameMixin"
+           hidden="true" movable="true" enableMouse="true"
+           frameStrata="DIALOG" clampedToScreen="true">
+
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+
+        <Size x="200" y="432"/>
+
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture name="$parentTitleFrameHeader" parentKey="TitleFrameHeader"
+                         file="Interface\DialogFrame\UI-DialogBox-Header">
+                    <Size x="380" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOP" relativePoint="TOP" x="0" y="0"/>
+                    </Anchors>
+                    <Scripts>
+                        <OnMouseDown>
+                            if button == "LeftButton" then
+                            self:GetParent():StartMoving()
+                            end
+                        </OnMouseDown>
+
+                        <OnMouseUp>
+                            self:GetParent():StopMovingOrSizing()
+                        </OnMouseUp>
+                    </Scripts>
+                </Texture>
+                <FontString name="$parentDialogTitle" parentKey="HeaderTitle"
+                            inherits="GameFontNormal">
+                    <Size>
+                        <AbsDimension x="185" y="12"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP" relativePoint="TOP" x="0" y="-2" />
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+
+        <!-- Scroll area for icons -->
+        <Frames>
+            <Frame name="$parentFirstRow" parentKey="FirstRow" inherits="BackdropTemplate">
+                <Size y="80"/>
+                <!--<KeyValues>
+                    <KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
+                </KeyValues>-->
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="16" y="-24"/>
+                    <Anchor point="TOPRIGHT" x="-20"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentLabel" parentKey="Label"
+                                    inherits="Gears_LabelFont">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" x="65" y="-10"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+
+                </Frames>
+            </Frame>
+        </Frames>
+    </Frame>
+
+    <Frame name="Gears_EquipmentSetFrame" hidden="true" movable="true" enableMouse="true"
+           inherits="BackdropTemplate, Gears_EquipmentSetFrameTemplate">
+    </Frame>
+</Ui>

@@ -93,7 +93,7 @@ function o:LoadEventTrace()
             self.logName, addOnName, reason))
   end
   assert(EventTrace, ('%s:: Failed to load [%s].'):format(self.logName, addOnName))
-  --EventTrace:Hide()
+  EventTrace:Hide()
   return EventTrace
 end
 
