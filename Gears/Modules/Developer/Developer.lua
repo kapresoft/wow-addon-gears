@@ -4,7 +4,7 @@ local ns = select(2, ...)
 --- @class Developer
 local o = {}
 
-local p = ns:Log('Developer')
+local p = ns:log('Developer')
 C_Timer.After(0.7, function()
     p('Is-Dev:', ns:IsDev())
 end)

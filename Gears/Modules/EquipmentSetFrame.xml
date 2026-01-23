@@ -15,6 +15,30 @@
         </Scripts>
     </Frame>-->
 
+    <Frame name="Gears_IconRowTemplate" inherits="BackdropTemplate" virtual="true">
+        <Size y="48"/>
+        <!--<KeyValues>
+            <KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
+        </KeyValues>-->
+        <Anchors>
+            <Anchor point="TOPLEFT" />
+            <Anchor point="TOPRIGHT"/>
+        </Anchors>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentLabel" parentKey="Label"
+                            inherits="Gears_LabelFont">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="65" y="-10"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+
+        </Frames>
+    </Frame>
+
     <Frame name="Gears_EquipmentSetFrameTemplate" virtual="true"
            mixin="Gears_EquipmentSetFrameMixin"
            hidden="true" movable="true" enableMouse="true"
@@ -24,7 +48,7 @@
             <OnLoad method="OnLoad"/>
         </Scripts>
 
-        <Size x="200" y="426"/>
+        <Size x="200" y="427"/>
 
         <Layers>
             <Layer level="ARTWORK">
@@ -60,11 +84,44 @@
 
         <!-- Scroll area for icons -->
         <Frames>
-            <Frame name="$parentFirstRow" parentKey="FirstRow" inherits="BackdropTemplate">
+            <Frame parentKey="ButtonsContainerFrame">
+                <Size x="180" y="22"/>
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="TOP" x="0" y="-26"/>
+                </Anchors>
+                <Frames>
+                    <Button parentKey="EquipButton"
+                            inherits="UIPanelButtonTemplate"
+                            text="Equip">
+                        <Size x="90" y="22"/>
+                        <Anchors>
+                            <Anchor point="LEFT"/>
+                        </Anchors>
+                    </Button>
+
+                    <Button parentKey="SaveButton"
+                            inherits="UIPanelButtonTemplate"
+                            text="Save">
+                        <Size x="90" y="22"/>
+                        <Anchors>
+                            <Anchor point="LEFT" relativeKey="$parent.EquipButton"
+                                    relativePoint="RIGHT"
+                                    x="0" y="0"/>
+                        </Anchors>
+                    </Button>
+                </Frames>
+            </Frame>
+            <Frame name="$parentFirstRow" parentKey="FirstRow" inherits="Gears_IconRowTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" y="-30" />
+                    <Anchor point="TOPRIGHT"/>
+                </Anchors>
+            </Frame>
+            <!--<Frame name="$parentFirstRow" parentKey="FirstRow" inherits="BackdropTemplate">
                 <Size y="80"/>
-                <!--<KeyValues>
+                <KeyValues>
                     <KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
-                </KeyValues>-->
+                </KeyValues>
                 <Anchors>
                     <Anchor point="TOPLEFT" x="16" y="-24"/>
                     <Anchor point="TOPRIGHT" x="-20"/>
@@ -82,7 +139,7 @@
                 <Frames>
 
                 </Frames>
-            </Frame>
+            </Frame>-->
         </Frames>
     </Frame>
 

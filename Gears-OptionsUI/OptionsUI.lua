@@ -8,7 +8,7 @@ local addon
 local ns
 addon, ns = ...
 
-local p = GEARS_NS:Log(addon)
+local p = GEARS_NS:log(addon)
 
 C_Timer.After(1, function()
     p('xxx Loaded....')

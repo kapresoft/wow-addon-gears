@@ -1,6 +1,6 @@
 --- @type Namespace
 local ns = select(2, ...)
-local p = ns:Log('Gears')
+local p = ns:log('Gears')
 
 --[[-----------------------------------------------------------------------------
 Local Vars

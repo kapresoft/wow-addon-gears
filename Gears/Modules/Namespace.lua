@@ -1,9 +1,8 @@
 --[[-----------------------------------------------------------------------------
 Type: Namespace
 -------------------------------------------------------------------------------]]
---- @class Namespace
---- @field private eventTraceName string
---- @field private xml table
+--- @class NamespaceImpl
+--- @field xml table
 --- @field gameVersion GameVersion
 --- @field tracer EventTracePrinter
 --- @field p LibPrettyPrint_Printer The base printer
@@ -16,13 +15,17 @@ Type: NamespaceObjects
 --- @field GameVersion GameVersion
 
 --[[-------------------------------------------------------------------
+Aliases
+---------------------------------------------------------------------]]
+--- @alias Namespace NamespaceImpl | GameVersionMixin
+
+--[[-------------------------------------------------------------------
 Start
 ---------------------------------------------------------------------]]
 local addon
---- @type Namespace
+--- @type NamespaceImpl | Namespace
 local ns
 addon, ns = ...; ns.addon = addon; GEARS_NS = ns
-
 
 --- Used in XML files to hook frame events: OnLoad and OnEvent
 --- Example: <OnLoad>GEARS_XML:[TypeName]_OnLoad(self)</OnLoad>
@@ -59,22 +62,19 @@ do
   --- @param tracer EventTracePrinter
   function ns:RegisterTracer(tracer) self.tracer = tracer:New(ns.addon, predicateFn) end
   function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
-
   --- @param moduleName Name
-  --- @return LibPrettyPrint_Printer
-  function ns:Log(moduleName) return self.printer:WithSubPrefix(moduleName) end
+  --- @return LibPrettyPrint_Printer | LibPrettyPrint_PrintFn
+  function ns:log(moduleName) return self.printer:WithSubPrefix(moduleName) end
 end
 
-local p  = ns:Log('Namespace')
+local p  = ns:log('Namespace')
 
 --[[-----------------------------------------------------------------------------
 Namespace: Methods
 -------------------------------------------------------------------------------]]
 do
-  ns.eventTraceName = 'GEARS'
   ns.sformat        = string.format
   ns.settings       = settings
-  ns.eventBasename  = string.upper(ns.addon)
   ns.O              = {}
 
   function ns:t(prefix, ...) return self.tracer(prefix, ...) end
@@ -92,3 +92,4 @@ do
   end
 
 end
+

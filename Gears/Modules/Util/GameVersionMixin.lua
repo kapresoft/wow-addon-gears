@@ -12,6 +12,7 @@ New Library
 --- @type Namespace
 local ns = select(2, ...)
 
+--- @class GameVersionMixin
 local o = {}
 do
   o.GAME_VERSION_CLASSIC_ERA = "classic-era"

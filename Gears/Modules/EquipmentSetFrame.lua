@@ -4,12 +4,16 @@ local ns = select(2, ...)
 --- @class EquipmentSetFrameMixin : Frame
 Gears_EquipmentSetFrameMixin = {}
 local S = Gears_EquipmentSetFrameMixin
-local p = ns:Log('Gears_EquipmentSetFrame')
+local p = ns:log('Gears_EquipmentSetFrame')
 
 --- @param frame FrameObj
 local function AnchorToPaperDoll(frame)
   frame:ClearAllPoints()
-  frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", -34, -12)
+  local osx, osy = 0, 2
+  if ns:IsTBC() then
+    osx, osy = -34, -19
+  end
+  frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", osx, osy)
 end
 
 function S:OnLoad()
