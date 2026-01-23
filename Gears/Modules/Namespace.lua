@@ -4,6 +4,7 @@ Type: Namespace
 --- @class Namespace
 --- @field private eventTraceName string
 --- @field private xml table
+--- @field tracer EventTracePrinter
 --- @field p LibPrettyPrint_Printer The base printer
 --- @type string
 
@@ -37,8 +38,8 @@ function ns:IsDev() return ns.settings.developer == true end
 --[[-------------------------------------------------------------------
 Logger Methods
 ---------------------------------------------------------------------]]
-local function predicateFn() return ns:IsDev() end
 do
+  local function predicateFn() return ns:IsDev() end
   ns.fmt     = LibPrettyPrint:Formatter({
     show_all = true, depth_limit = 3
   })
@@ -47,11 +48,14 @@ do
     formatter = ns.fmt
   }, predicateFn)
 
+  --- @param tracer EventTracePrinter
+  function ns:RegisterTracer(tracer)
+    self.tracer = tracer:New(ns.addon, predicateFn)
+  end
+
   --- @param moduleName Name
   --- @return LibPrettyPrint_Printer
-  function ns:Log(moduleName)
-    return self.printer:WithSubPrefix(moduleName)
-  end
+  function ns:Log(moduleName) return self.printer:WithSubPrefix(moduleName) end
 end
 
 local p  = ns:Log('Namespace')
@@ -75,24 +79,9 @@ do
   ns.eventBasename  = string.upper(ns.addon)
   ns.O              = {}; NSO(ns.O)
 
-  function ns:t(prefix, ...) return self:evt():t(prefix, ...) end
-  function ns:tf(prefix, ...) return self:evt():t(prefix, ...) end
-  function ns:td(...) return self:evt():t(...) end
-  function ns:tdf(...) return self:evt():t(...) end
-
-  --- @return EventTracePrinter
-  function ns:evt()
-    if not self.eventTracer then
-      self.eventTracer = ns.O.EventTracePrinter:New(ns.addon, predicateFn)
-    end
-    return self.eventTracer
-  end
-
-  function ns:K() return ns.Kapresoft_LibUtil end
+  function ns:t(prefix, ...) return self.tracer(prefix, ...) end
+  function ns:tf(prefix, ...) return self.tracer:tf(prefix, ...) end
+  function ns:td(prefix, ...) return self.tracer:td(...) end
+  function ns:tdf(prefix, ...) return self.tracer:tdf(...) end
 
 end
-
-C_Timer.After(2, function()
-  ns:td('hello', 'there')
-  ns:tdf('hello', 'there')
-end)
