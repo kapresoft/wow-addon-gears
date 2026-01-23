@@ -23,6 +23,19 @@ function S:OnLoad()
   --self:SetBackdrop(BACKDROP_DARK_DIALOG_32_32)
   self:SetBackdrop(BACKDROP_TOAST_12_12)
 
+  --- @type ScrollFrameObj
+  local scrollFrame = self.ScrollFrame
+  local child = scrollFrame.ScrollChild
+  --child:SetWidth(scrollFrame:GetWidth() - 20) -- scrollbar width
+
+  scrollFrame:SetScrollChild(child)
+
+  local rowHeight = 48
+  local spacing = 2
+  local numRows = 9
+
+  child:SetHeight(numRows * (rowHeight + spacing))
+
   --- @type FontString
   local headerText = self.HeaderTitle
   headerText:SetText(ns.addon)

@@ -8,35 +8,45 @@
         <Color color="WHITE_FONT_COLOR"/>
     </Font>
 
-    <!--<Frame name="Gears_IconRowTemplate" virtual="true">
-        <Size x="1" y="36"/>
-        <Scripts>
-            <OnLoad>Gears_EquipmentSetFrameMixin.OnLoadRow(self)</OnLoad>
-        </Scripts>
-    </Frame>-->
-
     <Frame name="Gears_IconRowTemplate" inherits="BackdropTemplate" virtual="true">
         <Size y="48"/>
-        <!--<KeyValues>
+        <KeyValues>
             <KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
-        </KeyValues>-->
+        </KeyValues>
         <Anchors>
-            <Anchor point="TOPLEFT" />
-            <Anchor point="TOPRIGHT"/>
+            <Anchor point="TOPLEFT" x="5" />
+            <Anchor point="TOPRIGHT" x="-26" />
         </Anchors>
+
+        <Frames>
+            <Button parentKey="IconButton"
+                    inherits="IconButtonTemplate">
+                <Size x="36" y="36"/>
+                <Anchors>
+                    <Anchor point="LEFT" x="8" y="0"/>
+                </Anchors>
+                <NormalTexture file="Interface\Icons\INV_Misc_QuestionMark"/>
+            </Button>
+        </Frames>
+
         <Layers>
             <Layer level="ARTWORK">
-                <FontString name="$parentLabel" parentKey="Label"
-                            inherits="Gears_LabelFont">
+                <!-- Text aligned to the right of the icon -->
+                <FontString name="$parentLabel"
+                            parentKey="Label"
+                            text="DPS"
+                            inherits="Gears_LabelFont"
+                            justifyH="LEFT">
                     <Anchors>
-                        <Anchor point="TOPLEFT" x="65" y="-10"/>
+                        <Anchor point="LEFT"
+                                relativeKey="$parent.IconButton"
+                                relativePoint="RIGHT"
+                                x="10" y="0"/>
+                        <Anchor point="RIGHT" x="-10" y="0"/>
                     </Anchors>
                 </FontString>
             </Layer>
         </Layers>
-        <Frames>
-
-        </Frames>
     </Frame>
 
     <Frame name="Gears_EquipmentSetFrameTemplate" virtual="true"
@@ -111,35 +121,84 @@
                     </Button>
                 </Frames>
             </Frame>
-            <Frame name="$parentFirstRow" parentKey="FirstRow" inherits="Gears_IconRowTemplate">
-                <Anchors>
-                    <Anchor point="TOPLEFT" y="-30" />
-                    <Anchor point="TOPRIGHT"/>
-                </Anchors>
-            </Frame>
-            <!--<Frame name="$parentFirstRow" parentKey="FirstRow" inherits="BackdropTemplate">
-                <Size y="80"/>
-                <KeyValues>
+            <ScrollFrame parentKey="ScrollFrame"
+                         inherits="UIPanelScrollFrameTemplate,BackdropTemplate">
+                <Size x="190" y="330"/>
+                <!--<KeyValues>
                     <KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
-                </KeyValues>
+                </KeyValues>-->
                 <Anchors>
-                    <Anchor point="TOPLEFT" x="16" y="-24"/>
-                    <Anchor point="TOPRIGHT" x="-20"/>
+                    <Anchor point="TOP" relativeKey="$parent.ButtonsContainerFrame"
+                            relativePoint="BOTTOM" y="-5" />
+                    <Anchor point="LEFT" x="5"/>
+                    <Anchor point="RIGHT" x="-34"/>
+                    <Anchor point="BOTTOM" y="5"/>
                 </Anchors>
-                <Layers>
-                    <Layer level="ARTWORK">
-                        <FontString name="$parentLabel" parentKey="Label"
-                                    inherits="Gears_LabelFont">
-                            <Anchors>
-                                <Anchor point="TOPLEFT" x="65" y="-10"/>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
-                <Frames>
 
+                <Frames>
+                    <!-- THIS is what scrolls -->
+                    <Frame parentKey="ScrollChild" >
+                        <Size x="190" y="330"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT"/>
+                            <Anchor point="TOPRIGHT"/>
+                        </Anchors>
+                        <Frames>
+                            <Frame name="$parentFirstRow" parentKey="Row1"
+                                   inherits="Gears_IconRowTemplate">
+                            </Frame>
+                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row2" >
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row1"
+                                            relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row3" >
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row2"
+                                            relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row4" >
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row3"
+                                            relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row5" >
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row4"
+                                            relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row6" >
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row5"
+                                            relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row7" >
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row6"
+                                            relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row8" >
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row7"
+                                            relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row9" >
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row8"
+                                            relativePoint="BOTTOMLEFT" />
+                                </Anchors>
+                            </Frame>
+                        </Frames>
+                    </Frame>
                 </Frames>
-            </Frame>-->
+            </ScrollFrame>
         </Frames>
     </Frame>
 
