@@ -1,6 +1,6 @@
 --- @type Namespace
 local ns = select(2, ...)
-local p = ns:Log(ns.addon)
+local p = ns:Log('Gears')
 
 --[[-----------------------------------------------------------------------------
 Local Vars
@@ -16,6 +16,8 @@ local L = {}; GEARS = L
 --- @type Gears
 local a = L
 
+
+
 function a:Info()
     p("Gears AddOn")
 end
@@ -29,6 +31,6 @@ local api = {
 }; GEARS.api = api
 
 C_Timer.After(1, function()
-    p('xxx loaded...')
+    p('loaded...')
 end)
 

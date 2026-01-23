@@ -11,5 +11,5 @@ addon, ns = ...
 local p = GEARS_NS:Log(addon)
 
 C_Timer.After(1, function()
-    p(('[00:00:00] {{%s}}: xxx loaded...'):format(addon))
+    p('xxx Loaded....')
 end)
