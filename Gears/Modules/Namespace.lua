@@ -4,9 +4,16 @@ Type: Namespace
 --- @class Namespace
 --- @field private eventTraceName string
 --- @field private xml table
+--- @field gameVersion GameVersion
 --- @field tracer EventTracePrinter
 --- @field p LibPrettyPrint_Printer The base printer
 --- @type string
+
+--[[-------------------------------------------------------------------
+Type: NamespaceObjects
+---------------------------------------------------------------------]]
+--- @class NamespaceObjects
+--- @field GameVersion GameVersion
 
 --[[-------------------------------------------------------------------
 Start
@@ -32,6 +39,7 @@ Override in DeveloperSetup to enable
 --- @field developer boolean if true: enables developer mode
 local settings = { developer = false }
 
+
 --- @return boolean
 function ns:IsDev() return ns.settings.developer == true end
 
@@ -49,9 +57,8 @@ do
   }, predicateFn)
 
   --- @param tracer EventTracePrinter
-  function ns:RegisterTracer(tracer)
-    self.tracer = tracer:New(ns.addon, predicateFn)
-  end
+  function ns:RegisterTracer(tracer) self.tracer = tracer:New(ns.addon, predicateFn) end
+  function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
 
   --- @param moduleName Name
   --- @return LibPrettyPrint_Printer
@@ -59,15 +66,6 @@ do
 end
 
 local p  = ns:Log('Namespace')
-print('xxx p:', p)
-
---[[-----------------------------------------------------------------------------
-NamespaceObjects
--------------------------------------------------------------------------------]]
---- @param o NamespaceObjects
-local function NSO(o)
-
-end
 
 --[[-----------------------------------------------------------------------------
 Namespace: Methods
@@ -77,11 +75,20 @@ do
   ns.sformat        = string.format
   ns.settings       = settings
   ns.eventBasename  = string.upper(ns.addon)
-  ns.O              = {}; NSO(ns.O)
+  ns.O              = {}
 
   function ns:t(prefix, ...) return self.tracer(prefix, ...) end
   function ns:tf(prefix, ...) return self.tracer:tf(prefix, ...) end
   function ns:td(prefix, ...) return self.tracer:td(...) end
   function ns:tdf(prefix, ...) return self.tracer:tdf(...) end
+
+  --- @param name Name The module name; see NamespaceObjects
+  --- @param obj any The namespace object
+  function ns:register(name, obj)
+    assert(name, 'Module name required')
+    assert(obj, ('Module instance is invalid. val=%s'):format(tostring(obj)))
+    O[name] = obj
+    return obj
+  end
 
 end

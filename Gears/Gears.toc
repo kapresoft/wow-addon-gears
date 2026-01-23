@@ -43,4 +43,5 @@
 ## X-PayPal-Donation-URL: https://www.paypal.com/donate/?hosted_button_id=AX58YP3GSGXVU
 
 ThirdParty\ThirdParty.xml
+Mainline.lua
 Gears.xml

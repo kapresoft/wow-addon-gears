@@ -12,7 +12,7 @@ local ns= select(2, ...)
 Library
 -------------------------------------------------------------------------------]]
 --- @class EventTracePrinter
-local S = {}; ns.O.EventTracePrinter  = S
+local S = {};
 S.__index = S
 S.__type = 'EventTracePrinter'
 
