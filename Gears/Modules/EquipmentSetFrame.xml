@@ -24,7 +24,7 @@
             <OnLoad method="OnLoad"/>
         </Scripts>
 
-        <Size x="200" y="430"/>
+        <Size x="200" y="426"/>
 
         <Layers>
             <Layer level="ARTWORK">

@@ -9,7 +9,7 @@ local p = ns:Log('Gears_EquipmentSetFrame')
 --- @param frame FrameObj
 local function AnchorToPaperDoll(frame)
   frame:ClearAllPoints()
-  frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", -34, -10)
+  frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", -34, -12)
 end
 
 function S:OnLoad()
