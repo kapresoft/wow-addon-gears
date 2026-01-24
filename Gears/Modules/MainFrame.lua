@@ -1,9 +1,9 @@
 --- @type Namespace
 local ns = select(2, ...)
 
---- @class EquipmentSetFrameMixin : Frame
-Gears_EquipmentSetFrameMixin = {}
-local S = Gears_EquipmentSetFrameMixin
+--- @class MainFrameMixin : Frame
+Gears_MainFrameMixin = {}
+local S = Gears_MainFrameMixin
 local p = ns:log('Gears_EquipmentSetFrame')
 
 --- @param frame FrameObj
@@ -43,7 +43,7 @@ function S:OnLoad()
     _frame:OnClickClose()
   end)
 
-  C_Timer.After(1, function()
+  C_Timer.After(0.1, function()
     local rowCount = self:ForEachEquipment(function(info)
       self:AddRow(info)
     end)
@@ -83,7 +83,7 @@ function S:AddRow(eq)
 
   --- @type FrameObj
   local row = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
-          scrollChild, "Gears_EquipmentSetRowTemplate");
+          scrollChild, "Gears_EquipmentSetTemplate");
   row:SetParent(self)
   row:SetParentKey(rowKey)
   print('xx rowName=', row:GetName())

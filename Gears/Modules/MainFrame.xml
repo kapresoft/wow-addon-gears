@@ -1,14 +1,14 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 
-    <Script file="EquipmentSetFrame.lua"/>
+    <Script file="MainFrame.lua"/>
 
     <Font name="Gears_LabelFont" inherits="GameFontWhiteTiny"
           justifyH="LEFT" virtual="true">
         <Color color="WHITE_FONT_COLOR"/>
     </Font>
 
-    <Frame name="Gears_EquipmentSetRowTemplate" inherits="BackdropTemplate"
+    <Frame name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
            enableMouse="true" virtual="true">
         <Size y="48"/>
         <KeyValues>
@@ -77,8 +77,8 @@
         </Layers>
     </Frame>
 
-    <Frame name="Gears_EquipmentSetFrameTemplate" virtual="true"
-           mixin="Gears_EquipmentSetFrameMixin"
+    <Frame name="Gears_MainFrameTemplate" virtual="true"
+           mixin="Gears_MainFrameMixin"
            hidden="true" movable="true" enableMouse="true"
            frameStrata="DIALOG" clampedToScreen="true">
 
@@ -180,6 +180,6 @@
     </Frame>
 
     <Frame name="Gears_EquipmentSetFrame" hidden="true" movable="true" enableMouse="true"
-           inherits="BackdropTemplate, Gears_EquipmentSetFrameTemplate">
+           inherits="BackdropTemplate, Gears_MainFrameTemplate">
     </Frame>
 </Ui>
