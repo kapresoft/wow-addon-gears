@@ -16,8 +16,9 @@
 
         <Scripts>
             <OnLoad method="OnLoad"/>
-            <OnEnter method="ShowBorder"/>
-            <OnLeave method="HideBorder"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnMouseDown method="OnMouseDown"/>
         </Scripts>
 
         <Anchors>
@@ -158,7 +159,7 @@
         </Frames>
     </Frame>
 
-    <Frame name="Gears_EquipmentSetFrame" hidden="true" movable="true" enableMouse="true"
+    <Frame name="Gears_MainFrame" hidden="true" movable="true" enableMouse="true"
            inherits="BackdropTemplate, Gears_MainFrameTemplate">
     </Frame>
 </Ui>

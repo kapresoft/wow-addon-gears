@@ -1,10 +1,20 @@
 --- @type Namespace
 local ns = select(2, ...)
+--[[-------------------------------------------------------------------
+Alias
+---------------------------------------------------------------------]]
+--- @alias MainFrame MainFrameMixin | FrameObj
 
---- @class MainFrameMixin : FrameObj
+--[[-------------------------------------------------------------------
+MainFrame
+---------------------------------------------------------------------]]
+--- @class MainFrameMixin
+--- @field rows table<number, EquipmentSet>
 Gears_MainFrameMixin = {}
-local S = Gears_MainFrameMixin
-local p = ns:log('Gears_EquipmentSetFrame')
+local p = ns:log('MainFrame')
+
+--- @type MainFrameMixin | MainFrame
+local o = Gears_MainFrameMixin
 
 --- @param frame FrameObj
 local function AnchorToPaperDoll(frame)
@@ -16,7 +26,7 @@ local function AnchorToPaperDoll(frame)
   frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", osx, osy)
 end
 
-function S:OnLoad()
+function o:OnLoad()
 
   -- set same parent so frame is scaled automatically
   self:SetParent(PaperDollFrame:GetParent())
@@ -53,13 +63,14 @@ function S:OnLoad()
 end
 
 --- @class EquipmentSetInfo
+--- @field id Identifier The equipment set ID
 --- @field index Index
 --- @field name Name
 --- @field icon IconIDOrPath
 
 --- @param callback fun(info:EquipmentSetInfo) | "function(info) end"
 --- @return number The row count
-function S:ForEachEquipment(callback)
+function o:ForEachEquipment(callback)
   local rowCount = 0
   local eq = C_EquipmentSet
   --- @type table<number,number>
@@ -68,25 +79,27 @@ function S:ForEachEquipment(callback)
   for i, id in ipairs(ids) do
     rowCount = rowCount + 1
     local name, icon = eq.GetEquipmentSetInfo(id)
-    local info       = { index=i, name = name, icon = icon }
+    local info       = { id=id, index=i, name = name, icon = icon }
     callback(info)
   end
   return rowCount
 end
 
 --- @param eq EquipmentSetInfo
-function S:AddRow(eq)
+function o:AddRow(eq)
   local index       = eq.index
   local rowKey      = 'Row' .. index
   self.rows         = self.rows or {}
   local scrollChild = self.ScrollFrame.ScrollChild
 
-  --- @type FrameObj
+  --- @type EquipmentSet
   local row = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
           scrollChild, "Gears_EquipmentSetTemplate");
-  row:SetParent(self)
+  row.owner = self; self.rows[index] = row
   row:SetParentKey(rowKey)
-  print('xx rowName=', row:GetName())
+  
+  --print('xx rowName=', row:GetName())
+  row.equipSetID = eq.id
   
   --row:SetBackdropColor(0, 0, 0, 0)
   --row:SetBackdropBorderColor(0, 0, 0, 0)
@@ -116,7 +129,7 @@ function S:AddRow(eq)
   return row
 end
 
-function S:UpdateScrollHeight(numRows)
+function o:UpdateScrollHeight(numRows)
   local scrollFrame = self.ScrollFrame
   local child = scrollFrame.ScrollChild
   
@@ -131,5 +144,22 @@ function S:UpdateScrollHeight(numRows)
   child:SetHeight(height)
 end
 
-function S:OnClickClose() self:Hide() end
+function o:OnClickClose() self:Hide() end
 
+--- @param equipSet EquipmentSet
+function o:SelectEquipmentSet(equipSet)
+  assert(type(equipSet) == 'table', "The param equipSet is required.")
+  
+  --- @type EquipmentSet
+  local otherEquipSet
+  local id = equipSet.equipSetID
+  
+  self:ForEachEquipment(function(info)
+    if info.id == id then
+      equipSet:SetSelected(true)
+    else
+      otherEquipSet = self.rows[info.index]
+      otherEquipSet:SetSelected(false)
+    end
+  end)
+end
