@@ -1,7 +1,7 @@
 --- @type Namespace
 local ns = select(2, ...)
 
---- @class MainFrameMixin : Frame
+--- @class MainFrameMixin : FrameObj
 Gears_MainFrameMixin = {}
 local S = Gears_MainFrameMixin
 local p = ns:log('Gears_EquipmentSetFrame')
@@ -88,8 +88,8 @@ function S:AddRow(eq)
   row:SetParentKey(rowKey)
   print('xx rowName=', row:GetName())
   
-  row:SetBackdropColor(0, 0, 0, 0)
-  row:SetBackdropBorderColor(0, 0, 0, 0)
+  --row:SetBackdropColor(0, 0, 0, 0)
+  --row:SetBackdropBorderColor(0, 0, 0, 0)
   
   if index > 1 then
     row:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")

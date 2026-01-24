@@ -2,6 +2,7 @@
 ..\FrameXML\UI.xsd">
 
     <Script file="MainFrame.lua"/>
+    <Script file="EquipmentSetMixin.lua"/>
 
     <Font name="Gears_LabelFont" inherits="GameFontWhiteTiny"
           justifyH="LEFT" virtual="true">
@@ -9,21 +10,14 @@
     </Font>
 
     <Frame name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
+           mixin="Gears_EquipmentSetMixin"
            enableMouse="true" virtual="true">
         <Size y="48"/>
-        <KeyValues>
-            <KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
-        </KeyValues>
 
         <Scripts>
-            <OnEnter>
-                self:SetBackdropColor(0, 0, 0, 0.6)
-                self:SetBackdropBorderColor(1, 1, 1, 0.8)
-            </OnEnter>
-            <OnLeave>
-                self:SetBackdropColor(0, 0, 0, 0)
-                self:SetBackdropBorderColor(0, 0, 0, 0)
-            </OnLeave>
+            <OnLoad method="OnLoad"/>
+            <OnEnter method="ShowBorder"/>
+            <OnLeave method="HideBorder"/>
         </Scripts>
 
         <Anchors>
@@ -59,21 +53,6 @@
                     </Anchors>
                 </FontString>
             </Layer>
-            <!--<Layer level="HIGHLIGHT">
-                <Texture parentKey="Highlight"
-                         file="Interface\\QuestFrame\\UI-QuestTitleHighlight"
-                         blendMode="ADD"
-                         alpha="0.35">
-                    <Scripts>
-                        <OnEnter>self:Show(); print('xx Show()')</OnEnter>
-                        <OnLeave>self:Hide()</OnLeave>
-                    </Scripts>
-                    <Anchors>
-                        <Anchor point="TOPLEFT"/>
-                        <Anchor point="BOTTOMRIGHT"/>
-                    </Anchors>
-                </Texture>
-            </Layer>-->
         </Layers>
     </Frame>
 
