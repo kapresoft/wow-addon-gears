@@ -55,7 +55,7 @@ function o:OnLoad()
 
   C_Timer.After(0.1, function()
     local rowCount = self:ForEachEquipment(function(info)
-      self:AddRow(info)
+      self:AddEquipmentSet(info)
     end)
     self:UpdateScrollHeight(rowCount)
   end)
@@ -86,47 +86,36 @@ function o:ForEachEquipment(callback)
 end
 
 --- @param eq EquipmentSetInfo
-function o:AddRow(eq)
-  local index       = eq.index
-  local rowKey      = 'Row' .. index
-  self.rows         = self.rows or {}
-  local scrollChild = self.ScrollFrame.ScrollChild
+function o:AddEquipmentSet(eq)
+  local index        = eq.index
+  local rowKey       = 'Row' .. index
+  self.rows          = self.rows or {}
+  local scrollChild  = self.ScrollFrame.ScrollChild
 
   --- @type EquipmentSet
-  local row = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
+  local equipmentSet = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
           scrollChild, "Gears_EquipmentSetTemplate");
-  row.owner = self; self.rows[index] = row
-  row:SetParentKey(rowKey)
-  
-  --print('xx rowName=', row:GetName())
-  row.equipSetID = eq.id
-  
-  --row:SetBackdropColor(0, 0, 0, 0)
-  --row:SetBackdropBorderColor(0, 0, 0, 0)
+  equipmentSet.owner = self; self.rows[index] = equipmentSet
+  equipmentSet:SetParentKey(rowKey)
+  equipmentSet.equipSetID = eq.id
   
   if index > 1 then
-    row:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")
+    equipmentSet:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")
   end
 
   --- @type ButtonObj
-  local iconBtn = row.IconButton
+  local iconBtn = equipmentSet.IconButton
   iconBtn:SetNormalTexture(eq.icon)
   --- @type FontStringObj
-  local eqSetName = row.Label
+  local eqSetName = equipmentSet.Label
   eqSetName:SetText(eq.name)
 
-  row:Show()
-  self.rows[index] = row
+  equipmentSet:Show()
+  self.rows[index] = equipmentSet
 
+  equipmentSet:SelectWhenEquipped()
 
-  --[[--- @type FrameObj
-  local rowFrame   = self.ScrollFrame.ScrollChild
-  print('xx rowKey=', rowKey, 'rowFrame=', rowFrame['Row1'])
-  P = rowFrame
-  local iconButton = rowFrame.IconButton
-  print('xx iconButton=', pf(iconButton))]]
-
-  return row
+  return equipmentSet
 end
 
 function o:UpdateScrollHeight(numRows)

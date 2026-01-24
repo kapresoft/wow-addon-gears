@@ -29,7 +29,6 @@ function o:OnLoad()
   
   self:HideBorder()
   self:__OnLoadCheckMark()
-  self:SelectEquipped()
 end
 
 --- @private
@@ -44,9 +43,24 @@ end
 function o:GetMainFrame() return self.owner end
 
 -- TODO next: needs implementation.
-function o:SelectEquipped()
+function o:SelectWhenEquipped()
   -- if isEquipped then
   -- self.CheckMark:Show()
+  if self:IsFullyEquipped() then
+    self.CheckMark:Show()
+    -- todo: disable action buttons
+    return
+  end
+  
+  -- todo: else, enable action buttons
+  
+end
+
+function o:IsFullyEquipped()
+  local _, _, _, _, numItems, numEquipped =
+  C_EquipmentSet.GetEquipmentSetInfo(self.equipSetID)
+  
+  return numItems > 0 and numEquipped == numItems
 end
 
 
