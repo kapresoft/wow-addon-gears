@@ -30,12 +30,6 @@ function S:OnLoad()
 
   scrollFrame:SetScrollChild(child)
 
-  local rowHeight = 48
-  local spacing = 2
-  local numRows = 9
-
-  child:SetHeight(numRows * (rowHeight + spacing))
-
   --- @type FontString
   local headerText = self.HeaderTitle
   headerText:SetText(ns.addon)
