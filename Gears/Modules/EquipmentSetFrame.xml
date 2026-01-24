@@ -144,7 +144,7 @@
                             <Anchor point="TOPRIGHT"/>
                         </Anchors>
                         <Frames>
-                            <Frame name="$parentFirstRow" parentKey="Row1"
+                            <!--<Frame name="$parentFirstRow" parentKey="Row1"
                                    inherits="Gears_IconRowTemplate">
                             </Frame>
                             <Frame inherits="Gears_IconRowTemplate" parentKey="Row2" >
@@ -194,7 +194,7 @@
                                     <Anchor point="TOPLEFT" relativeKey="$parent.Row8"
                                             relativePoint="BOTTOMLEFT" />
                                 </Anchors>
-                            </Frame>
+                            </Frame>-->
                         </Frames>
                     </Frame>
                 </Frames>
