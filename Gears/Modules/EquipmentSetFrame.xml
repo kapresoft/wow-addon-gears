@@ -8,11 +8,24 @@
         <Color color="WHITE_FONT_COLOR"/>
     </Font>
 
-    <Frame name="Gears_IconRowTemplate" inherits="BackdropTemplate" virtual="true">
+    <Frame name="Gears_EquipmentSetRowTemplate" inherits="BackdropTemplate"
+           enableMouse="true" virtual="true">
         <Size y="48"/>
         <KeyValues>
             <KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
         </KeyValues>
+
+        <Scripts>
+            <OnEnter>
+                self:SetBackdropColor(0, 0, 0, 0.6)
+                self:SetBackdropBorderColor(1, 1, 1, 0.8)
+            </OnEnter>
+            <OnLeave>
+                self:SetBackdropColor(0, 0, 0, 0)
+                self:SetBackdropBorderColor(0, 0, 0, 0)
+            </OnLeave>
+        </Scripts>
+
         <Anchors>
             <Anchor point="TOPLEFT" x="5" />
             <Anchor point="TOPRIGHT" x="-26" />
@@ -46,6 +59,21 @@
                     </Anchors>
                 </FontString>
             </Layer>
+            <!--<Layer level="HIGHLIGHT">
+                <Texture parentKey="Highlight"
+                         file="Interface\\QuestFrame\\UI-QuestTitleHighlight"
+                         blendMode="ADD"
+                         alpha="0.35">
+                    <Scripts>
+                        <OnEnter>self:Show(); print('xx Show()')</OnEnter>
+                        <OnLeave>self:Hide()</OnLeave>
+                    </Scripts>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>-->
         </Layers>
     </Frame>
 
@@ -144,57 +172,6 @@
                             <Anchor point="TOPRIGHT"/>
                         </Anchors>
                         <Frames>
-                            <!--<Frame name="$parentFirstRow" parentKey="Row1"
-                                   inherits="Gears_IconRowTemplate">
-                            </Frame>
-                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row2" >
-                                <Anchors>
-                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row1"
-                                            relativePoint="BOTTOMLEFT" />
-                                </Anchors>
-                            </Frame>
-                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row3" >
-                                <Anchors>
-                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row2"
-                                            relativePoint="BOTTOMLEFT" />
-                                </Anchors>
-                            </Frame>
-                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row4" >
-                                <Anchors>
-                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row3"
-                                            relativePoint="BOTTOMLEFT" />
-                                </Anchors>
-                            </Frame>
-                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row5" >
-                                <Anchors>
-                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row4"
-                                            relativePoint="BOTTOMLEFT" />
-                                </Anchors>
-                            </Frame>
-                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row6" >
-                                <Anchors>
-                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row5"
-                                            relativePoint="BOTTOMLEFT" />
-                                </Anchors>
-                            </Frame>
-                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row7" >
-                                <Anchors>
-                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row6"
-                                            relativePoint="BOTTOMLEFT" />
-                                </Anchors>
-                            </Frame>
-                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row8" >
-                                <Anchors>
-                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row7"
-                                            relativePoint="BOTTOMLEFT" />
-                                </Anchors>
-                            </Frame>
-                            <Frame inherits="Gears_IconRowTemplate" parentKey="Row9" >
-                                <Anchors>
-                                    <Anchor point="TOPLEFT" relativeKey="$parent.Row8"
-                                            relativePoint="BOTTOMLEFT" />
-                                </Anchors>
-                            </Frame>-->
                         </Frames>
                     </Frame>
                 </Frames>

@@ -83,9 +83,13 @@ function S:AddRow(eq)
 
   --- @type FrameObj
   local row = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
-          scrollChild, "Gears_IconRowTemplate");
+          scrollChild, "Gears_EquipmentSetRowTemplate");
+  row:SetParent(self)
   row:SetParentKey(rowKey)
   print('xx rowName=', row:GetName())
+  
+  row:SetBackdropColor(0, 0, 0, 0)
+  row:SetBackdropBorderColor(0, 0, 0, 0)
   
   if index > 1 then
     row:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")
