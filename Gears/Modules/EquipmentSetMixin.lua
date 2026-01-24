@@ -5,6 +5,8 @@ local ns = select(2, ...)
 --- @field owner MainFrame
 --- @field selected boolean
 --- @field equipSetID Identifier
+--- @field CheckMarkFrame FrameObj
+
 --- @alias EquipmentSet EquipmentSetMixinImpl|FrameObjWithBackdrop
 
 Gears_EquipmentSetMixin = {}
@@ -17,6 +19,10 @@ function o:OnLoad()
   BackdropTemplateMixin.OnBackdropLoaded(self)
   self:SetBackdrop(BACKDROP_TOAST_12_12)
   self:HideBorder()
+  local t = self.CheckMark
+  t:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+  t:SetVertexColor(1, 1, 1, 1)
+  t:Show()
 end
 
 --- @return MainFrame

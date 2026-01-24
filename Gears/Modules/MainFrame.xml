@@ -39,20 +39,23 @@
 
         <Layers>
             <Layer level="ARTWORK">
-                <!-- Text aligned to the right of the icon -->
                 <FontString name="$parentLabel"
                             parentKey="Label"
                             text="DPS"
                             inherits="Gears_LabelFont"
                             justifyH="LEFT">
                     <Anchors>
-                        <Anchor point="LEFT"
-                                relativeKey="$parent.IconButton"
-                                relativePoint="RIGHT"
-                                x="10" y="0"/>
-                        <Anchor point="RIGHT" x="-10" y="0"/>
+                        <Anchor point="LEFT" x="50" y="0"/>
+                        <Anchor point="CENTER" y="0"/>
                     </Anchors>
                 </FontString>
+                <Texture parentKey="CheckMark" alpha="0.9">
+                    <Size x="16" y="16"/>
+                    <Anchors>
+                        <Anchor point="RIGHT" x="-10" />
+                        <Anchor point="CENTER" y="0" />
+                    </Anchors>
+                </Texture>
             </Layer>
         </Layers>
     </Frame>
