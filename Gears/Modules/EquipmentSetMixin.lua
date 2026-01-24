@@ -8,6 +8,14 @@ local ns = select(2, ...)
 --- @field CheckMark TextureObj
 
 --- @alias EquipmentSet EquipmentSetMixinImpl|FrameObjWithBackdrop
+--[[-------------------------------------------------------------------
+Local Vars
+---------------------------------------------------------------------]]
+local CHECKBOX_TEXTURE = [[Interface\Buttons\UI-CheckBox-Check]]
+
+--[[-------------------------------------------------------------------
+Mixin
+---------------------------------------------------------------------]]
 
 Gears_EquipmentSetMixin = {}
 local p = ns:log('EquipmentSetMixin')
@@ -18,38 +26,51 @@ local o = Gears_EquipmentSetMixin
 function o:OnLoad()
   BackdropTemplateMixin.OnBackdropLoaded(self)
   self:SetBackdrop(BACKDROP_TOAST_12_12)
-  self:HideBorder()
   
+  self:HideBorder()
   self:__OnLoadCheckMark()
+  self:SelectEquipped()
 end
 
 --- @private
 function o:__OnLoadCheckMark()
   local t = self.CheckMark
-  t:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+  t:SetTexture(CHECKBOX_TEXTURE)
   t:SetVertexColor(1, 1, 1, 1)
-  t:Show()
+  t:Hide()
 end
 
 --- @return MainFrame
 function o:GetMainFrame() return self.owner end
 
+-- TODO next: needs implementation.
+function o:SelectEquipped()
+  -- if isEquipped then
+  -- self.CheckMark:Show()
+end
+
+
 function o:OnMouseDown() self:GetMainFrame():SelectEquipmentSet(self) end
 
-function o:OnEnter()
-  self:ShowBorder()
-end
+function o:OnEnter() self:ShowBorder() end
+
 function o:OnLeave()
   if self.selected == true then return end
   self:HideBorder()
   print('xx hide border')
 end
 
+--- This is not the same as 'equipped' state
 --- @param selected boolean
 function o:SetSelected(selected)
   assert(type(selected) == 'boolean', 'Expected SetSelected(selected:boolean)')
+  
   self.selected = selected
-  if self.selected then return self:ShowBorder() end
+  if self.selected then
+    self:ShowBorder()
+    return
+  end
+
   self:HideBorder()
 end
 

@@ -49,7 +49,7 @@
                         <Anchor point="CENTER" y="0"/>
                     </Anchors>
                 </FontString>
-                <Texture parentKey="CheckMark" alpha="0.9">
+                <Texture parentKey="CheckMark" alpha="0.9" hidden="true">
                     <Size x="16" y="16"/>
                     <Anchors>
                         <Anchor point="RIGHT" x="-10" />
