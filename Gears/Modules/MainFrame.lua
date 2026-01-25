@@ -1,8 +1,19 @@
 --- @type Namespace
 local ns = select(2, ...)
 --[[-------------------------------------------------------------------
-Alias
+Types and Alias
 ---------------------------------------------------------------------]]
+--- @class __ButtonsContainerFrame
+--- @field EquipButton ButtonObj
+
+--- @class EquipmentSetInfo
+--- @field id Identifier The equipment set ID
+--- @field index Index
+--- @field name Name
+--- @field icon IconIDOrPath
+
+-- Aliases -------------
+--- @alias ButtonsContainerFrame __ButtonsContainerFrame|FrameObj
 --- @alias MainFrame MainFrameMixin | FrameObj
 
 --[[-------------------------------------------------------------------
@@ -16,6 +27,9 @@ local p = ns:log('MainFrame')
 --- @type MainFrameMixin | MainFrame
 local o = Gears_MainFrameMixin
 
+--[[-------------------------------------------------------------------
+Support Functions
+---------------------------------------------------------------------]]
 --- @param frame FrameObj
 local function AnchorToPaperDoll(frame)
   frame:ClearAllPoints()
@@ -26,6 +40,16 @@ local function AnchorToPaperDoll(frame)
   frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", osx, osy)
 end
 
+--- @param self MainFrameMixin
+--- @return ButtonObj
+local function EquipButton(self) return self.ButtonsContainerFrame.EquipButton end
+--- @param self MainFrameMixin
+--- @return ButtonObj
+local function SaveButton(self) return self.ButtonsContainerFrame.SaveButton end
+
+--[[-------------------------------------------------------------------
+Methods: Gears_MainFrameMixin
+---------------------------------------------------------------------]]
 function o:OnLoad()
 
   -- set same parent so frame is scaled automatically
@@ -58,15 +82,20 @@ function o:OnLoad()
       self:AddEquipmentSet(info)
     end)
     self:UpdateScrollHeight(rowCount)
+    
+    self:__UpdateActionsEnabledState(false)
   end)
 
 end
 
---- @class EquipmentSetInfo
---- @field id Identifier The equipment set ID
---- @field index Index
---- @field name Name
---- @field icon IconIDOrPath
+--- @param equipID Identifier
+--- @param callback fun(info:EquipmentSetInfo) | "function(info) end"
+function o:ForEachEquipmentExcept(equipID, callback)
+    assert(equipID, "The param equipID is required.")
+    self:ForEachEquipment(function(info)
+      if info.id ~= equipID then callback(info) end
+    end)
+end
 
 --- @param callback fun(info:EquipmentSetInfo) | "function(info) end"
 --- @return number The row count
@@ -112,8 +141,7 @@ function o:AddEquipmentSet(eq)
 
   equipmentSet:Show()
   self.rows[index] = equipmentSet
-
-  equipmentSet:SelectWhenEquipped()
+  equipmentSet:OnUpdateEquippedState()
 
   return equipmentSet
 end
@@ -143,12 +171,21 @@ function o:SelectEquipmentSet(equipSet)
   local otherEquipSet
   local id = equipSet.equipSetID
   
-  self:ForEachEquipment(function(info)
-    if info.id == id then
-      equipSet:SetSelected(true)
-    else
-      otherEquipSet = self.rows[info.index]
-      otherEquipSet:SetSelected(false)
-    end
+  equipSet:SetSelected(true)
+  equipSet:OnUpdateEquippedState(function(isFullyEquipped)
+    self:__UpdateActionsEnabledState(not isFullyEquipped)
   end)
+  
+  -- uncheck the rest
+  self:ForEachEquipmentExcept(id, function(info)
+    otherEquipSet = self.rows[info.index]
+    otherEquipSet:SetSelected(false)
+  end)
+end
+
+--- @private
+--- @param isEnabledState boolean
+function o:__UpdateActionsEnabledState(isEnabledState)
+  EquipButton(self):SetEnabled(isEnabledState)
+  SaveButton(self):SetEnabled(isEnabledState)
 end
