@@ -86,9 +86,11 @@ function o:OnLoad()
     _frame:OnClickClose()
   end)
   
-  self:OnLoadEquipmentSet()
+  self:RegisterEvent('PLAYER_LOGIN', 'OnPlayerLogin')
 
 end
+
+function o:OnPlayerLogin() self:OnLoadEquipmentSet() end
 
 --- @private
 function o:OnLoadEquipmentSet()
