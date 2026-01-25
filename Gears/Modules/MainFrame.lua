@@ -15,6 +15,9 @@ Types and Alias
 -- Aliases -------------
 --- @alias ButtonsContainerFrame __ButtonsContainerFrame|FrameObj
 --- @alias MainFrame MainFrameMixin | FrameObj
+--[[-------------------------------------------------------------------
+Local Vars
+---------------------------------------------------------------------]]
 
 --[[-------------------------------------------------------------------
 MainFrame
@@ -24,8 +27,10 @@ MainFrame
 Gears_MainFrameMixin = {}
 local p = ns:log('MainFrame')
 
---- @type MainFrameMixin | MainFrame | AceBucket
+--- @type MainFrameMixin | MainFrame | AceEvent | AceBucket
 local o = Gears_MainFrameMixin
+LibStub("AceEvent-3.0"):Embed(o);
+LibStub("AceBucket-3.0"):Embed(o)
 
 --[[-------------------------------------------------------------------
 Support Functions
@@ -60,8 +65,6 @@ function o:OnLoad()
   self:SetBackdrop(BACKDROP_TOAST_12_12)
   --self:SetBackdrop(BACKDROP_DARK_DIALOG_32_32)
   
-  LibStub("AceBucket-3.0"):Embed(self)
-  
   -- set same parent so frame is scaled automatically
   self:SetParent(PaperDollFrame:GetParent())
   
@@ -83,27 +86,35 @@ function o:OnLoad()
     _frame:OnClickClose()
   end)
   
-  C_Timer.After(0.01, function()
-    local rowCount = self:ForEachEquipment(function(info)
-      self:AddEquipmentSet(info)
-    end)
-    self:UpdateScrollHeight(rowCount)
-    
-    self:__UpdateActionsEnabledState(false)
-    
-    self:RegisterBucketEvent("PLAYER_EQUIPMENT_CHANGED",
-            0.01,
-            "OnEquipmentChanged")
-  end)
+  self:OnLoadEquipmentSet()
 
 end
 
+--- @private
+function o:OnLoadEquipmentSet()
+  local rowCount = self:ForEachEquipment(function(info)
+    self:AddEquipmentSet(info)
+  end)
+  self:UpdateScrollHeight(rowCount)
+  self:UpdateActionsEnabledState(false)
+  
+  -- bucket because this fires a few times
+  self:RegisterBucketEvent('PLAYER_EQUIPMENT_CHANGED', 0.01, 'OnEquipmentChanged')
+  self:RegisterEvent('EQUIPMENT_SETS_CHANGED', 'OnEquipmentSetsChanged')
+end
+
+--- @private
 function o:OnEquipmentChanged(event, ...)
-  print('xx OnEquipmentChanged')
   self:ForEachEquipment(function(info)
     local equipSet = EquipmentSet(self, info.index)
     if equipSet then equipSet:OnUpdateEquippedState() end
   end)
+end
+
+--- Fired when equipment set is deleted
+--- via C_DeleteEquipmentSet()
+function o:OnEquipmentSetsChanged()
+  p('xx OnEquipmentSetsChanged called...')
 end
 
 --- @param equipID Identifier
@@ -134,6 +145,7 @@ end
 
 --- @param eq EquipmentSetInfo
 function o:AddEquipmentSet(eq)
+  -- todo next: need to pool frames
   local index        = eq.index
   local rowKey       = 'Row' .. index
   self.rows          = self.rows or {}
@@ -168,6 +180,39 @@ function o:AddEquipmentSet(eq)
   return equipmentSet
 end
 
+-- todo next: This needs a review
+function o:RefreshEquipmentSets()
+  local used = {}
+  
+  local rowCount = self:ForEachEquipment(function(info)
+    local row = self.rows[info.index]
+    
+    if not row then
+      row = self:AddEquipmentSet(info)
+    else
+      row.equipSetID = info.id
+      row.Label:SetText(info.name)
+      row.IconButton:SetNormalTexture(info.icon)
+      row:Show()
+    end
+    
+    used[info.index] = true
+  end)
+  
+  -- hide unused rows
+  for index, row in pairs(self.rows) do
+    if not used[index] then
+      row:SetSelected(false)
+      row.CheckMark:Hide()
+      row.equipSetID = nil
+      row:Hide()
+    end
+  end
+  
+  self:UpdateScrollHeight(rowCount)
+end
+
+--- @private
 function o:UpdateScrollHeight(numRows)
   local scrollFrame = self.ScrollFrame
   local child = scrollFrame.ScrollChild
@@ -183,6 +228,7 @@ function o:UpdateScrollHeight(numRows)
   child:SetHeight(height)
 end
 
+--- @private
 function o:OnClickClose() self:Hide() end
 
 --- @param equipSet EquipmentSet
@@ -195,7 +241,7 @@ function o:SelectEquipmentSet(equipSet)
   
   equipSet:SetSelected(true)
   equipSet:OnUpdateEquippedState(function(isFullyEquipped)
-    self:__UpdateActionsEnabledState(not isFullyEquipped)
+    self:UpdateActionsEnabledState(not isFullyEquipped)
   end)
   
   -- uncheck the rest
@@ -207,7 +253,7 @@ end
 
 --- @private
 --- @param isEnabledState boolean
-function o:__UpdateActionsEnabledState(isEnabledState)
+function o:UpdateActionsEnabledState(isEnabledState)
   EquipButton(self):SetEnabled(isEnabledState)
   SaveButton(self):SetEnabled(isEnabledState)
 end
