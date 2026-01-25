@@ -12,12 +12,13 @@ C_Timer.After(0.7, function()
 end)
 
 
-function o:del1()
-  local del = 4
-  local ids = eq.GetEquipmentSetIDs()
-  local info = { deleted={ eq.GetEquipmentSetInfo(del) }}
-  --eq.DeleteEquipmentSet(del)
-  return ids
+function o:eqDel(index)
+  if not index then return self:eqIds() end
+  
+  local del = index
+  local deleted = { eq.GetEquipmentSetInfo(del) }
+  eq.DeleteEquipmentSet(del)
+  return { deleted = deleted, remaining = self:eqIds() }
 end
 
 function o:eqIds()
