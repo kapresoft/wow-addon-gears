@@ -4,9 +4,8 @@
     <Script file="MainFrame.lua"/>
     <Script file="EquipmentSetMixin.lua"/>
 
-    <Font name="Gears_LabelFont" inherits="GameFontWhiteTiny"
+    <Font name="Gears_LabelFont" inherits="GameFontNormalOutline"
           justifyH="LEFT" virtual="true">
-        <Color color="WHITE_FONT_COLOR"/>
     </Font>
 
     <Frame name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
