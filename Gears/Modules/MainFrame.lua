@@ -24,6 +24,10 @@ MainFrame
 ---------------------------------------------------------------------]]
 --- @class MainFrameMixin
 --- @field rows table<number, EquipmentSet>
+--- @field equipmentSetPool ObjectPoolBaseMixin
+--- @field info EquipmentSetInfo
+--- @field ScrollFrame ScrollFrameObj
+--- @field framePool table<number, EquipmentSet>
 Gears_MainFrameMixin = {}
 local p = ns:log('MainFrame')
 
@@ -32,11 +36,22 @@ local o = Gears_MainFrameMixin
 LibStub("AceEvent-3.0"):Embed(o);
 LibStub("AceBucket-3.0"):Embed(o)
 
+o.framePool = {}
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
+--- @param targetFn fun()
+--- @return fun()
+local function fn(targetFn, ...)
+  local boundArgs = { ... }
+  return function(...) targetFn(unpack(boundArgs), ...) end
+end
+
+--[[-------------------------------------------------------------------
+Methods: Gears_MainFrameMixin (Private Methods)
+---------------------------------------------------------------------]]
 --- @param frame FrameObj
-local function AnchorToPaperDoll(frame)
+local function MainFrameMixin_AnchorToPaperDoll(frame)
   frame:ClearAllPoints()
   local osx, osy = 0, 2
   if ns:IsTBC() then
@@ -44,18 +59,40 @@ local function AnchorToPaperDoll(frame)
   end
   frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", osx, osy)
 end
-
 --- @param self MainFrameMixin
 --- @return ButtonObj
-local function EquipButton(self) return self.ButtonsContainerFrame.EquipButton end
+local function MainFrameMixin_EquipButton(self) return self.ButtonsContainerFrame.EquipButton end
 --- @param self MainFrameMixin
 --- @return ButtonObj
-local function SaveButton(self) return self.ButtonsContainerFrame.SaveButton end
+local function MainFrameMixin_SaveButton(self) return self.ButtonsContainerFrame.SaveButton end
 
 --- @param self MainFrameMixin
 --- @param index number The equipment set frame index
 --- @return EquipmentSet
-local function EquipmentSet(self, index) return self.rows[index] end
+local function MainFrameMixin_EquipmentSet(self, index) return self.rows[index] end
+
+--- @param self MainFrameMixin
+local function MainFrameMixin_OnPlayerLogin(self)
+  C_Timer.After(1, function()
+      print('xx MainFrameMixin_OnPlayerLogin called...')
+  end)
+  self:OnLoadEquipmentSet() end
+
+--- @private
+--- @param self MainFrameMixin
+local function MainFrameMixin_OnEquipmentChanged(self)
+  self:ForEachEquipment(function(info)
+    local equipSet = MainFrameMixin_EquipmentSet(self, info.index)
+    if equipSet then equipSet:OnUpdateEquippedState() end
+  end)
+end
+
+--- Fired when equipment set is deleted
+--- via C_DeleteEquipmentSet()
+--- @param self MainFrameMixin
+local function MainFrameMixin_OnEquipmentSetsChanged(self)
+  self:RefreshEquipmentSet()
+end
 
 --[[-------------------------------------------------------------------
 Methods: Gears_MainFrameMixin
@@ -79,44 +116,43 @@ function o:OnLoad()
   
   local _frame = self
   PaperDollFrame:HookScript("OnShow", function()
-    AnchorToPaperDoll(_frame)
+    MainFrameMixin_AnchorToPaperDoll(_frame)
     _frame:Show()
   end)
   PaperDollFrame:HookScript("OnHide", function()
     _frame:OnClickClose()
   end)
   
-  self:RegisterEvent('PLAYER_LOGIN', 'OnPlayerLogin')
+  self:RegisterEvent('PLAYER_LOGIN', fn(MainFrameMixin_OnPlayerLogin, self))
 
 end
 
-function o:OnPlayerLogin() self:OnLoadEquipmentSet() end
 
 --- @private
 function o:OnLoadEquipmentSet()
-  local rowCount = self:ForEachEquipment(function(info)
-    self:AddEquipmentSet(info)
-  end)
-  self:UpdateScrollHeight(rowCount)
+  --local rowCount = self:ForEachEquipment(function(info)
+  --  self:AddEquipmentSet(info)
+  --end)
+  --self:UpdateScrollHeight(rowCount)
+  self.equipmentSetPool = CreateFramePool(
+          "Frame",
+          self.ScrollFrame.ScrollChild,
+          "Gears_EquipmentSetTemplate"
+  )
+  
+  self:RefreshEquipmentSet()
   self:UpdateActionsEnabledState(false)
   
-  -- bucket because this fires a few times
-  self:RegisterBucketEvent('PLAYER_EQUIPMENT_CHANGED', 0.01, 'OnEquipmentChanged')
-  self:RegisterEvent('EQUIPMENT_SETS_CHANGED', 'OnEquipmentSetsChanged')
+  -- bucket because [PLAYER_EQUIPMENT_CHANGED] fires a few times
+  self:RegisterBucketEvent('PLAYER_EQUIPMENT_CHANGED', 0.01, fn(MainFrameMixin_OnEquipmentChanged, self))
+  self:RegisterEvent('EQUIPMENT_SETS_CHANGED', fn(MainFrameMixin_OnEquipmentSetsChanged, self))
 end
 
---- @private
-function o:OnEquipmentChanged(event, ...)
-  self:ForEachEquipment(function(info)
-    local equipSet = EquipmentSet(self, info.index)
-    if equipSet then equipSet:OnUpdateEquippedState() end
+function o:RefreshEquipmentSet()
+  local rowCount = self:ForEachEquipment(function(info)
+    self:BuildEquipmentSet(info)
   end)
-end
-
---- Fired when equipment set is deleted
---- via C_DeleteEquipmentSet()
-function o:OnEquipmentSetsChanged()
-  p('xx OnEquipmentSetsChanged called...')
+  self:UpdateScrollHeight(rowCount)
 end
 
 --- @param equipID Identifier
@@ -145,23 +181,68 @@ function o:ForEachEquipment(callback)
   return rowCount
 end
 
+--- @param self MainFrameMixin
+--- @param eqInfo EquipmentSetInfo
+local function MainFrameMixin_GetFrame(self, eqInfo)
+  if not self.framePool[eqInfo.id] then
+    print('xx MainFrameMixin_GetFrame: New frame created:', pf(eqInfo))
+    self.framePool[eqInfo.id] = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(eqInfo.id),
+            self.ScrollFrame.ScrollChild, "Gears_EquipmentSetTemplate")
+  end
+  self.framePool[eqInfo.id].info = eqInfo
+  return self.framePool[eqInfo.id]
+end
+
+--- @param eqInfo EquipmentSetInfo
+function o:BuildEquipmentSet(eqInfo)
+  -- todo next: need to pool frames
+  local index        = eqInfo.index
+  local rowKey       = 'Row' .. index
+  self.rows          = self.rows or {}
+  
+  --- @type EquipmentSet
+  local equipmentSet = MainFrameMixin_GetFrame(self, eqInfo)
+  equipmentSet.owner = self
+  self.rows[index] = equipmentSet
+  equipmentSet:SetParentKey(rowKey)
+  equipmentSet.equipSetID = eqInfo.id
+  
+  if index > 1 then
+    equipmentSet:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")
+  end
+  
+  --- @type ButtonObj
+  local iconBtn = equipmentSet.IconButton
+  iconBtn:SetNormalTexture(eqInfo.icon)
+  --- @type FontStringObj
+  local eqSetName = equipmentSet.Label
+  eqSetName:SetText(eqInfo.name)
+  
+  equipmentSet:Show()
+  --self.rows[index] = equipmentSet
+  equipmentSet:OnUpdateEquippedState()
+  
+  return equipmentSet
+end
+
 --- @param eq EquipmentSetInfo
 function o:AddEquipmentSet(eq)
   -- todo next: need to pool frames
   local index        = eq.index
   local rowKey       = 'Row' .. index
-  self.rows          = self.rows or {}
+  --self.rows          = self.rows or {}
   local scrollChild  = self.ScrollFrame.ScrollChild
 
   --- @type EquipmentSet
   local equipmentSet = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
           scrollChild, "Gears_EquipmentSetTemplate");
-  equipmentSet.owner = self; self.rows[index] = equipmentSet
+  equipmentSet.owner = self;
+  --self.rows[index] = equipmentSet
   equipmentSet:SetParentKey(rowKey)
   equipmentSet.equipSetID = eq.id
   
   if index > 1 then
-    equipmentSet:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")
+    --equipmentSet:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")
   end
 
   --- @type ButtonObj
@@ -172,7 +253,7 @@ function o:AddEquipmentSet(eq)
   eqSetName:SetText(eq.name)
 
   equipmentSet:Show()
-  self.rows[index] = equipmentSet
+  --self.rows[index] = equipmentSet
   equipmentSet:OnUpdateEquippedState(function(isFullyEquipped)
     --C_Timer.After(1, function()
     --  print(('xx equipped[%s]: %s'):format(eq.id, tostring(isFullyEquipped)))
@@ -180,38 +261,6 @@ function o:AddEquipmentSet(eq)
   end)
 
   return equipmentSet
-end
-
--- todo next: This needs a review
-function o:RefreshEquipmentSets()
-  local used = {}
-  
-  local rowCount = self:ForEachEquipment(function(info)
-    local row = self.rows[info.index]
-    
-    if not row then
-      row = self:AddEquipmentSet(info)
-    else
-      row.equipSetID = info.id
-      row.Label:SetText(info.name)
-      row.IconButton:SetNormalTexture(info.icon)
-      row:Show()
-    end
-    
-    used[info.index] = true
-  end)
-  
-  -- hide unused rows
-  for index, row in pairs(self.rows) do
-    if not used[index] then
-      row:SetSelected(false)
-      row.CheckMark:Hide()
-      row.equipSetID = nil
-      row:Hide()
-    end
-  end
-  
-  self:UpdateScrollHeight(rowCount)
 end
 
 --- @private
@@ -256,6 +305,6 @@ end
 --- @private
 --- @param isEnabledState boolean
 function o:UpdateActionsEnabledState(isEnabledState)
-  EquipButton(self):SetEnabled(isEnabledState)
-  SaveButton(self):SetEnabled(isEnabledState)
+  MainFrameMixin_EquipButton(self):SetEnabled(isEnabledState)
+  MainFrameMixin_SaveButton(self):SetEnabled(isEnabledState)
 end

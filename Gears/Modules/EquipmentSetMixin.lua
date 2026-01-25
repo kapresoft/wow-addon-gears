@@ -9,6 +9,7 @@ local ns = select(2, ...)
 --- @field selected boolean
 --- @field equipSetID Identifier
 --- @field CheckMark TextureObj
+--- @field info EquipmentSetInfo
 
 --- @alias EquipmentSet EquipmentSetMixinImpl|FrameObjWithBackdrop
 --[[-------------------------------------------------------------------
