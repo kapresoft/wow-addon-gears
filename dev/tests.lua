@@ -19,6 +19,14 @@ x = {
   end,
   
   function()
+    local eq = C_EquipmentSet
+    local del = 3
+    local info = { deleted={ eq.GetEquipmentSetInfo(del) }}
+    eq.DeleteEquipmentSet(del)
+    return info
+  end,
+  
+  function()
     local s   = C_EquipmentSet
     local ids = s.GetEquipmentSetIDs()
     if #ids <= 0 then return end
