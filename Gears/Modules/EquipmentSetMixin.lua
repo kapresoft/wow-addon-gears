@@ -1,6 +1,9 @@
 --- @type Namespace
 local ns = select(2, ...)
 
+-- todo next: EQUIPMENT_SWAP_PENDING
+-- todo next: EQUIPMENT_SWAP_FINISHED true, <equipSetID>
+
 --- @class EquipmentSetMixinImpl : Frame
 --- @field owner MainFrame
 --- @field selected boolean
@@ -51,12 +54,15 @@ function o:OnUpdateEquippedState(callbackFn)
   if self:IsFullyEquipped() then
     self.CheckMark:Show()
     equipped = true
+  else
+    self.CheckMark:Hide()
   end
   if callbackFn then callbackFn(equipped) end
 end
 
 function o:IsFullyEquipped()
-  local _, _, _, isEquipped = C_GetEquipmentSetInfo(self.equipSetID)
+  local name, _, _, isEquipped = C_GetEquipmentSetInfo(self.equipSetID)
+  --print(('yy equipped[%s::%s]: %s'):format(self.equipSetID, name, tostring(isEquipped)))
   return isEquipped
 end
 

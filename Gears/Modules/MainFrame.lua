@@ -24,7 +24,7 @@ MainFrame
 Gears_MainFrameMixin = {}
 local p = ns:log('MainFrame')
 
---- @type MainFrameMixin | MainFrame
+--- @type MainFrameMixin | MainFrame | AceBucket
 local o = Gears_MainFrameMixin
 
 --[[-------------------------------------------------------------------
@@ -47,25 +47,33 @@ local function EquipButton(self) return self.ButtonsContainerFrame.EquipButton e
 --- @return ButtonObj
 local function SaveButton(self) return self.ButtonsContainerFrame.SaveButton end
 
+--- @param self MainFrameMixin
+--- @param index number The equipment set frame index
+--- @return EquipmentSet
+local function EquipmentSet(self, index) return self.rows[index] end
+
 --[[-------------------------------------------------------------------
 Methods: Gears_MainFrameMixin
 ---------------------------------------------------------------------]]
 function o:OnLoad()
-
+  BackdropTemplateMixin.OnBackdropLoaded(self)
+  self:SetBackdrop(BACKDROP_TOAST_12_12)
+  --self:SetBackdrop(BACKDROP_DARK_DIALOG_32_32)
+  
+  LibStub("AceBucket-3.0"):Embed(self)
+  
   -- set same parent so frame is scaled automatically
   self:SetParent(PaperDollFrame:GetParent())
-  --self:SetBackdrop(BACKDROP_DARK_DIALOG_32_32)
-  self:SetBackdrop(BACKDROP_TOAST_12_12)
-
+  
   --- @type ScrollFrameObj
   local scrollFrame = self.ScrollFrame
   -- set scrollChild here to enable scrolling
   scrollFrame:SetScrollChild(scrollFrame.ScrollChild)
-
+  
   --- @type FontString
   local headerText = self.HeaderTitle
   headerText:SetText(ns.addon)
-
+  
   local _frame = self
   PaperDollFrame:HookScript("OnShow", function()
     AnchorToPaperDoll(_frame)
@@ -74,16 +82,28 @@ function o:OnLoad()
   PaperDollFrame:HookScript("OnHide", function()
     _frame:OnClickClose()
   end)
-
-  C_Timer.After(0.1, function()
+  
+  C_Timer.After(0.01, function()
     local rowCount = self:ForEachEquipment(function(info)
       self:AddEquipmentSet(info)
     end)
     self:UpdateScrollHeight(rowCount)
     
     self:__UpdateActionsEnabledState(false)
+    
+    self:RegisterBucketEvent("PLAYER_EQUIPMENT_CHANGED",
+            0.01,
+            "OnEquipmentChanged")
   end)
 
+end
+
+function o:OnEquipmentChanged(event, ...)
+  print('xx OnEquipmentChanged')
+  self:ForEachEquipment(function(info)
+    local equipSet = EquipmentSet(self, info.index)
+    if equipSet then equipSet:OnUpdateEquippedState() end
+  end)
 end
 
 --- @param equipID Identifier

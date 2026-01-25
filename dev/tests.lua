@@ -7,6 +7,18 @@ x = {
   end,
   
   function()
+    local s = C_EquipmentSet
+    -- 0, 1
+    s.SaveEquipmentSet(1)
+  end,
+  
+  function()
+    local s = C_EquipmentSet
+    -- 0, 1
+    s.PickupEquipmentSet(1)
+  end,
+  
+  function()
     local s   = C_EquipmentSet
     local ids = s.GetEquipmentSetIDs()
     if #ids <= 0 then return end
