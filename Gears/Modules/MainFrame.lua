@@ -23,11 +23,9 @@ Local Vars
 MainFrame
 ---------------------------------------------------------------------]]
 --- @class MainFrameMixin
---- @field rows table<number, EquipmentSet>
---- @field equipmentSetPool ObjectPoolBaseMixin
+--- @field private framePool table<number, EquipmentSet>
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
---- @field framePool table<number, EquipmentSet>
 Gears_MainFrameMixin = {}
 local p = ns:log('MainFrame')
 
@@ -69,7 +67,7 @@ local function MainFrameMixin_SaveButton(self) return self.ButtonsContainerFrame
 --- @param self MainFrameMixin
 --- @param index number The equipment set frame index
 --- @return EquipmentSet
-local function MainFrameMixin_EquipmentSet(self, index) return self.rows[index] end
+local function MainFrameMixin_EquipmentSet(self, index) return self.framePool[index] end
 
 --- @param self MainFrameMixin
 local function MainFrameMixin_OnPlayerLogin(self)
@@ -134,11 +132,11 @@ function o:OnLoadEquipmentSet()
   --  self:AddEquipmentSet(info)
   --end)
   --self:UpdateScrollHeight(rowCount)
-  self.equipmentSetPool = CreateFramePool(
-          "Frame",
-          self.ScrollFrame.ScrollChild,
-          "Gears_EquipmentSetTemplate"
-  )
+  --self.equipmentSetPool = CreateFramePool(
+  --        "Frame",
+  --        self.ScrollFrame.ScrollChild,
+  --        "Gears_EquipmentSetTemplate"
+  --)
   
   self:RefreshEquipmentSet()
   self:UpdateActionsEnabledState(false)
@@ -149,10 +147,24 @@ function o:OnLoadEquipmentSet()
 end
 
 function o:RefreshEquipmentSet()
-  local rowCount = self:ForEachEquipment(function(info)
-    self:BuildEquipmentSet(info)
+  local usedCount = self:ForEachEquipment(function(info)
+    local f = self:BuildEquipmentSet(info)
+    f.__used = true
   end)
-  self:UpdateScrollHeight(rowCount)
+  
+  for _, frame in pairs(self.framePool) do
+    if not frame.__used then
+      frame.info = nil
+      frame:SetSelected(false)
+      frame.CheckMark:Hide()
+      frame.equipSetID = nil
+      frame:Hide()
+      print('xx removing unused')
+    end
+    frame.__used = nil
+  end
+  
+  self:UpdateScrollHeight(usedCount)
 end
 
 --- @param equipID Identifier
@@ -184,13 +196,14 @@ end
 --- @param self MainFrameMixin
 --- @param eqInfo EquipmentSetInfo
 local function MainFrameMixin_GetFrame(self, eqInfo)
-  if not self.framePool[eqInfo.id] then
+  local index = eqInfo.index
+  if not self.framePool[index] then
     print('xx MainFrameMixin_GetFrame: New frame created:', pf(eqInfo))
-    self.framePool[eqInfo.id] = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(eqInfo.id),
+    self.framePool[index] = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
             self.ScrollFrame.ScrollChild, "Gears_EquipmentSetTemplate")
   end
-  self.framePool[eqInfo.id].info = eqInfo
-  return self.framePool[eqInfo.id]
+  self.framePool[index].info = eqInfo
+  return self.framePool[index]
 end
 
 --- @param eqInfo EquipmentSetInfo
@@ -198,17 +211,15 @@ function o:BuildEquipmentSet(eqInfo)
   -- todo next: need to pool frames
   local index        = eqInfo.index
   local rowKey       = 'Row' .. index
-  self.rows          = self.rows or {}
   
   --- @type EquipmentSet
   local equipmentSet = MainFrameMixin_GetFrame(self, eqInfo)
   equipmentSet.owner = self
-  self.rows[index] = equipmentSet
   equipmentSet:SetParentKey(rowKey)
   equipmentSet.equipSetID = eqInfo.id
   
   if index > 1 then
-    equipmentSet:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")
+    equipmentSet:SetPoint("TOPLEFT", self.framePool[index - 1], "BOTTOMLEFT")
   end
   
   --- @type ButtonObj
@@ -297,7 +308,7 @@ function o:SelectEquipmentSet(equipSet)
   
   -- uncheck the rest
   self:ForEachEquipmentExcept(id, function(info)
-    otherEquipSet = self.rows[info.index]
+    otherEquipSet = self.framePool[info.index]
     otherEquipSet:SetSelected(false)
   end)
 end
