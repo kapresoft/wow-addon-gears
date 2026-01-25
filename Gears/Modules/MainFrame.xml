@@ -133,11 +133,8 @@
                 </Frames>
             </Frame>
             <ScrollFrame parentKey="ScrollFrame"
-                         inherits="UIPanelScrollFrameTemplate,BackdropTemplate">
+                         inherits="UIPanelScrollFrameTemplate">
                 <Size x="190" y="330"/>
-                <!--<KeyValues>
-                    <KeyValue key="backdropInfo" value="BACKDROP_TOAST_12_12" type="global"/>
-                </KeyValues>-->
                 <Anchors>
                     <Anchor point="TOP" relativeKey="$parent.ButtonsContainerFrame"
                             relativePoint="BOTTOM" y="-5" />

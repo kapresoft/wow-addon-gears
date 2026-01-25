@@ -59,10 +59,8 @@ function o:OnLoad()
 
   --- @type ScrollFrameObj
   local scrollFrame = self.ScrollFrame
-  local child = scrollFrame.ScrollChild
-  --child:SetWidth(scrollFrame:GetWidth() - 20) -- scrollbar width
-
-  scrollFrame:SetScrollChild(child)
+  -- set scrollChild here to enable scrolling
+  scrollFrame:SetScrollChild(scrollFrame.ScrollChild)
 
   --- @type FontString
   local headerText = self.HeaderTitle
@@ -141,7 +139,11 @@ function o:AddEquipmentSet(eq)
 
   equipmentSet:Show()
   self.rows[index] = equipmentSet
-  equipmentSet:OnUpdateEquippedState()
+  equipmentSet:OnUpdateEquippedState(function(isFullyEquipped)
+    --C_Timer.After(1, function()
+    --  print(('xx equipped[%s]: %s'):format(eq.id, tostring(isFullyEquipped)))
+    --end)
+  end)
 
   return equipmentSet
 end

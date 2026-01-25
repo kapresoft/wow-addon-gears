@@ -56,8 +56,8 @@ function o:OnUpdateEquippedState(callbackFn)
 end
 
 function o:IsFullyEquipped()
-  local _, _, _, _, numItems, numEquipped = C_GetEquipmentSetInfo(self.equipSetID)
-  return numItems > 0 and numEquipped == numItems
+  local _, _, _, isEquipped = C_GetEquipmentSetInfo(self.equipSetID)
+  return isEquipped
 end
 
 function o:OnMouseDown() self:GetMainFrame():SelectEquipmentSet(self) end
