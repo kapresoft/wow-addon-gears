@@ -84,6 +84,11 @@ function o:EquipGear()
   end
 end
 
+function o:SaveGear()
+  PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
+  C_EquipmentSet.SaveEquipmentSet(self:GetID(), self.info.icon)
+end
+
 ---@param info EquipmentSetInfo
 function o:SetInfo(info)
   assert(info, "SetInfo(info): The parameter info is required.")
@@ -96,7 +101,6 @@ end
 function o:SetSelected(selected)
   assert(type(selected) == 'boolean', 'Expected SetSelected(selected:boolean)')
   
-  --PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
   PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF, "Ambience")
   self.selected = selected
   if self.selected then self:ShowBorder(); return end

@@ -149,7 +149,11 @@ function o:OnLoad()
   end)
   
   self:RegisterEvent('PLAYER_LOGIN', fn(MainFrameMixin_OnPlayerLogin, self))
-
+  
+  local equipButton = MainFrameMixin_EquipButton(self)
+  local saveButton = MainFrameMixin_SaveButton(self)
+  equipButton.owner = self
+  saveButton.owner = self
 end
 
 
@@ -274,7 +278,7 @@ end
 
 --- There is only one that can be selected at a time.
 --- @param callback fun(sel:EquipmentSetFrame) : void
-function o:IfSelectedEquipmentSet(callback)
+function o:WithSelectedEquipmentSet(callback)
   for _, eqs in pairs(self.framePool) do
     if eqs.selected and callback then callback(eqs) end
   end
@@ -283,8 +287,18 @@ end
 --- @private
 function o:OnClickClose() self:Hide() end
 
-function o:OnEquipButtonClick(buttonFrame, mouseButton)
+--- @see MainFrame.xml#L124 (EquipButton)
+--- @param button ButtonObj
+--- @param mouseButton Name The name of the button that was clicked.
+function o:OnEquipButtonClick(button, mouseButton)
   if mouseButton ~= "LeftButton" then return end
-  
-  self:IfSelectedEquipmentSet(function(sel) sel:EquipGear() end)
+  self:WithSelectedEquipmentSet(function(sel) sel:EquipGear() end)
+end
+
+--- @see MainFrame.xml#L124 (SaveButton)
+--- @param button ButtonObj
+--- @param mouseButton Name The name of the button that was clicked.
+function o:OnSaveButtonClick(button, mouseButton)
+  if mouseButton ~= "LeftButton" then return end
+  self:WithSelectedEquipmentSet(function(sel) sel:SaveGear() end)
 end

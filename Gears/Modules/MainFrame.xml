@@ -121,7 +121,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                self:GetParent():GetParent():OnEquipButtonClick(self, button);
+                                self.owner:OnEquipButtonClick(self, button);
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -134,6 +134,11 @@
                                     relativePoint="RIGHT"
                                     x="0" y="0"/>
                         </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                self.owner:OnSaveButtonClick(self, button);
+                            </OnClick>
+                        </Scripts>
                     </Button>
                     <Button parentKey="AddButton"
                             inherits="UIPanelButtonTemplate"
