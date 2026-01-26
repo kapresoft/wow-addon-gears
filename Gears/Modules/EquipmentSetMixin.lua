@@ -73,13 +73,15 @@ function o:OnEnter() self:ShowBorder() end
 function o:OnLeave()
   if self.selected == true then return end; self:HideBorder()
 end
-function o:OnDoubleClick()
+function o:OnDoubleClick() self:EquipGear() end
+
+function o:EquipGear()
+  PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
   if EquipmentManager_EquipSet then
     EquipmentManager_EquipSet(self:GetID())
   else
     C_EquipmentSet.UseEquipmentSet(self:GetID())
   end
-  PlaySound(SOUNDKIT.GUILD_BANK_OPEN_BAG)
 end
 
 ---@param info EquipmentSetInfo
@@ -94,6 +96,8 @@ end
 function o:SetSelected(selected)
   assert(type(selected) == 'boolean', 'Expected SetSelected(selected:boolean)')
   
+  --PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
+  PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF, "Ambience")
   self.selected = selected
   if self.selected then self:ShowBorder(); return end
   self:HideBorder()

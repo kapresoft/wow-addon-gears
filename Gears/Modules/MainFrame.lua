@@ -286,7 +286,5 @@ function o:OnClickClose() self:Hide() end
 function o:OnEquipButtonClick(buttonFrame, mouseButton)
   if mouseButton ~= "LeftButton" then return end
   
-  self:IfSelectedEquipmentSet(function(sel)
-    C_EquipmentSet.UseEquipmentSet(sel:GetID())
-  end)
+  self:IfSelectedEquipmentSet(function(sel) sel:EquipGear() end)
 end
