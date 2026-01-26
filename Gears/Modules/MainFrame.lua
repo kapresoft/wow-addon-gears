@@ -70,6 +70,22 @@ local function MainFrameMixin_SaveButton(self) return self.ButtonsContainerFrame
 local function MainFrameMixin_EquipmentSet(self, index) return self.framePool[index] end
 
 --- @param self MainFrameMixin
+--- @param eqInfo EquipmentSetInfo
+--- @return EquipmentSet
+local function MainFrameMixin_GetFrame(self, eqInfo)
+  local index = eqInfo.index
+  if not self.framePool[index] then
+    print('xx MainFrameMixin_GetFrame: New frame created:', pf(eqInfo))
+    self.framePool[index] = CreateFrame("Button", ("$parent_EquipmentSet%s"):format(eqInfo.id),
+            self.ScrollFrame.ScrollChild, "Gears_EquipmentSetTemplate")
+  end
+  self.framePool[index].owner = self
+  self.framePool[index]:SetInfo(eqInfo)
+  
+  return self.framePool[index]
+end
+
+--- @param self MainFrameMixin
 local function MainFrameMixin_OnPlayerLogin(self)
   C_Timer.After(1, function()
       print('xx MainFrameMixin_OnPlayerLogin called...')
@@ -157,7 +173,6 @@ function o:RefreshEquipmentSet()
       frame.info = nil
       frame:SetSelected(false)
       frame.CheckMark:Hide()
-      frame.equipSetID = nil
       frame:Hide()
       print('xx removing unused')
     end
@@ -193,33 +208,13 @@ function o:ForEachEquipment(callback)
   return rowCount
 end
 
---- @param self MainFrameMixin
---- @param eqInfo EquipmentSetInfo
-local function MainFrameMixin_GetFrame(self, eqInfo)
-  local index = eqInfo.index
-  if not self.framePool[index] then
-    print('xx MainFrameMixin_GetFrame: New frame created:', pf(eqInfo))
-    self.framePool[index] = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
-            self.ScrollFrame.ScrollChild, "Gears_EquipmentSetTemplate")
-  end
-  self.framePool[index].info = eqInfo
-  return self.framePool[index]
-end
-
 --- @param eqInfo EquipmentSetInfo
 function o:BuildEquipmentSet(eqInfo)
-  -- todo next: need to pool frames
-  local index        = eqInfo.index
-  local rowKey       = 'Row' .. index
+  assert(eqInfo, 'BuildEquipmentSet(eqInfo): The param eqInfo is required.')
   
-  --- @type EquipmentSet
   local equipmentSet = MainFrameMixin_GetFrame(self, eqInfo)
-  equipmentSet.owner = self
-  equipmentSet:SetParentKey(rowKey)
-  equipmentSet.equipSetID = eqInfo.id
-  
-  if index > 1 then
-    equipmentSet:SetPoint("TOPLEFT", self.framePool[index - 1], "BOTTOMLEFT")
+  if eqInfo.index > 1 then
+    equipmentSet:SetPoint("TOPLEFT", self.framePool[eqInfo.index - 1], "BOTTOMLEFT")
   end
   
   --- @type ButtonObj
@@ -230,47 +225,8 @@ function o:BuildEquipmentSet(eqInfo)
   eqSetName:SetText(eqInfo.name)
   
   equipmentSet:Show()
-  --self.rows[index] = equipmentSet
   equipmentSet:OnUpdateEquippedState()
   
-  return equipmentSet
-end
-
---- @param eq EquipmentSetInfo
-function o:AddEquipmentSet(eq)
-  -- todo next: need to pool frames
-  local index        = eq.index
-  local rowKey       = 'Row' .. index
-  --self.rows          = self.rows or {}
-  local scrollChild  = self.ScrollFrame.ScrollChild
-
-  --- @type EquipmentSet
-  local equipmentSet = CreateFrame("Frame", ("$parent_EquipmentSet%s"):format(index),
-          scrollChild, "Gears_EquipmentSetTemplate");
-  equipmentSet.owner = self;
-  --self.rows[index] = equipmentSet
-  equipmentSet:SetParentKey(rowKey)
-  equipmentSet.equipSetID = eq.id
-  
-  if index > 1 then
-    --equipmentSet:SetPoint("TOPLEFT", self.rows[index - 1], "BOTTOMLEFT")
-  end
-
-  --- @type ButtonObj
-  local iconBtn = equipmentSet.IconButton
-  iconBtn:SetNormalTexture(eq.icon)
-  --- @type FontStringObj
-  local eqSetName = equipmentSet.Label
-  eqSetName:SetText(eq.name)
-
-  equipmentSet:Show()
-  --self.rows[index] = equipmentSet
-  equipmentSet:OnUpdateEquippedState(function(isFullyEquipped)
-    --C_Timer.After(1, function()
-    --  print(('xx equipped[%s]: %s'):format(eq.id, tostring(isFullyEquipped)))
-    --end)
-  end)
-
   return equipmentSet
 end
 
@@ -299,7 +255,7 @@ function o:SelectEquipmentSet(equipSet)
   
   --- @type EquipmentSet
   local otherEquipSet
-  local id = equipSet.equipSetID
+  local id = equipSet:GetID()
   
   equipSet:SetSelected(true)
   equipSet:OnUpdateEquippedState(function(isFullyEquipped)

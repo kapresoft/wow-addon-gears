@@ -4,7 +4,7 @@ local ns = select(2, ...)
 -- todo next: EQUIPMENT_SWAP_PENDING
 -- todo next: EQUIPMENT_SWAP_FINISHED true, <equipSetID>
 
---- @class EquipmentSetMixinImpl : Frame
+--- @class EquipmentSetMixinImpl : Button
 --- @field owner MainFrame
 --- @field selected boolean
 --- @field equipSetID Identifier
@@ -12,7 +12,7 @@ local ns = select(2, ...)
 --- @field info EquipmentSetInfo
 --- @field private __used boolean|nil
 
---- @alias EquipmentSet EquipmentSetMixinImpl|FrameObjWithBackdrop
+--- @alias EquipmentSet EquipmentSetMixinImpl|ButtonObjWithBackdrop
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
@@ -63,7 +63,7 @@ function o:OnUpdateEquippedState(callbackFn)
 end
 
 function o:IsFullyEquipped()
-  local name, _, _, isEquipped = C_GetEquipmentSetInfo(self.equipSetID)
+  local name, _, _, isEquipped = C_GetEquipmentSetInfo(self:GetID())
   --print(('yy equipped[%s::%s]: %s'):format(self.equipSetID, name, tostring(isEquipped)))
   return isEquipped
 end
@@ -72,6 +72,17 @@ function o:OnMouseDown() self:GetMainFrame():SelectEquipmentSet(self) end
 function o:OnEnter() self:ShowBorder() end
 function o:OnLeave()
   if self.selected == true then return end; self:HideBorder()
+end
+function o:OnDoubleClick()
+  print(('xx double-clicked; name=%s id=%s'):format(self:GetName(), self:GetID()), 'info=', pf(self.info))
+  EquipmentManager_EquipSet(self:GetID())
+end
+
+---@param info EquipmentSetInfo
+function o:SetInfo(info)
+  assert(info, "SetInfo(info): The parameter info is required.")
+  self.info = info
+  self:SetID(info.id)
 end
 
 --- This is not the same as 'equipped' state

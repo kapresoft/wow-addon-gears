@@ -8,7 +8,7 @@
           justifyH="LEFT" virtual="true">
     </Font>
 
-    <Frame name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
+    <Button name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
            mixin="Gears_EquipmentSetMixin"
            enableMouse="true" virtual="true">
         <Size y="48"/>
@@ -18,6 +18,7 @@
             <OnEnter method="OnEnter"/>
             <OnLeave method="OnLeave"/>
             <OnMouseDown method="OnMouseDown"/>
+            <OnDoubleClick method="OnDoubleClick"/>
         </Scripts>
 
         <Anchors>
@@ -57,7 +58,7 @@
                 </Texture>
             </Layer>
         </Layers>
-    </Frame>
+    </Button>
 
     <Frame name="Gears_MainFrameTemplate" virtual="true"
            mixin="Gears_MainFrameMixin"
