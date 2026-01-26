@@ -193,28 +193,23 @@ function o:RefreshEquipmentSet()
   self:UpdateScrollHeight(usedCount)
 end
 
---- @param equipID Identifier
+--- Iterate through all equipments with an optional accept function.
 --- @param callback fun(info:EquipmentSetInfo) | "function(info) end"
-function o:ForEachEquipmentExcept(equipID, callback)
-    assert(equipID, "The param equipID is required.")
-    self:ForEachEquipment(function(info)
-      if info.id ~= equipID then callback(info) end
-    end)
-end
-
---- @param callback fun(info:EquipmentSetInfo) | "function(info) end"
---- @return number The row count
-function o:ForEachEquipment(callback)
+--- @param acceptFn nil|fun(eqsInfo:EquipmentSetInfo) : boolean @Optional: The filter function | "function(eqs) return true end"
+--- @return number The number of accepted equipment sets
+function o:ForEachEquipment(callback, acceptFn)
   local rowCount = 0
-  local eq = C_EquipmentSet
+  local eq       = C_EquipmentSet
+  local acceptEquipmentSet = acceptFn or function() return true  end
+  
   --- @type table<number,number>
   local ids = eq.GetEquipmentSetIDs()
-  local set = {}
   for i, id in ipairs(ids) do
-    rowCount = rowCount + 1
     local name, icon = eq.GetEquipmentSetInfo(id)
-    local info       = { id=id, index=i, name = name, icon = icon }
-    callback(info)
+    local info       = { id = id, index = i, name = name, icon = icon }
+    if acceptEquipmentSet(info) then
+      rowCount = rowCount + 1
+      callback(info) end
   end
   return rowCount
 end
@@ -271,18 +266,18 @@ function o:SelectEquipmentSet(equipSet)
   end)
   
   -- uncheck the rest
-  self:ForEachEquipmentExcept(id, function(info)
+  self:ForEachEquipment(function(info)
     otherEquipSet = self.framePool[info.index]
     otherEquipSet:SetSelected(false)
-  end)
+  end, function(eqsInfo) return eqsInfo.id ~= id end)
 end
 
+--- There is only one that can be selected at a time.
 --- @param callback fun(sel:EquipmentSetFrame) : void
 function o:IfSelectedEquipmentSet(callback)
   for _, eqs in pairs(self.framePool) do
-    if eqs.selected then return callback and callback(eqs) end
+    if eqs.selected and callback then callback(eqs) end
   end
-  return nil
 end
 
 --- @private

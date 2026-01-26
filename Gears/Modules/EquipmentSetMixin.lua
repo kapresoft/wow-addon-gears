@@ -5,7 +5,7 @@ local ns = select(2, ...)
 -- todo next: EQUIPMENT_SWAP_FINISHED true, <equipSetID>
 
 --- @class EquipmentSetMixinImpl : Button
---- @field owner MainFrame
+--- @field private owner MainFrame
 --- @field selected boolean
 --- @field equipSetID Identifier
 --- @field CheckMark TextureObj
