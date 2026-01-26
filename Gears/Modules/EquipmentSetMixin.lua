@@ -73,7 +73,14 @@ function o:OnEnter() self:ShowBorder() end
 function o:OnLeave()
   if self.selected == true then return end; self:HideBorder()
 end
-function o:OnDoubleClick() EquipmentManager_EquipSet(self:GetID()) end
+function o:OnDoubleClick()
+  if EquipmentManager_EquipSet then
+    EquipmentManager_EquipSet(self:GetID())
+  else
+    C_EquipmentSet.UseEquipmentSet(self:GetID())
+  end
+  PlaySound(SOUNDKIT.GUILD_BANK_OPEN_BAG)
+end
 
 ---@param info EquipmentSetInfo
 function o:SetInfo(info)
