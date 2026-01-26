@@ -52,10 +52,9 @@ function o:GetMainFrame() return self.owner end
 --- The `callbackFn` is optional.
 --- @param callbackFn nil|fun(isFullyEquipped:boolean) | "function(isFullyEquipped) end"
 function o:OnUpdateEquippedState(callbackFn)
-  local equipped = false
-  if self:IsFullyEquipped() then
+  local equipped = self:IsFullyEquipped()
+  if equipped then
     self.CheckMark:Show()
-    equipped = true
   else
     self.CheckMark:Hide()
   end

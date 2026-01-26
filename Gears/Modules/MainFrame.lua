@@ -65,6 +65,13 @@ local function MainFrameMixin_EquipButton(self) return self.ButtonsContainerFram
 local function MainFrameMixin_SaveButton(self) return self.ButtonsContainerFrame.SaveButton end
 
 --- @param self MainFrameMixin
+--- @param isEnabledState boolean
+local function MainFrameMixin_UpdateActionsEnabledState(self, isEnabledState)
+  MainFrameMixin_EquipButton(self):SetEnabled(isEnabledState)
+  MainFrameMixin_SaveButton(self):SetEnabled(isEnabledState)
+end
+
+--- @param self MainFrameMixin
 --- @param index number The equipment set frame index
 --- @return EquipmentSet
 local function MainFrameMixin_EquipmentSet(self, index) return self.framePool[index] end
@@ -97,7 +104,12 @@ local function MainFrameMixin_OnPlayerLogin(self)
 local function MainFrameMixin_OnEquipmentChanged(self)
   self:ForEachEquipment(function(info)
     local equipSet = MainFrameMixin_EquipmentSet(self, info.index)
-    if equipSet then equipSet:OnUpdateEquippedState() end
+    
+    if equipSet then equipSet:OnUpdateEquippedState(function(isFullyEquipped)
+      if equipSet.selected then
+        MainFrameMixin_UpdateActionsEnabledState(self, false)
+      end
+    end) end
   end)
 end
 
@@ -155,7 +167,7 @@ function o:OnLoadEquipmentSet()
   --)
   
   self:RefreshEquipmentSet()
-  self:UpdateActionsEnabledState(false)
+  MainFrameMixin_UpdateActionsEnabledState(self, false)
   
   -- bucket because [PLAYER_EQUIPMENT_CHANGED] fires a few times
   self:RegisterBucketEvent('PLAYER_EQUIPMENT_CHANGED', 0.01, fn(MainFrameMixin_OnEquipmentChanged, self))
@@ -259,7 +271,7 @@ function o:SelectEquipmentSet(equipSet)
   
   equipSet:SetSelected(true)
   equipSet:OnUpdateEquippedState(function(isFullyEquipped)
-    self:UpdateActionsEnabledState(not isFullyEquipped)
+    MainFrameMixin_UpdateActionsEnabledState(self, not isFullyEquipped)
   end)
   
   -- uncheck the rest
@@ -267,11 +279,4 @@ function o:SelectEquipmentSet(equipSet)
     otherEquipSet = self.framePool[info.index]
     otherEquipSet:SetSelected(false)
   end)
-end
-
---- @private
---- @param isEnabledState boolean
-function o:UpdateActionsEnabledState(isEnabledState)
-  MainFrameMixin_EquipButton(self):SetEnabled(isEnabledState)
-  MainFrameMixin_SaveButton(self):SetEnabled(isEnabledState)
 end
