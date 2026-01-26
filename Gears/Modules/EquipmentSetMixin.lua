@@ -73,10 +73,7 @@ function o:OnEnter() self:ShowBorder() end
 function o:OnLeave()
   if self.selected == true then return end; self:HideBorder()
 end
-function o:OnDoubleClick()
-  print(('xx double-clicked; name=%s id=%s'):format(self:GetName(), self:GetID()), 'info=', pf(self.info))
-  EquipmentManager_EquipSet(self:GetID())
-end
+function o:OnDoubleClick() EquipmentManager_EquipSet(self:GetID()) end
 
 ---@param info EquipmentSetInfo
 function o:SetInfo(info)

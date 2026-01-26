@@ -82,7 +82,6 @@ local function MainFrameMixin_EquipmentSet(self, index) return self.framePool[in
 local function MainFrameMixin_GetFrame(self, eqInfo)
   local index = eqInfo.index
   if not self.framePool[index] then
-    print('xx MainFrameMixin_GetFrame: New frame created:', pf(eqInfo))
     self.framePool[index] = CreateFrame("Button", ("$parent_EquipmentSet%s"):format(eqInfo.id),
             self.ScrollFrame.ScrollChild, "Gears_EquipmentSetTemplate")
   end
