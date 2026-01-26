@@ -23,7 +23,7 @@ Local Vars
 MainFrame
 ---------------------------------------------------------------------]]
 --- @class MainFrameMixin
---- @field private framePool table<number, EquipmentSet>
+--- @field private framePool table<number, EquipmentSetFrame>
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
 Gears_MainFrameMixin = {}
@@ -73,12 +73,12 @@ end
 
 --- @param self MainFrameMixin
 --- @param index number The equipment set frame index
---- @return EquipmentSet
+--- @return EquipmentSetFrame
 local function MainFrameMixin_EquipmentSet(self, index) return self.framePool[index] end
 
 --- @param self MainFrameMixin
 --- @param eqInfo EquipmentSetInfo
---- @return EquipmentSet
+--- @return EquipmentSetFrame
 local function MainFrameMixin_GetFrame(self, eqInfo)
   local index = eqInfo.index
   if not self.framePool[index] then
@@ -93,11 +93,7 @@ local function MainFrameMixin_GetFrame(self, eqInfo)
 end
 
 --- @param self MainFrameMixin
-local function MainFrameMixin_OnPlayerLogin(self)
-  C_Timer.After(1, function()
-      print('xx MainFrameMixin_OnPlayerLogin called...')
-  end)
-  self:OnLoadEquipmentSet() end
+local function MainFrameMixin_OnPlayerLogin(self) self:OnLoadEquipmentSet() end
 
 --- @private
 --- @param self MainFrameMixin
@@ -139,6 +135,10 @@ function o:OnLoad()
   --- @type FontString
   local headerText = self.HeaderTitle
   headerText:SetText(ns.addon)
+  
+  -- todo next: locale
+  MainFrameMixin_EquipButton(self):SetText('Equip')
+  MainFrameMixin_SaveButton(self):SetText('Save')
   
   local _frame = self
   PaperDollFrame:HookScript("OnShow", function()
@@ -258,14 +258,11 @@ function o:UpdateScrollHeight(numRows)
   child:SetHeight(height)
 end
 
---- @private
-function o:OnClickClose() self:Hide() end
-
---- @param equipSet EquipmentSet
+--- @param equipSet EquipmentSetFrame
 function o:SelectEquipmentSet(equipSet)
   assert(type(equipSet) == 'table', "The param equipSet is required.")
   
-  --- @type EquipmentSet
+  --- @type EquipmentSetFrame
   local otherEquipSet
   local id = equipSet:GetID()
   
@@ -278,5 +275,24 @@ function o:SelectEquipmentSet(equipSet)
   self:ForEachEquipmentExcept(id, function(info)
     otherEquipSet = self.framePool[info.index]
     otherEquipSet:SetSelected(false)
+  end)
+end
+
+--- @param callback fun(sel:EquipmentSetFrame) : void
+function o:IfSelectedEquipmentSet(callback)
+  for _, eqs in pairs(self.framePool) do
+    if eqs.selected then return callback and callback(eqs) end
+  end
+  return nil
+end
+
+--- @private
+function o:OnClickClose() self:Hide() end
+
+function o:OnEquipButtonClick(buttonFrame, mouseButton)
+  if mouseButton ~= "LeftButton" then return end
+  
+  self:IfSelectedEquipmentSet(function(sel)
+    C_EquipmentSet.UseEquipmentSet(sel:GetID())
   end)
 end

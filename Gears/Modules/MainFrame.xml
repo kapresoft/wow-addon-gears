@@ -103,32 +103,58 @@
             </Layer>
         </Layers>
 
+
         <!-- Scroll area for icons -->
         <Frames>
             <Frame parentKey="ButtonsContainerFrame">
-                <Size x="180" y="22"/>
+                <Size x="173" y="24"/>
                 <Anchors>
-                    <Anchor point="TOP" relativePoint="TOP" x="0" y="-26"/>
+                    <Anchor point="TOP" relativePoint="TOP" x="5" y="-26"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="EquipButton"
+                    <Button parentKey="EquipButton" hidden="false"
                             inherits="UIPanelButtonTemplate"
-                            text="Equip">
-                        <Size x="90" y="22"/>
+                            text="_EQUIP_">
+                        <Size x="70" y="24"/>
                         <Anchors>
                             <Anchor point="LEFT"/>
                         </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                self:GetParent():GetParent():OnEquipButtonClick(self, button);
+                            </OnClick>
+                        </Scripts>
                     </Button>
-
-                    <Button parentKey="SaveButton"
+                    <Button parentKey="SaveButton" hidden="false"
                             inherits="UIPanelButtonTemplate"
-                            text="Save">
-                        <Size x="90" y="22"/>
+                            text="_SAVE_">
+                        <Size x="70" y="24"/>
                         <Anchors>
                             <Anchor point="LEFT" relativeKey="$parent.EquipButton"
                                     relativePoint="RIGHT"
                                     x="0" y="0"/>
                         </Anchors>
+                    </Button>
+                    <Button parentKey="AddButton"
+                            inherits="UIPanelButtonTemplate"
+                            text="+">
+                        <Size x="28" y="22"/>
+                        <Anchors>
+                            <Anchor point="LEFT" relativeKey="$parent.SaveButton"
+                                    relativePoint="RIGHT"
+                                    x="0" y="0"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnEnter>
+                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+                                GameTooltip:SetText("Create a new equipment set.", 1, 1, 1);
+                                GameTooltip:Show();
+                            </OnEnter>
+
+                            <OnLeave>
+                                GameTooltip:Hide();
+                            </OnLeave>
+                        </Scripts>
                     </Button>
                 </Frames>
             </Frame>

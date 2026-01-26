@@ -12,7 +12,7 @@ local ns = select(2, ...)
 --- @field info EquipmentSetInfo
 --- @field private __used boolean|nil
 
---- @alias EquipmentSet EquipmentSetMixinImpl|ButtonObjWithBackdrop
+--- @alias EquipmentSetFrame EquipmentSetMixinImpl|ButtonObjWithBackdrop
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
@@ -27,7 +27,7 @@ Mixin
 Gears_EquipmentSetMixin = {}
 local p = ns:log('EquipmentSetMixin')
 
---- @type EquipmentSetMixinImpl | EquipmentSet
+--- @type EquipmentSetMixinImpl | EquipmentSetFrame
 local o = Gears_EquipmentSetMixin
 
 function o:OnLoad()
