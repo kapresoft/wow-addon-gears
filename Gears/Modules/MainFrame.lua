@@ -97,7 +97,6 @@ local function MainFrameMixin_OnPlayerLogin(self) self:OnLoadEquipmentSet() end
 --- @private
 --- @param self MainFrameMixin
 local function MainFrameMixin_OnEquipmentChanged(self)
-  print('xx MainFrameMixin_OnEquipmentChanged')
   self:ForEachEquipment(function(info)
     local equipSet = MainFrameMixin_EquipmentSet(self, info.index)
     if not equipSet then return end

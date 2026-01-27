@@ -8,6 +8,7 @@
 ## SavedVariables: GEARS_DB
 ## SavedVariablesPerCharacter: GEARS_CHARACTER_DB
 
+## Dependencies: LibIconPicker
 ## OptionalDeps: Ace3
 
 ## Group: Gears
