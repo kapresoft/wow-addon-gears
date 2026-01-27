@@ -4,24 +4,24 @@ local ns = select(2, ...)
 --[[-------------------------------------------------------------------
 Mixin
 ---------------------------------------------------------------------]]
---- @alias EquipmentSetDeleteButton EquipmentSetDeleteButtonMixin|ButtonObj
+--- @alias EquipmentSetChangeButton EquipmentSetChangeButtonMixin|ButtonObj
 
---- @class EquipmentSetDeleteButtonMixin : Button
+--- @class EquipmentSetChangeButtonMixin : Button
 --- @field owner EquipmentSetFrame
---- @field DeleteButton boolean
-Gears_EquipmentSetDeleteButtonMixin = {}
-local p           = ns:log('EquipmentSetDeleteButtonMixin')
-local OBJECT_TYPE = 'Gears_EquipmentSetDeleteButton'
+--- @field ChangeButton boolean
+Gears_EquipmentSetChangeButtonMixin = {}
+local p           = ns:log('EquipmentSetChangeButtonMixin')
+local OBJECT_TYPE = 'Gears_EquipmentSetChangeButton'
 
---- @type EquipmentSetDeleteButtonMixin | EquipmentSetDeleteButton
-local o  = Gears_EquipmentSetDeleteButtonMixin
-o.DeleteButton = true
+--- @type EquipmentSetChangeButtonMixin | EquipmentSetChangeButton
+local o  = Gears_EquipmentSetChangeButtonMixin
+o.ChangeButton = true
 
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
---- @param self EquipmentSetDeleteButtonMixin
-local function DeleteButton_SetupPressedState(self)
+--- @param self EquipmentSetChangeButtonMixin
+local function ChangeButton_SetupPressedState(self)
   local normal = self:GetNormalTexture()
   local pushed = self:GetPushedTexture()
   
@@ -35,39 +35,42 @@ local function DeleteButton_SetupPressedState(self)
   pushed:SetPoint("CENTER")
   pushed:SetSize(11, 11)
 end
---- @param self EquipmentSetDeleteButtonMixin
-local function DeleteButton_OnEnterShowTooltip(self)
+--- @param self EquipmentSetChangeButtonMixin
+local function ChangeButton_OnEnterShowTooltip(self)
   GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-  GameTooltip:SetText(DELETE, 1, 1, 1)
+  GameTooltip:SetText(EQUIPMENT_SET_EDIT, 1, 1, 1)
   GameTooltip:Show()
-  -- edit: EQUIPMENT_SET_EDIT
 end
---- @param self EquipmentSetDeleteButtonMixin
-local function DeleteButton_OnLeaveHideTooltip(self)
+--- @param self EquipmentSetChangeButtonMixin
+local function ChangeButton_OnLeaveHideTooltip(self)
   GameTooltip:Hide()
 end
+
 --[[-------------------------------------------------------------------
 Methods
 ---------------------------------------------------------------------]]
 function o:OnLoad()
-  DeleteButton_SetupPressedState(self)
+  ChangeButton_SetupPressedState(self)
 end
 
 --- @param button Name
 function o:OnClick(button)
-  self.owner:OnDeleteButtonClick(self, button);
+  print('xx ChangeButton::OnClick...')
+  --self.owner:OnChangeButtonClick(self, button);
 end
 
 function o:OnEnter()
+  print('xx ChangeButton::OnEnter...')
   self:GetNormalTexture():SetAlpha(1.0)
   self.owner:ShowBorderOnHover()
   
-  DeleteButton_OnEnterShowTooltip(self)
+  ChangeButton_OnEnterShowTooltip(self)
 end
 
 function o:OnLeave()
+  print('xx ChangeButton::OnLeave...')
   self:GetNormalTexture():SetAlpha(0.4)
   self.owner:HideBorder()
   
-  DeleteButton_OnLeaveHideTooltip(self)
+  ChangeButton_OnLeaveHideTooltip(self)
 end

@@ -2,6 +2,7 @@
 ..\FrameXML\UI.xsd">
 
     <Script file="EquipmentSetDeleteButtonMixin.lua"/>
+    <Script file="EquipmentSetChangeButtonMixin.lua"/>
     <Script file="MainFrame.lua"/>
     <Script file="EquipmentSetMixin.lua"/>
 
@@ -9,7 +10,6 @@
           justifyH="LEFT" virtual="true">
     </Font>
 
-    <!--     inherits="IconButtonTemplate" -->
     <Button name="Gears_DeleteButtonTemplate" inherits="IconButtonTemplate" hidden="true"
             mixin="Gears_EquipmentSetDeleteButtonMixin"
             parentKey="DeleteButton" virtual="true">
@@ -20,8 +20,17 @@
             <OnEnter method="OnEnter"/>
             <OnLeave method="OnLeave"/>
         </Scripts>
-        <NormalTexture hidden="true" alpha="0.4" file="Interface\AddOns\Gears\Assets\x-red"/>
+        <NormalTexture hidden="true" file="Interface\AddOns\Gears\Assets\x-red"/>
         <PushedTexture alpha="0.8" file="Interface\AddOns\Gears\Assets\x-red"/>
+    </Button>
+
+    <Button name="Gears_ChangeButtonTemplate" inherits="IconButtonTemplate" hidden="true"
+            mixin="Gears_EquipmentSetChangeButtonMixin"
+            parentKey="ChangeButton"
+            virtual="true">
+        <Size x="13" y="13"/>
+        <NormalTexture file="Interface\Buttons\UI-OptionsButton"/>
+        <PushedTexture alpha="1.0" file="Interface\Buttons\UI-OptionsButton"/>
     </Button>
 
     <Button name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"

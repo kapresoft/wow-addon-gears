@@ -161,23 +161,12 @@ end
 --- hide other EquipmentSet specific action buttons
 function o:OnEnter()
   self:ForEachEquipmentFrame(function(eqs)
-    eqs.DeleteButton:Hide()
-    -- todo: hide edit or eqs:HideSpecificActions()
+    eqs:HideActionButtons()
   end)
 end
 
 --- @private
 function o:OnLoadEquipmentSet()
-  --local rowCount = self:ForEachEquipment(function(info)
-  --  self:AddEquipmentSet(info)
-  --end)
-  --self:UpdateScrollHeight(rowCount)
-  --self.equipmentSetPool = CreateFramePool(
-  --        "Frame",
-  --        self.ScrollFrame.ScrollChild,
-  --        "Gears_EquipmentSetTemplate"
-  --)
-  
   self:RefreshEquipmentSet()
   MainFrameMixin_UpdateActionsEnabledState(self, false)
   

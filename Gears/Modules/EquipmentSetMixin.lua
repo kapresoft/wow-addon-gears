@@ -7,6 +7,7 @@ Local Vars
 local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
 
 local CHECKBOX_TEXTURE = [[Interface\Buttons\UI-CheckBox-Check]]
+local NORMAL_TEXTURE_ALPHA = 0.4
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -20,6 +21,7 @@ Mixin
 --- @field equipSetID Identifier
 --- @field CheckMark TextureObj
 --- @field DeleteButton ButtonObj
+--- @field ChangeButton ButtonObj
 --- @field private __used boolean|nil
 Gears_EquipmentSetMixin = {}
 local p = ns:log('EquipmentSetMixin')
@@ -42,11 +44,10 @@ function o:OnLoad()
   self:HideBorder()
   self:__OnLoadCheckMark()
   self:__CreateDeleteButton()
+  self:__CreateChangeButton()
 end
 
 function o:__CreateDeleteButton()
-  if self.DeleteButton then return end
-  
   local btn = CreateFrame(
           "Button",
           "$parentDeleteButton",
@@ -61,10 +62,32 @@ function o:__CreateDeleteButton()
   btn:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -5, 5)
   
   -- Initial visual state
-  btn:GetNormalTexture():SetAlpha(0.4)
+  btn:GetNormalTexture():SetAlpha(NORMAL_TEXTURE_ALPHA)
   btn:Hide()
   
   self.DeleteButton = btn
+end
+
+function o:__CreateChangeButton()
+  --- @type ButtonObj
+  local btn = CreateFrame(
+          "Button",
+          "$parentChangeButton",
+          self,
+          "Gears_ChangeButtonTemplate"
+  )
+  
+  btn.owner = self
+  btn:SetFrameLevel(self:GetFrameLevel() + 2)
+  
+  btn:ClearAllPoints()
+  btn:SetPoint("RIGHT", self.DeleteButton, "LEFT", -2, 0)
+  
+  -- Initial visual state
+  btn:GetNormalTexture():SetAlpha(NORMAL_TEXTURE_ALPHA)
+  btn:Hide()
+  
+  self.ChangeButton = btn
 end
 
 --- @private
@@ -109,12 +132,20 @@ function o:OnEnter()
   
   --- When we hover over to another EquipmentSetFrame,
   --- hide other EquipmentSet specific action buttons
-  self.owner:ForEachEquipmentFrame(function(eqs)
-    eqs.DeleteButton:Hide()
-    -- todo: hide edit or eqs:HideSpecificActions()
+  self.owner:ForEachEquipmentFrame(function(otherEQS)
+    otherEQS:HideActionButtons()
   end, function(eqsInfo) return self:GetID() ~= eqsInfo.id end)
   
+  self:ShowActionButtons()
+end
+
+function o:ShowActionButtons()
   self.DeleteButton:Show()
+  self.ChangeButton:Show()
+end
+function o:HideActionButtons()
+  self.DeleteButton:Hide()
+  self.ChangeButton:Hide()
 end
 
 local function FrameAtMouse()
@@ -133,7 +164,7 @@ end
 --- @return boolean
 --- @param obj EquipmentSetDeleteButton|table
 local function IsDeleteButton(obj)
-  return obj and obj.DeleteButton == true
+  return obj and obj.ChangeButton == true
 end
 
 --- @return boolean
@@ -155,8 +186,6 @@ function o:OnLeave()
   if self.__overDeleteButton then
     print('xx ESet OnLeave: __overDeleteButton')
   end
-  --self.DeleteButton:Hide()
-
   if self.selected == true then return end
   self:HideBorder()
 end
