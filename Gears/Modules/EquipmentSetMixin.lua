@@ -15,11 +15,11 @@ Mixin
 
 --- @class EquipmentSetMixin : Button
 --- @field owner MainFrame
+--- @field info EquipmentSetInfo
 --- @field selected boolean
 --- @field equipSetID Identifier
 --- @field CheckMark TextureObj
 --- @field DeleteButton ButtonObj
---- @field info EquipmentSetInfo
 --- @field private __used boolean|nil
 Gears_EquipmentSetMixin = {}
 local p = ns:log('EquipmentSetMixin')
@@ -107,7 +107,7 @@ function o:OnEnter()
     self:ShowBorderOnHover()
   end
   
-  self.owner:ForEachEquipmentFrame(function(eqs, info)
+  self.owner:ForEachEquipmentFrame(function(eqs)
     eqs.DeleteButton:Hide()
     print('xx ESM:DeleteButton:Hide()')
   end, function(eqsInfo) return self:GetID() ~= eqsInfo.id end)

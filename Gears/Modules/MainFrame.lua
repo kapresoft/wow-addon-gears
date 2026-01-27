@@ -97,6 +97,7 @@ local function MainFrameMixin_OnPlayerLogin(self) self:OnLoadEquipmentSet() end
 --- @private
 --- @param self MainFrameMixin
 local function MainFrameMixin_OnEquipmentChanged(self)
+  print('xx MainFrameMixin_OnEquipmentChanged')
   self:ForEachEquipment(function(info)
     local equipSet = MainFrameMixin_EquipmentSet(self, info.index)
     
@@ -108,7 +109,7 @@ local function MainFrameMixin_OnEquipmentChanged(self)
   end)
 end
 
---- Fired when equipment set is deleted
+--- Fired when equipment set is created, updated, deleted
 --- via C_DeleteEquipmentSet()
 --- @param self MainFrameMixin
 local function MainFrameMixin_OnEquipmentSetsChanged(self)
@@ -157,7 +158,7 @@ function o:OnLoad()
 end
 
 function o:OnEnter()
-  self:ForEachEquipmentFrame(function(eqs, info)
+  self:ForEachEquipmentFrame(function(eqs)
     eqs.DeleteButton:Hide()
     print('Main:DeleteButton:Hide()')
   end)
@@ -184,6 +185,7 @@ function o:OnLoadEquipmentSet()
 end
 
 function o:RefreshEquipmentSet()
+  -- always go through eq.GetEquipmentSetIDs() in self:ForEachEquipment()
   local usedCount = self:ForEachEquipment(function(info)
     local f = self:BuildEquipmentSet(info)
     f.__used = true
@@ -225,24 +227,13 @@ function o:ForEachEquipment(callback, acceptFn)
 end
 
 --- Iterate through all equipments with an optional accept function.
---- @param callback fun(eqs:EquipmentSetFrame, info:EquipmentSetInfo) | "function(info) end"
+--- @param callback fun(eqs:EquipmentSetFrame) | "function(eqs) end"
 --- @param acceptFn nil|fun(eqsInfo:EquipmentSetInfo) : boolean @Optional: The filter function | "function(eqs) return true end"
 --- @return number The number of accepted equipment sets
 function o:ForEachEquipmentFrame(callback, acceptFn)
-  local rowCount = 0
-  local eq       = C_EquipmentSet
-  local acceptEquipmentSet = acceptFn or function() return true  end
-  
-  --- @type table<number,number>
-  local ids = eq.GetEquipmentSetIDs()
-  for i, id in ipairs(ids) do
-    local name, icon = eq.GetEquipmentSetInfo(id)
-    local info       = { id = id, index = i, name = name, icon = icon }
-    if acceptEquipmentSet(info) then
-      rowCount = rowCount + 1
-      local eqs = self.framePool[info.index]
-      callback(eqs, info) end
-  end
+  local rowCount = self:ForEachEquipment(function(info)
+    callback(self.framePool[info.index])
+  end, acceptFn)
   return rowCount
 end
 
