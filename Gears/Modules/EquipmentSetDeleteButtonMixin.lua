@@ -2,6 +2,11 @@
 local ns = select(2, ...)
 
 --[[-------------------------------------------------------------------
+Local Vars
+---------------------------------------------------------------------]]
+local C_DeleteEquipmentSet = C_EquipmentSet.DeleteEquipmentSet
+
+--[[-------------------------------------------------------------------
 Mixin
 ---------------------------------------------------------------------]]
 --- @alias EquipmentSetDeleteButton EquipmentSetDeleteButtonMixin|ButtonObj
@@ -55,7 +60,8 @@ end
 
 --- @param button Name
 function o:OnClick(button)
-  self.owner:OnDeleteButtonClick(self, button);
+  local id, name = self.owner:GetIdentity()
+  StaticPopup_Show("CONFIRM_DELETE_EQUIPMENT_SET", name, nil, id)
 end
 
 function o:OnEnter()

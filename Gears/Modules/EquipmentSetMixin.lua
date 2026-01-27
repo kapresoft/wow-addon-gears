@@ -191,14 +191,6 @@ function o:OnLeave()
 end
 function o:OnDoubleClick() self:EquipGear() end
 
---- @see MainFrame.xml#L11 / Gears_DeleteButtonTemplate
---- @param button ButtonObj
---- @param mouseButton Name The name of the button that was clicked.
-function o:OnDeleteButtonClick(button, mouseButton)
-  if mouseButton ~= "LeftButton" then return end
-  print('xx OnDeleteButtonClick')
-end
-
 function o:EquipGear()
   PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
   if EquipmentManager_EquipSet then
@@ -248,4 +240,17 @@ function o:ShowAsSelectedBorder()
   --self:SetBackdropColor(0, 0, 0, 0)
   self:SetBackdropColor(1, 1, 1, 0.1)
   self:SetBackdropBorderColor(1.0, 0.82, 0.0, 0.9)
+end
+
+--- @return Identifier, Name, IconIDOrPath
+function o:GetIdentity()
+  local info = self.info
+  if not self.info then return nil end
+  return self.info.id, self.info.name, self.info.icon
+end
+
+--- @return Name
+function o:GetEquipmentSetName()
+  local info = self.owner.info
+  return info and info.name
 end

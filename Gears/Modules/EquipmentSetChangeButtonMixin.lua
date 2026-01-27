@@ -1,5 +1,10 @@
 --- @type Namespace
 local ns = select(2, ...)
+--[[-------------------------------------------------------------------
+Local Vars
+---------------------------------------------------------------------]]
+local LIP = ns.O.LibIconPickerUtil
+local C_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -55,22 +60,36 @@ end
 
 --- @param button Name
 function o:OnClick(button)
-  print('xx ChangeButton::OnClick...')
-  --self.owner:OnChangeButtonClick(self, button);
+  self:ShowPicker()
+end
+
+--- @return Name
+function o:GetEquipmentSetName()
+  local info = self.owner.info
+  return info and info.name
+end
+
+function o:ShowPicker()
+  local id, name, icon = self.owner:GetIdentity()
+  local opt = {
+    icon = icon, showTextInput = true,
+    textInput = { label = 'Set Name:', value = name }
+  }
+  LIP:Instance():Open(function(sel)
+    if not sel.textInputValue then return end
+    C_ModifyEquipmentSet(self.owner:GetID(), sel.textInputValue, sel.icon)
+    --print('Updated name:', sel.textInputValue, ', icon:', sel.icon)
+  end, opt)
 end
 
 function o:OnEnter()
-  print('xx ChangeButton::OnEnter...')
   self:GetNormalTexture():SetAlpha(1.0)
   self.owner:ShowBorderOnHover()
-  
   ChangeButton_OnEnterShowTooltip(self)
 end
 
 function o:OnLeave()
-  print('xx ChangeButton::OnLeave...')
   self:GetNormalTexture():SetAlpha(0.4)
   self.owner:HideBorder()
-  
   ChangeButton_OnLeaveHideTooltip(self)
 end

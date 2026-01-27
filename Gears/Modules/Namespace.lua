@@ -13,6 +13,7 @@ Type: NamespaceObjects
 ---------------------------------------------------------------------]]
 --- @class NamespaceObjects
 --- @field GameVersion GameVersion
+--- @field LibIconPickerUtil LibIconPickerUtil
 
 --[[-------------------------------------------------------------------
 Aliases
