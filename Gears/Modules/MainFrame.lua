@@ -100,12 +100,14 @@ local function MainFrameMixin_OnEquipmentChanged(self)
   print('xx MainFrameMixin_OnEquipmentChanged')
   self:ForEachEquipment(function(info)
     local equipSet = MainFrameMixin_EquipmentSet(self, info.index)
+    if not equipSet then return end
     
-    if equipSet then equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
+    equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
       if equipSet.selected then
-        MainFrameMixin_UpdateActionsEnabledState(self, false)
+        MainFrameMixin_UpdateActionsEnabledState(self, not isFullyEquipped)
       end
-    end) end
+    end)
+    
   end)
 end
 
@@ -188,7 +190,6 @@ function o:RefreshEquipmentSet()
       frame:SetSelected(false)
       frame.CheckMark:Hide()
       frame:Hide()
-      print('xx removing unused')
     end
     frame.__used = nil
   end
