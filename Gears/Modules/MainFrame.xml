@@ -1,6 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 
+    <Script file="EquipmentSetDeleteButtonMixin.lua"/>
     <Script file="MainFrame.lua"/>
     <Script file="EquipmentSetMixin.lua"/>
 
@@ -8,9 +9,26 @@
           justifyH="LEFT" virtual="true">
     </Font>
 
+    <!--     inherits="IconButtonTemplate" -->
+    <Button name="Gears_DeleteButtonTemplate" alpha="1.0"
+            mixin="Gears_EquipmentSetDeleteButtonMixin"
+            parentKey="DeleteButton" virtual="true">
+        <Size x="18" y="18"/>
+        <Anchors>
+            <Anchor point="RIGHT" x="0"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnClick method="OnClick"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+        </Scripts>
+        <NormalTexture alpha="0.5" file="Interface\Buttons\UI-GroupLoot-Pass-Down"/>
+    </Button>
+
     <Button name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
            mixin="Gears_EquipmentSetMixin"
-           enableMouse="true" virtual="true">
+            frameLevel="10" virtual="true">
         <Size y="48"/>
 
         <Scripts>
@@ -23,11 +41,11 @@
 
         <Anchors>
             <Anchor point="TOPLEFT" x="5" />
-            <Anchor point="TOPRIGHT" x="-26" />
+            <Anchor point="TOPRIGHT" x="-30" />
         </Anchors>
 
         <Frames>
-            <Button parentKey="IconButton"
+            <Button parentKey="IconButton" frameLevel="1"
                     inherits="IconButtonTemplate">
                 <Size x="36" y="36"/>
                 <Anchors>
@@ -35,6 +53,29 @@
                 </Anchors>
                 <NormalTexture file="Interface\Icons\INV_Misc_QuestionMark"/>
             </Button>
+            <!--<Button parentKey="DeleteButton" frameLevel="11"
+                    hidden="true"
+                    inherits="IconButtonTemplate">
+                <Size x="18" y="18"/>
+                <Anchors>
+                    <Anchor point="RIGHT" x="-34" />
+                </Anchors>
+                <Scripts>
+                    &lt;!&ndash;<OnLoad>
+                        self:SetPropagateMouseClicks(false)
+                        self:SetPropagateMouseMotion(false)
+                    </OnLoad>&ndash;&gt;
+                    <OnEnter>
+                        print('xxx delete btn hover')
+                    </OnEnter>
+                    &lt;!&ndash;<OnLeave>
+                        print('xxx delete btn LEAVE')
+                        self._hovered = nil
+                        self:GetNormalTexture():SetAlpha(0.5)
+                    </OnLeave>&ndash;&gt;
+                </Scripts>
+                <NormalTexture alpha="0.5" file="Interface\Buttons\UI-GroupLoot-Pass-Down"/>
+            </Button>-->
         </Frames>
 
         <Layers>

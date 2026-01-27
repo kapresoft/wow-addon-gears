@@ -100,7 +100,7 @@ local function MainFrameMixin_OnEquipmentChanged(self)
   self:ForEachEquipment(function(info)
     local equipSet = MainFrameMixin_EquipmentSet(self, info.index)
     
-    if equipSet then equipSet:UpdateCheckedState(function(isFullyEquipped)
+    if equipSet then equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
       if equipSet.selected then
         MainFrameMixin_UpdateActionsEnabledState(self, false)
       end
@@ -235,7 +235,7 @@ function o:BuildEquipmentSet(eqInfo)
   eqSetName:SetText(eqInfo.name)
   
   equipmentSet:Show()
-  equipmentSet:UpdateCheckedState()
+  equipmentSet:UpdateFullyEquippedState()
   
   return equipmentSet
 end
@@ -265,7 +265,7 @@ function o:SelectEquipmentSet(equipSet)
   local id = equipSet:GetID()
   
   equipSet:SetSelected(true)
-  equipSet:UpdateCheckedState(function(isFullyEquipped)
+  equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
     MainFrameMixin_UpdateActionsEnabledState(self, not isFullyEquipped)
   end)
   
