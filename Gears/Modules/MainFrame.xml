@@ -10,20 +10,17 @@
     </Font>
 
     <!--     inherits="IconButtonTemplate" -->
-    <Button name="Gears_DeleteButtonTemplate" alpha="1.0"
+    <Button name="Gears_DeleteButtonTemplate" hidden="true"
             mixin="Gears_EquipmentSetDeleteButtonMixin"
             parentKey="DeleteButton" virtual="true">
-        <Size x="18" y="18"/>
-        <Anchors>
-            <Anchor point="RIGHT" x="0"/>
-        </Anchors>
+        <Size x="14" y="14"/>
         <Scripts>
             <OnLoad method="OnLoad"/>
             <OnClick method="OnClick"/>
             <OnEnter method="OnEnter"/>
             <OnLeave method="OnLeave"/>
         </Scripts>
-        <NormalTexture alpha="0.5" file="Interface\Buttons\UI-GroupLoot-Pass-Down"/>
+        <NormalTexture hidden="true" alpha="0.4" file="Interface\Buttons\UI-StopButton"/>
     </Button>
 
     <Button name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
@@ -84,6 +81,7 @@
                             parentKey="Label"
                             text="DPS"
                             inherits="Gears_LabelFont"
+                            wordwrap="false"
                             justifyH="LEFT">
                     <Anchors>
                         <Anchor point="LEFT" x="50" y="0"/>
@@ -108,6 +106,7 @@
 
         <Scripts>
             <OnLoad method="OnLoad"/>
+            <OnEnter method="OnEnter"/>
         </Scripts>
 
         <Size x="200" y="427"/>

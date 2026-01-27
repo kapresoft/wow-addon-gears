@@ -14,10 +14,12 @@ local OBJECT_TYPE = 'Gears_EquipmentSetDeleteButton'
 
 --- @type EquipmentSetDeleteButtonMixin | EquipmentSetFrame
 local o  = Gears_EquipmentSetDeleteButtonMixin
-o.IsDeleteButton = true
+o.DeleteButton = true
 
 function o:OnLoad()
-  self:SetAlpha(1.0)
+  --local tex = self:GetNormalTexture()
+  --tex:SetSnapToPixelGrid(false)
+  --tex:SetTexelSnappingBias(0)
 end
 
 --- @param button Name
@@ -26,14 +28,16 @@ function o:OnClick(button)
 end
 
 function o:OnEnter()
-  self.owner.__OnEnterDeleteButton = true
+  self.owner.__overDeleteButton = true
+  print('OnEnter::__overDeleteButton:', self.owner.__overDeleteButton)
   self:GetNormalTexture():SetAlpha(1.0)
   --self.owner:EnableMouse(false)
-  self.owner:ShowBorder()
+  self.owner:ShowBorderOnHover()
 end
 
 function o:OnLeave()
-  self.owner.__OnEnterDeleteButton = false
+  self.owner.__overDeleteButton = false
+  print('OnLeave::__overDeleteButton:', self.owner.__overDeleteButton)
   self:GetNormalTexture():SetAlpha(0.4)
   --self.owner:EnableMouse(true)
   self.owner:HideBorder()

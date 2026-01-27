@@ -14,7 +14,7 @@ Mixin
 --- @alias EquipmentSetFrame EquipmentSetMixin|ButtonObjWithBackdrop
 
 --- @class EquipmentSetMixin : Button
---- @field private owner MainFrame
+--- @field owner MainFrame
 --- @field selected boolean
 --- @field equipSetID Identifier
 --- @field CheckMark TextureObj
@@ -26,6 +26,7 @@ local p = ns:log('EquipmentSetMixin')
 
 --- @type EquipmentSetMixin | EquipmentSetFrame
 local o = Gears_EquipmentSetMixin
+o.EquipmentSet = true
 
 local BACKDROP_WITH_BG = {
   bgFile   = "Interface\\Buttons\\WHITE8X8",
@@ -36,12 +37,10 @@ local BACKDROP_WITH_BG = {
 
 function o:OnLoad()
   BackdropTemplateMixin.OnBackdropLoaded(self)
-  --self:SetBackdrop(BACKDROP_TOAST_12_12)
-  self:SetBackdrop(BACKDROP_WITH_BG)
   
+  self:SetBackdrop(BACKDROP_WITH_BG)
   self:HideBorder()
   self:__OnLoadCheckMark()
-  
   self:__CreateDeleteButton()
 end
 
@@ -59,7 +58,7 @@ function o:__CreateDeleteButton()
   btn:SetFrameLevel(self:GetFrameLevel() + 2)
   
   btn:ClearAllPoints()
-  btn:SetPoint("RIGHT", self.CheckMark, "LEFT", 0, 0)
+  btn:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -5, 5)
   
   -- Initial visual state
   btn:GetNormalTexture():SetAlpha(0.4)
@@ -108,6 +107,11 @@ function o:OnEnter()
     self:ShowBorderOnHover()
   end
   
+  self.owner:ForEachEquipmentFrame(function(eqs, info)
+    eqs.DeleteButton:Hide()
+    print('xx ESM:DeleteButton:Hide()')
+  end, function(eqsInfo) return self:GetID() ~= eqsInfo.id end)
+  
   self.DeleteButton:Show()
 end
 
@@ -118,19 +122,39 @@ local function FrameAtMouse()
   return f.GetName and f:GetName() or tostring(f)
 end
 
---- @return boolean
-local function IsDeleteButtonAtMousePoint()
+local function GetFirstMouseFoci()
   local foci = GetMouseFoci()
-  if #foci <= 0 then return end
-  --- @type EquipmentSetDeleteButton|table
-  local f = foci[1]
-  return f.IsDeleteButton == true
+  if #foci <= 0 then return nil end
+  return foci[1]
+end
+
+--- @return boolean
+--- @param obj EquipmentSetDeleteButton|table
+local function IsDeleteButton(obj)
+  return obj and obj.DeleteButton == true
+end
+
+--- @return boolean
+--- @param obj EquipmentSetFrame|table
+local function IsEquipmentSet(obj)
+  return obj and obj.EquipmentSet == true
 end
 --'Gears_EquipmentSetDeleteButton'
 
+--- @return boolean
+local function IsInTheRightArea()
+  local obj = GetFirstMouseFoci(); if not obj then return false end
+  return IsEquipmentSet(obj) or IsDeleteButton(obj)
+  --print('xx is-del?:', IsDeleteButton(obj))
+  --return IsDeleteButton(obj)
+end
+
 function o:OnLeave()
-  print('xx ESM OnLeave: Delete btn at mouse-pt:', IsDeleteButtonAtMousePoint())
-  if not IsDeleteButtonAtMousePoint() then self.DeleteButton:Hide() end
+  if self.__overDeleteButton then
+    print('xx ESet OnLeave: __overDeleteButton')
+  end
+  --self.DeleteButton:Hide()
+
   if self.selected == true then return end
   self:HideBorder()
 end
@@ -172,25 +196,25 @@ function o:SetSelected(selected)
   
   PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF, "Ambience")
   self.selected = selected
-  if self.selected then self:ShowBorder(); return end
+  if self.selected then self:ShowAsSelectedBorder(); return end
   self:HideBorder()
 end
 
 function o:ShowBorderOnHover()
+  if self.selected then return end
   self:SetBackdropColor(1.0, 0.9, 0.2, 0.05)
   self:SetBackdropBorderColor(1.0, 0.82, 0.0, 0.9)
 end
 
+function o:HideBorder()
+  if self.selected then return end
+  self:SetBackdropColor(0, 0, 0, 0)
+  self:SetBackdropBorderColor(0, 0, 0, 0)
+end
 
-function o:ShowBorder()
+function o:ShowAsSelectedBorder()
   --self:SetBackdropColor(1, 1, 1, 1)
   --self:SetBackdropColor(0, 0, 0, 0)
   self:SetBackdropColor(1, 1, 1, 0.1)
   self:SetBackdropBorderColor(1.0, 0.82, 0.0, 0.9)
 end
-
-function o:HideBorder()
-  self:SetBackdropColor(0, 0, 0, 0)
-  self:SetBackdropBorderColor(0, 0, 0, 0)
-end
-

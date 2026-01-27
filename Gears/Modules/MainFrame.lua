@@ -156,6 +156,12 @@ function o:OnLoad()
   saveButton.owner = self
 end
 
+function o:OnEnter()
+  self:ForEachEquipmentFrame(function(eqs, info)
+    eqs.DeleteButton:Hide()
+    print('Main:DeleteButton:Hide()')
+  end)
+end
 
 --- @private
 function o:OnLoadEquipmentSet()
@@ -218,6 +224,28 @@ function o:ForEachEquipment(callback, acceptFn)
   return rowCount
 end
 
+--- Iterate through all equipments with an optional accept function.
+--- @param callback fun(eqs:EquipmentSetFrame, info:EquipmentSetInfo) | "function(info) end"
+--- @param acceptFn nil|fun(eqsInfo:EquipmentSetInfo) : boolean @Optional: The filter function | "function(eqs) return true end"
+--- @return number The number of accepted equipment sets
+function o:ForEachEquipmentFrame(callback, acceptFn)
+  local rowCount = 0
+  local eq       = C_EquipmentSet
+  local acceptEquipmentSet = acceptFn or function() return true  end
+  
+  --- @type table<number,number>
+  local ids = eq.GetEquipmentSetIDs()
+  for i, id in ipairs(ids) do
+    local name, icon = eq.GetEquipmentSetInfo(id)
+    local info       = { id = id, index = i, name = name, icon = icon }
+    if acceptEquipmentSet(info) then
+      rowCount = rowCount + 1
+      local eqs = self.framePool[info.index]
+      callback(eqs, info) end
+  end
+  return rowCount
+end
+
 --- @param eqInfo EquipmentSetInfo
 function o:BuildEquipmentSet(eqInfo)
   assert(eqInfo, 'BuildEquipmentSet(eqInfo): The param eqInfo is required.')
@@ -232,6 +260,8 @@ function o:BuildEquipmentSet(eqInfo)
   iconBtn:SetNormalTexture(eqInfo.icon)
   --- @type FontStringObj
   local eqSetName = equipmentSet.Label
+  eqSetName:SetWidth(80)
+  eqSetName:SetMaxLines(1)
   eqSetName:SetText(eqInfo.name)
   
   equipmentSet:Show()
