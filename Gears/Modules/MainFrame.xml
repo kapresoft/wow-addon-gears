@@ -10,17 +10,18 @@
     </Font>
 
     <!--     inherits="IconButtonTemplate" -->
-    <Button name="Gears_DeleteButtonTemplate" hidden="true"
+    <Button name="Gears_DeleteButtonTemplate" inherits="IconButtonTemplate" hidden="true"
             mixin="Gears_EquipmentSetDeleteButtonMixin"
             parentKey="DeleteButton" virtual="true">
-        <Size x="14" y="14"/>
+        <Size x="13" y="13"/>
         <Scripts>
             <OnLoad method="OnLoad"/>
             <OnClick method="OnClick"/>
             <OnEnter method="OnEnter"/>
             <OnLeave method="OnLeave"/>
         </Scripts>
-        <NormalTexture hidden="true" alpha="0.4" file="Interface\Buttons\UI-StopButton"/>
+        <NormalTexture hidden="true" alpha="0.4" file="Interface\AddOns\Gears\Assets\x-red"/>
+        <PushedTexture alpha="0.8" file="Interface\AddOns\Gears\Assets\x-red"/>
     </Button>
 
     <Button name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
@@ -183,7 +184,7 @@
                     <Button parentKey="AddButton"
                             inherits="UIPanelButtonTemplate"
                             text="+">
-                        <Size x="28" y="22"/>
+                        <Size x="30" y="24"/>
                         <Anchors>
                             <Anchor point="LEFT" relativeKey="$parent.SaveButton"
                                     relativePoint="RIGHT"

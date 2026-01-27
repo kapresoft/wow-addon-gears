@@ -107,9 +107,11 @@ function o:OnEnter()
     self:ShowBorderOnHover()
   end
   
+  --- When we hover over to another EquipmentSetFrame,
+  --- hide other EquipmentSet specific action buttons
   self.owner:ForEachEquipmentFrame(function(eqs)
     eqs.DeleteButton:Hide()
-    print('xx ESM:DeleteButton:Hide()')
+    -- todo: hide edit or eqs:HideSpecificActions()
   end, function(eqsInfo) return self:GetID() ~= eqsInfo.id end)
   
   self.DeleteButton:Show()

@@ -16,10 +16,39 @@ local OBJECT_TYPE = 'Gears_EquipmentSetDeleteButton'
 local o  = Gears_EquipmentSetDeleteButtonMixin
 o.DeleteButton = true
 
+--[[-------------------------------------------------------------------
+Support Functions
+---------------------------------------------------------------------]]
+--- @param self EquipmentSetDeleteButtonMixin
+local function DeleteButton_SetupPressedState(self)
+  local normal = self:GetNormalTexture()
+  local pushed = self:GetPushedTexture()
+  
+  -- Normal: full size
+  normal:ClearAllPoints()
+  normal:SetPoint("CENTER")
+  normal:SetSize(13, 13)
+  
+  -- Pushed: slightly smaller
+  pushed:ClearAllPoints()
+  pushed:SetPoint("CENTER")
+  pushed:SetSize(11, 11)
+end
+
+--- @param self EquipmentSetDeleteButtonMixin
+local function DeleteButton_OnEnterShowTooltip(self)
+  GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+  GameTooltip:SetText(DELETE, 1, 1, 1)
+  GameTooltip:Show()
+  -- edit: EQUIPMENT_SET_EDIT
+end
+--- @param self EquipmentSetDeleteButtonMixin
+local function DeleteButton_OnLeaveHideTooltip(self)
+  GameTooltip:Hide()
+end
+
 function o:OnLoad()
-  --local tex = self:GetNormalTexture()
-  --tex:SetSnapToPixelGrid(false)
-  --tex:SetTexelSnappingBias(0)
+  DeleteButton_SetupPressedState(self)
 end
 
 --- @param button Name
@@ -28,17 +57,15 @@ function o:OnClick(button)
 end
 
 function o:OnEnter()
-  self.owner.__overDeleteButton = true
-  print('OnEnter::__overDeleteButton:', self.owner.__overDeleteButton)
   self:GetNormalTexture():SetAlpha(1.0)
-  --self.owner:EnableMouse(false)
   self.owner:ShowBorderOnHover()
+  
+  DeleteButton_OnEnterShowTooltip(self)
 end
 
 function o:OnLeave()
-  self.owner.__overDeleteButton = false
-  print('OnLeave::__overDeleteButton:', self.owner.__overDeleteButton)
   self:GetNormalTexture():SetAlpha(0.4)
-  --self.owner:EnableMouse(true)
   self.owner:HideBorder()
+  
+  DeleteButton_OnLeaveHideTooltip(self)
 end

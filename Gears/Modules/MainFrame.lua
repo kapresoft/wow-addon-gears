@@ -157,10 +157,12 @@ function o:OnLoad()
   saveButton.owner = self
 end
 
+--- When the mouse is out of the EquipmentSetFrame and into the main frame,
+--- hide other EquipmentSet specific action buttons
 function o:OnEnter()
   self:ForEachEquipmentFrame(function(eqs)
     eqs.DeleteButton:Hide()
-    print('Main:DeleteButton:Hide()')
+    -- todo: hide edit or eqs:HideSpecificActions()
   end)
 end
 
