@@ -41,7 +41,7 @@ Override in DeveloperSetup to enable
 -------------------------------------------------------------------------------]]
 --- @class LibIconPickerSettings
 --- @field developer boolean if true: enables developer mode
-local settings = { developer = false }
+local settings = { developer = false }; ns.settings = settings
 
 
 --- @return boolean
@@ -67,8 +67,6 @@ do
   --- @return LibPrettyPrint_Printer | LibPrettyPrint_PrintFn
   function ns:log(moduleName) return self.printer:WithSubPrefix(moduleName) end
 end
-
-local p  = ns:log('Namespace')
 
 --[[-----------------------------------------------------------------------------
 Namespace: Methods
