@@ -300,19 +300,24 @@ end
 --- @private
 function o:OnClickClose() self:Hide() end
 
---- @see MainFrame.xml#L124 (EquipButton)
+--- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/EquipButton
 --- @param button ButtonObj
 --- @param mouseButton Name The name of the button that was clicked.
-function o:OnEquipButtonClick(button, mouseButton)
-  if mouseButton ~= "LeftButton" then return end
+function o:OnClick_EquipButton(button, mouseButton)
   self:WithSelectedEquipmentSet(function(sel) sel:EquipGear() end)
 end
 
---- @see MainFrame.xml#L124 (SaveButton)
+--- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/SaveButton
 --- @param button ButtonObj
 --- @param mouseButton Name The name of the button that was clicked.
-function o:OnSaveButtonClick(button, mouseButton)
-  if mouseButton ~= "LeftButton" then return end
+function o:OnClick_SaveButton(button, mouseButton)
+  self:WithSelectedEquipmentSet(function(sel) sel:SaveGear() end)
+end
+
+--- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/AddButton
+--- @param button ButtonObj
+--- @param mouseButton Name The name of the button that was clicked.
+function o:OnClick_AddButton(button, mouseButton)
   self:WithSelectedEquipmentSet(function(sel) sel:SaveGear() end)
 end
 

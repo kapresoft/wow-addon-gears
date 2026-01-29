@@ -48,6 +48,7 @@ function o:OnLoad()
 end
 
 function o:__CreateDeleteButton()
+  --- @type ButtonObj
   local btn = CreateFrame(
           "Button",
           "$parentDeleteButton",
@@ -64,8 +65,6 @@ function o:__CreateDeleteButton()
   -- Initial visual state
   btn:GetNormalTexture():SetAlpha(NORMAL_TEXTURE_ALPHA)
   btn:Hide()
-  
-  self.DeleteButton = btn
 end
 
 function o:__CreateChangeButton()
@@ -81,13 +80,11 @@ function o:__CreateChangeButton()
   btn:SetFrameLevel(self:GetFrameLevel() + 2)
   
   btn:ClearAllPoints()
-  btn:SetPoint("RIGHT", self.DeleteButton, "LEFT", -2, 0)
+  btn:SetPoint("RIGHT", self.DeleteButton, "LEFT", 1, 0)
   
   -- Initial visual state
-  btn:GetNormalTexture():SetAlpha(NORMAL_TEXTURE_ALPHA)
+  --btn:GetNormalTexture():SetAlpha(NORMAL_TEXTURE_ALPHA)
   btn:Hide()
-  
-  self.ChangeButton = btn
 end
 
 --- @private

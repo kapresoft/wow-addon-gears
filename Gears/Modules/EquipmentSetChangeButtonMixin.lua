@@ -9,7 +9,7 @@ local C_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
 --[[-------------------------------------------------------------------
 Mixin
 ---------------------------------------------------------------------]]
---- @alias EquipmentSetChangeButton EquipmentSetChangeButtonMixin|ButtonObj
+--- @alias EquipmentSetChangeButton EquipmentSetChangeButtonMixin|ButtonObj|IconButtonMixin
 
 --- @class EquipmentSetChangeButtonMixin : Button
 --- @field owner EquipmentSetFrame
@@ -22,24 +22,10 @@ local OBJECT_TYPE = 'Gears_EquipmentSetChangeButton'
 local o  = Gears_EquipmentSetChangeButtonMixin
 o.ChangeButton = true
 
+
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
---- @param self EquipmentSetChangeButtonMixin
-local function ChangeButton_SetupPressedState(self)
-  local normal = self:GetNormalTexture()
-  local pushed = self:GetPushedTexture()
-  
-  -- Normal: full size
-  normal:ClearAllPoints()
-  normal:SetPoint("CENTER")
-  normal:SetSize(13, 13)
-  
-  -- Pushed: slightly smaller
-  pushed:ClearAllPoints()
-  pushed:SetPoint("CENTER")
-  pushed:SetSize(11, 11)
-end
 --- @param self EquipmentSetChangeButtonMixin
 local function ChangeButton_OnEnterShowTooltip(self)
   GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -55,12 +41,21 @@ end
 Methods
 ---------------------------------------------------------------------]]
 function o:OnLoad()
-  ChangeButton_SetupPressedState(self)
+  IconButtonMixin.OnLoad(self)
+  self.tooltipText = EQUIPMENT_SET_EDIT
+  -- baseline (dimmed)
+  self.Icon:SetAlpha(0.4)
+  self.onClickHandler = function() self:ShowPicker()  end
 end
 
---- @param button Name
-function o:OnClick(button)
-  self:ShowPicker()
+function o:OnEnter()
+  IconButtonMixin.OnEnter(self)
+  self.owner:ShowBorderOnHover()
+end
+
+function o:OnLeave()
+  IconButtonMixin.OnLeave(self)
+  self.owner:HideBorder()
 end
 
 --- @return Name
@@ -79,19 +74,8 @@ function o:ShowPicker()
     lip:Open(function(sel)
       if not sel.textInputValue then return end
       C_ModifyEquipmentSet(self.owner:GetID(), sel.textInputValue, sel.icon)
-      --print('Updated name:', sel.textInputValue, ', icon:', sel.icon)
+      p('Updated name:', sel.textInputValue, ', icon:', sel.icon)
     end, opt)
   end)
 end
 
-function o:OnEnter()
-  self:GetNormalTexture():SetAlpha(1.0)
-  self.owner:ShowBorderOnHover()
-  ChangeButton_OnEnterShowTooltip(self)
-end
-
-function o:OnLeave()
-  self:GetNormalTexture():SetAlpha(0.4)
-  self.owner:HideBorder()
-  ChangeButton_OnLeaveHideTooltip(self)
-end

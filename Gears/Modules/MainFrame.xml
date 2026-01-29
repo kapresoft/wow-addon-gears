@@ -11,8 +11,8 @@
     </Font>
 
     <Button name="Gears_DeleteButtonTemplate" inherits="IconButtonTemplate" hidden="true"
-            mixin="Gears_EquipmentSetDeleteButtonMixin"
-            parentKey="DeleteButton" virtual="true">
+            mixin="Gears_EquipmentSetDeleteButtonMixin" parentKey="DeleteButton"
+            registerForClicks="LeftButtonUp" virtual="true">
         <Size x="13" y="13"/>
         <Scripts>
             <OnLoad method="OnLoad"/>
@@ -25,12 +25,16 @@
     </Button>
 
     <Button name="Gears_ChangeButtonTemplate" inherits="IconButtonTemplate" hidden="true"
-            mixin="Gears_EquipmentSetChangeButtonMixin"
-            parentKey="ChangeButton"
-            virtual="true">
-        <Size x="13" y="13"/>
-        <NormalTexture file="Interface\Buttons\UI-OptionsButton"/>
-        <PushedTexture alpha="1.0" file="Interface\Buttons\UI-OptionsButton"/>
+            mixin="Gears_EquipmentSetChangeButtonMixin" parentKey="ChangeButton"
+            registerForClicks="LeftButtonUp" virtual="true">
+        <KeyValues>
+            <KeyValue key="icon" value="Interface\Buttons\UI-OptionsButton"/>
+            <KeyValue key="iconSize" value="13" type="number"/>
+            <KeyValue key="iconWidth" value="13" type="number"/>
+            <KeyValue key="useIconAsHighlight" value="true" type="boolean"/>
+            <KeyValue key="onClickSoundKit" value="SOUNDKIT.IG_MAINMENU_CONTINUE" type="global"/>
+            <KeyValue key="tooltipText" value="EQUIPMENT_SET_EDIT" type="global"/>
+        </KeyValues>
     </Button>
 
     <Button name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
@@ -162,22 +166,20 @@
                     <Anchor point="TOP" relativePoint="TOP" x="5" y="-26"/>
                 </Anchors>
                 <Frames>
-                    <Button parentKey="EquipButton" hidden="false"
-                            inherits="UIPanelButtonTemplate"
-                            text="_EQUIP_">
+                    <Button parentKey="EquipButton" inherits="UIPanelButtonTemplate"
+                            registerForClicks="LeftButtonUp" text="_EQUIP_">
                         <Size x="70" y="24"/>
                         <Anchors>
                             <Anchor point="LEFT"/>
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                self.owner:OnEquipButtonClick(self, button);
+                                self.owner:OnClick_EquipButton(self, button);
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button parentKey="SaveButton" hidden="false"
-                            inherits="UIPanelButtonTemplate"
-                            text="_SAVE_">
+                    <Button parentKey="SaveButton" inherits="UIPanelButtonTemplate"
+                            registerForClicks="LeftButtonUp" text="_SAVE_">
                         <Size x="70" y="24"/>
                         <Anchors>
                             <Anchor point="LEFT" relativeKey="$parent.EquipButton"
@@ -186,13 +188,12 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                self.owner:OnSaveButtonClick(self, button);
+                                self.owner:OnClick_SaveButton(self, button);
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button parentKey="AddButton"
-                            inherits="UIPanelButtonTemplate"
-                            text="+">
+                    <Button parentKey="AddButton" inherits="UIPanelButtonTemplate"
+                            registerForClicks="LeftButtonUp" text="_ADD_">
                         <Size x="30" y="24"/>
                         <Anchors>
                             <Anchor point="LEFT" relativeKey="$parent.SaveButton"
@@ -200,6 +201,9 @@
                                     x="0" y="0"/>
                         </Anchors>
                         <Scripts>
+                            <OnClick>
+                                self.owner:OnClick_AddButton(self, button)
+                            </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
                                 GameTooltip:SetText("Create a new equipment set.", 1, 1, 1);
