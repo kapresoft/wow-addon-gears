@@ -5,6 +5,8 @@ Types and Alias
 ---------------------------------------------------------------------]]
 --- @class __ButtonsContainerFrame
 --- @field EquipButton ButtonObj
+--- @field SaveButton ButtonObj
+--- @field AddButton ButtonObj
 
 --- @class EquipmentSetInfo
 --- @field id Identifier The equipment set ID
@@ -24,6 +26,7 @@ MainFrame
 ---------------------------------------------------------------------]]
 --- @class MainFrameMixin
 --- @field private framePool table<number, EquipmentSetFrame>
+--- @field protected ButtonsContainerFrame ButtonsContainerFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
 Gears_MainFrameMixin = {}
@@ -45,9 +48,6 @@ local function fn(targetFn, ...)
   return function(...) targetFn(unpack(boundArgs), ...) end
 end
 
---[[-------------------------------------------------------------------
-Methods: Gears_MainFrameMixin (Private Methods)
----------------------------------------------------------------------]]
 --- @param frame FrameObj
 local function MainFrameMixin_AnchorToPaperDoll(frame)
   frame:ClearAllPoints()
@@ -57,18 +57,27 @@ local function MainFrameMixin_AnchorToPaperDoll(frame)
   end
   frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", osx, osy)
 end
+
 --- @param self MainFrameMixin
 --- @return ButtonObj
-local function MainFrameMixin_EquipButton(self) return self.ButtonsContainerFrame.EquipButton end
---- @param self MainFrameMixin
---- @return ButtonObj
-local function MainFrameMixin_SaveButton(self) return self.ButtonsContainerFrame.SaveButton end
+local function MainFrameMixin_OnLoadButtons(self)
+  local equipButton = self:GetEquipButton()
+  local saveButton = self:GetSaveButton()
+  local addButton = self:GetAddButton()
+  equipButton.owner = self
+  saveButton.owner = self
+  addButton.owner = self
+  
+  equipButton:SetText('Equip')
+  saveButton:SetText('Save')
+  addButton:SetText('+')
+end
 
 --- @param self MainFrameMixin
 --- @param isEnabledState boolean
 local function MainFrameMixin_UpdateActionsEnabledState(self, isEnabledState)
-  MainFrameMixin_EquipButton(self):SetEnabled(isEnabledState)
-  MainFrameMixin_SaveButton(self):SetEnabled(isEnabledState)
+  self:GetEquipButton():SetEnabled(isEnabledState)
+  self:GetSaveButton():SetEnabled(isEnabledState)
 end
 
 --- @param self MainFrameMixin
@@ -92,7 +101,7 @@ local function MainFrameMixin_GetFrame(self, eqInfo)
 end
 
 --- @param self MainFrameMixin
-local function MainFrameMixin_OnPlayerLogin(self) self:OnLoadEquipmentSet() end
+local function MainFrameMixin_OnPlayerLogin(self) self:InitEquipmentSet() end
 
 --- @private
 --- @param self MainFrameMixin
@@ -113,9 +122,7 @@ end
 --- Fired when equipment set is created, updated, deleted
 --- via C_DeleteEquipmentSet()
 --- @param self MainFrameMixin
-local function MainFrameMixin_OnEquipmentSetsChanged(self)
-  self:RefreshEquipmentSet()
-end
+local function MainFrameMixin_OnEquipmentSetsChanged(self) self:RefreshEquipmentSet() end
 
 --[[-------------------------------------------------------------------
 Methods: Gears_MainFrameMixin
@@ -137,10 +144,6 @@ function o:OnLoad()
   local headerText = self.HeaderTitle
   headerText:SetText(ns.addon)
   
-  -- todo next: locale
-  MainFrameMixin_EquipButton(self):SetText('Equip')
-  MainFrameMixin_SaveButton(self):SetText('Save')
-  
   local _frame = self
   PaperDollFrame:HookScript("OnShow", function()
     MainFrameMixin_AnchorToPaperDoll(_frame)
@@ -150,12 +153,10 @@ function o:OnLoad()
     _frame:OnClickClose()
   end)
   
+  MainFrameMixin_OnLoadButtons(self)
+  
   self:RegisterEvent('PLAYER_LOGIN', fn(MainFrameMixin_OnPlayerLogin, self))
   
-  local equipButton = MainFrameMixin_EquipButton(self)
-  local saveButton = MainFrameMixin_SaveButton(self)
-  equipButton.owner = self
-  saveButton.owner = self
 end
 
 --- When the mouse is out of the EquipmentSetFrame and into the main frame,
@@ -167,7 +168,7 @@ function o:OnEnter()
 end
 
 --- @private
-function o:OnLoadEquipmentSet()
+function o:InitEquipmentSet()
   self:RefreshEquipmentSet()
   MainFrameMixin_UpdateActionsEnabledState(self, false)
   
@@ -313,4 +314,14 @@ end
 function o:OnSaveButtonClick(button, mouseButton)
   if mouseButton ~= "LeftButton" then return end
   self:WithSelectedEquipmentSet(function(sel) sel:SaveGear() end)
+end
+
+function o:GetEquipButton()
+  return self.ButtonsContainerFrame.EquipButton
+end
+function o:GetSaveButton()
+  return self.ButtonsContainerFrame.SaveButton
+end
+function o:GetAddButton()
+  return self.ButtonsContainerFrame.AddButton
 end
