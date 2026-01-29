@@ -3,12 +3,10 @@
 ..\FrameXML\UI.xsd">
 
     <Script file="Modules\Namespace.lua"/>
-    <Include file="Modules\Util\_Util.xml"/>
-
     <!--@do-not-package@-->
     <Script file="Modules\Developer\DeveloperSetup.lua" />
-
     <!--@end-do-not-package@-->
+    <Include file="Modules\Util\_Util.xml"/>
 
     <!--<Include file="Modules\Locales\_Locales.xml"/>-->
 

@@ -3,7 +3,7 @@ local ns = select(2, ...)
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
-local LIP = ns.O.LibIconPickerUtil
+local LibIconPickerUtil    = ns.O.LibIconPickerUtil
 local C_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
 
 --[[-------------------------------------------------------------------
@@ -75,11 +75,13 @@ function o:ShowPicker()
     icon = icon, showTextInput = true,
     textInput = { label = 'Set Name:', value = name }
   }
-  LIP:Instance():Open(function(sel)
-    if not sel.textInputValue then return end
-    C_ModifyEquipmentSet(self.owner:GetID(), sel.textInputValue, sel.icon)
-    --print('Updated name:', sel.textInputValue, ', icon:', sel.icon)
-  end, opt)
+  LibIconPickerUtil:Get(function(lip)
+    lip:Open(function(sel)
+      if not sel.textInputValue then return end
+      C_ModifyEquipmentSet(self.owner:GetID(), sel.textInputValue, sel.icon)
+      --print('Updated name:', sel.textInputValue, ', icon:', sel.icon)
+    end, opt)
+  end)
 end
 
 function o:OnEnter()

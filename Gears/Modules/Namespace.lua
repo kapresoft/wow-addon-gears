@@ -56,7 +56,7 @@ do
     show_all = true, depth_limit = 3
   })
   ns.printer = LibPrettyPrint:Printer({
-    prefix = ns.addon, prefix_color = '132CF2', sub_prefix_color = '9CFF9C',
+    prefix = ns.addon, prefix_color = '466EFF', sub_prefix_color = '9CFF9C',
     formatter = ns.fmt
   }, predicateFn)
 

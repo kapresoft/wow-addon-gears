@@ -5,6 +5,23 @@ enable-toc-creation: no
 # --------------------------
 license-output: LICENSE.txt
 
+manual-changelog:
+  filename: CHANGELOG.txt
+  markup-type: markdown
+
+embedded-libraries:
+  - LibPrettyPrint
+  - LibStub
+  - Ace3
+  - LibSharedMedia-3-0
+
+tools-used:
+  - DevSuite
+  - DebugChatFrame
+  - Addon-Usage
+  - Bugsack
+  - Bug-Grabber
+
 externals:
   Gears/ThirdParty/Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
   Gears/ThirdParty/Libs/LibPrettyPrint: https://github.com/kapresoft/wow-addon-LibPrettyPrint
