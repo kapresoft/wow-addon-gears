@@ -16,7 +16,7 @@
     @end-non-debug@-->
     <Include file="Ace3.xml"/>
     <Include file='LibPrettyPrint.xml'/>
-    <!--<Include file='LibIconPicker.xml'/>-->
+    <Include file='LibIconPicker.xml'/>
     <Include file="Libs\LibSharedMedia\LibSharedMedia-3.0\lib.xml"/>
 
 </Ui>
