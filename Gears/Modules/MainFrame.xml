@@ -13,15 +13,13 @@
     <Button name="Gears_DeleteButtonTemplate" inherits="IconButtonTemplate" hidden="true"
             mixin="Gears_EquipmentSetDeleteButtonMixin" parentKey="DeleteButton"
             registerForClicks="LeftButtonUp" virtual="true">
-        <Size x="13" y="13"/>
-        <Scripts>
-            <OnLoad method="OnLoad"/>
-            <OnClick method="OnClick"/>
-            <OnEnter method="OnEnter"/>
-            <OnLeave method="OnLeave"/>
-        </Scripts>
-        <NormalTexture hidden="true" file="Interface\AddOns\Gears\Assets\x-red"/>
-        <PushedTexture alpha="0.8" file="Interface\AddOns\Gears\Assets\x-red"/>
+        <KeyValues>
+            <KeyValue key="icon" value="Interface\AddOns\Gears\Assets\x-red"/>
+            <KeyValue key="iconSize" value="12" type="number"/>
+            <KeyValue key="iconWidth" value="12" type="number"/>
+            <KeyValue key="useIconAsHighlight" value="true" type="boolean"/>
+            <KeyValue key="tooltipText" value="DELETE" type="global"/>
+        </KeyValues>
     </Button>
 
     <Button name="Gears_ChangeButtonTemplate" inherits="IconButtonTemplate" hidden="true"

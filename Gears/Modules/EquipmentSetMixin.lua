@@ -55,15 +55,10 @@ function o:__CreateDeleteButton()
           self,
           "Gears_DeleteButtonTemplate"
   )
-  
   btn.owner = self
   btn:SetFrameLevel(self:GetFrameLevel() + 2)
-  
   btn:ClearAllPoints()
-  btn:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -5, 5)
-  
-  -- Initial visual state
-  btn:GetNormalTexture():SetAlpha(NORMAL_TEXTURE_ALPHA)
+  btn:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -2, 2)
   btn:Hide()
 end
 
@@ -75,15 +70,10 @@ function o:__CreateChangeButton()
           self,
           "Gears_ChangeButtonTemplate"
   )
-  
   btn.owner = self
   btn:SetFrameLevel(self:GetFrameLevel() + 2)
-  
   btn:ClearAllPoints()
-  btn:SetPoint("RIGHT", self.DeleteButton, "LEFT", 1, 0)
-  
-  -- Initial visual state
-  --btn:GetNormalTexture():SetAlpha(NORMAL_TEXTURE_ALPHA)
+  btn:SetPoint("RIGHT", self.DeleteButton, "LEFT", 4, 0)
   btn:Hide()
 end
 
