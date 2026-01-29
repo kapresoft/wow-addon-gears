@@ -9,6 +9,9 @@ manual-changelog:
   filename: CHANGELOG.txt
   markup-type: markdown
 
+required-dependencies:
+  - LibIconPicker
+
 embedded-libraries:
   - LibPrettyPrint
   - LibStub
