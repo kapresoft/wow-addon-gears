@@ -16,26 +16,10 @@ Mixin
 --- @field ChangeButton boolean
 Gears_EquipmentSetChangeButtonMixin = {}
 local p           = ns:log('EquipmentSetChangeButtonMixin')
-local OBJECT_TYPE = 'Gears_EquipmentSetChangeButton'
 
 --- @type EquipmentSetChangeButtonMixin | EquipmentSetChangeButton
 local o  = Gears_EquipmentSetChangeButtonMixin
 o.ChangeButton = true
-
-
---[[-------------------------------------------------------------------
-Support Functions
----------------------------------------------------------------------]]
---- @param self EquipmentSetChangeButtonMixin
-local function ChangeButton_OnEnterShowTooltip(self)
-  GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-  GameTooltip:SetText(EQUIPMENT_SET_EDIT, 1, 1, 1)
-  GameTooltip:Show()
-end
---- @param self EquipmentSetChangeButtonMixin
-local function ChangeButton_OnLeaveHideTooltip(self)
-  GameTooltip:Hide()
-end
 
 --[[-------------------------------------------------------------------
 Methods

@@ -3,12 +3,33 @@
 
     <Script file="EquipmentSetDeleteButtonMixin.lua"/>
     <Script file="EquipmentSetChangeButtonMixin.lua"/>
-    <Script file="MainFrame.lua"/>
     <Script file="EquipmentSetMixin.lua"/>
+    <Script file="MainFrame.lua"/>
+    <Script file="ToggleButtonMixin.lua"/>
 
     <Font name="Gears_LabelFont" inherits="GameFontNormalOutline"
           justifyH="LEFT" virtual="true">
     </Font>
+
+    <CheckButton name="Gears_ToggleButton" inherits="UICheckButtonTemplate"
+                 mixin="Gears_ToggleButtonMixin" registerForClicks="LeftButtonUp"
+                 frameLevel="10" hidden="true">
+        <Size x="34" y="34"/>
+        <Anchors>
+            <Anchor point="BOTTOMRIGHT" relativeTo="CharacterHandsSlot"
+                    relativePoint="TOPRIGHT" x="-3" y="2"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnClick method="OnClick"/>
+        </Scripts>
+        <!--<NormalTexture file="Interface\Icons\INV_Misc_Gear_01"/>
+        <PushedTexture file="Interface\Icons\INV_Misc_Gear_01" alpha="0.7"/>-->
+        <NormalTexture file="Interface\Addons\Gears\Assets\gears-button"/>
+        <PushedTexture file="Interface\Addons\Gears\Assets\gears-button" alpha="0.7"/>
+        <CheckedTexture file="Interface\Buttons\CheckButtonHilight" alpha="0.8" alphaMode="ADD"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+    </CheckButton>
 
     <Button name="Gears_DeleteButtonTemplate" inherits="IconButtonTemplate" hidden="true"
             mixin="Gears_EquipmentSetDeleteButtonMixin" parentKey="DeleteButton"
