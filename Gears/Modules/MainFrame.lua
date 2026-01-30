@@ -17,9 +17,39 @@ Types and Alias
 -- Aliases -------------
 --- @alias ButtonsContainerFrame __ButtonsContainerFrame|FrameObj
 --- @alias MainFrame MainFrameMixin | FrameObj
+
+--[[-------------------------------------------------------------------
+Blizzard Vars
+---------------------------------------------------------------------]]
+local C_CreateEquipmentSet = C_EquipmentSet.CreateEquipmentSet
+local strtrim = strtrim
+
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
+local LibIconPickerUtil = ns.O.LibIconPickerUtil
+local p = ns:log('MainFrame')
+-- tmp locale
+local L = {}
+L['Create a new equipment set'] = 'Create a new equipment set'
+
+--[[-------------------------------------------------------------------
+Gears_AddButtonMixin
+---------------------------------------------------------------------]]
+--- @alias Gears_AddButton ButtonObj|IconButtonMixin
+
+--- @class Gears_AddButtonMixin : Button
+--- @field owner MainFrame
+Gears_AddButtonMixin = {}
+do
+  --- @type Gears_AddButtonMixin | Gears_AddButton
+  local a = Gears_AddButtonMixin
+  function a:OnLoad()
+    IconButtonMixin.OnLoad(self)
+    self.onClickHandler = function() self.owner:OnClick_AddButton(self) end
+    self.tooltipText = L['Create a new equipment set']
+  end
+end
 
 --[[-------------------------------------------------------------------
 MainFrame
@@ -30,14 +60,13 @@ MainFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
 Gears_MainFrameMixin = {}
-local p = ns:log('MainFrame')
 
 --- @type MainFrameMixin | MainFrame | AceEvent | AceBucket
 local o = Gears_MainFrameMixin
 LibStub("AceEvent-3.0"):Embed(o);
 LibStub("AceBucket-3.0"):Embed(o)
-
 o.framePool = {}
+
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
@@ -67,10 +96,6 @@ local function MainFrameMixin_OnLoadButtons(self)
   equipButton.owner = self
   saveButton.owner = self
   addButton.owner = self
-  
-  equipButton:SetText('Equip')
-  saveButton:SetText('Save')
-  addButton:SetText('+')
 end
 
 --- @param self MainFrameMixin
@@ -316,9 +341,21 @@ end
 
 --- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/AddButton
 --- @param button ButtonObj
---- @param mouseButton Name The name of the button that was clicked.
-function o:OnClick_AddButton(button, mouseButton)
-  self:WithSelectedEquipmentSet(function(sel) sel:SaveGear() end)
+function o:OnClick_AddButton(button)
+  PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN)
+  local opt = {
+    icon = icon, showTextInput = true,
+    textInput = { label = 'New Equipment Set:' }
+  }
+  LibIconPickerUtil:Get(function(lip)
+    lip:Open(function(sel)
+      local esName = strtrim(sel.textInputValue)
+      if #esName <= 0 then return end
+      C_CreateEquipmentSet(esName, sel.icon)
+      p('Create set:: name:', esName, ', icon:', sel.icon)
+      PlaySound(SOUNDKIT.IG_MAINMENU_QUIT)
+    end, opt)
+  end)
 end
 
 function o:GetEquipButton()
