@@ -48,6 +48,10 @@ function o:OnLoad()
 
 end
 function o:OnClick()
-  if self:GetChecked() then Gears_MainFrame:Show(); return end
+  if self:GetChecked() then
+    PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
+    Gears_MainFrame:Show();
+    return end
+  PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   Gears_MainFrame:Hide()
 end
