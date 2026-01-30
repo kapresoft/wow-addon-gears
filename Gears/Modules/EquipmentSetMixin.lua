@@ -181,7 +181,9 @@ end
 function o:OnDoubleClick() self:EquipGear() end
 
 function o:EquipGear()
-  PlaySound(SOUNDKIT.IG_CHARACTER_INFO_TAB)
+  PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
+  PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
+  
   if EquipmentManager_EquipSet then
     EquipmentManager_EquipSet(self:GetID())
   else
