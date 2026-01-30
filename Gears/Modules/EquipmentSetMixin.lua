@@ -1,6 +1,8 @@
 --- @type Namespace
 local ns = select(2, ...)
 
+-- todo: Drag and drop to actionbars
+
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
@@ -15,7 +17,7 @@ Mixin
 --- @alias EquipmentSetFrame EquipmentSetMixin|ButtonObjWithBackdrop
 
 --- @class EquipmentSetMixin : Button
---- @field owner MainFrame
+--- @field owner Gears_MainFrame
 --- @field info EquipmentSetInfo
 --- @field selected boolean
 --- @field equipSetID Identifier
@@ -85,7 +87,7 @@ function o:__OnLoadCheckMark()
   t:Hide()
 end
 
---- @return MainFrame
+--- @return Gears_MainFrame
 function o:GetMainFrame() return self.owner end
 
 --- Show check-mark if fully equipped.

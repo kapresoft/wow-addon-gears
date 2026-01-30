@@ -17,16 +17,16 @@
         <Size x="36" y="36"/>
         <Anchors>
             <Anchor point="BOTTOMRIGHT" relativeTo="CharacterHandsSlot"
-                    relativePoint="TOPRIGHT" x="-5" y="5"/>
+                    relativePoint="TOPRIGHT" x="-2" y="2"/>
         </Anchors>
         <Scripts>
             <OnLoad method="OnLoad"/>
             <OnClick method="OnClick"/>
         </Scripts>
-        <NormalTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
-        <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+        <NormalTexture file="Interface\AddOns\Gears\Assets\ui-button-empty-grid"/>
+        <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress" alpha="0.7" alphaMode="ADD"/>
         <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alpha="0.8" alphaMode="ADD"/>
-        <CheckedTexture file="Interface\Buttons\CheckButtonHilight" alpha="0.7" alphaMode="ADD"/>
+        <CheckedTexture file="Interface\Buttons\CheckButtonHilight" alpha="0.4" alphaMode="ADD" />
     </CheckButton>
 
     <Button name="Gears_DeleteButtonTemplate" inherits="IconButtonTemplate" hidden="true"
@@ -180,7 +180,7 @@
             <Frame parentKey="ButtonsContainerFrame">
                 <Size x="170" y="24"/>
                 <Anchors>
-                    <Anchor point="TOP" relativePoint="TOP" x="2" y="-24"/>
+                    <Anchor point="TOP" relativePoint="TOP" x="2" y="-26"/>
                 </Anchors>
                 <Frames>
                     <Button parentKey="EquipButton" inherits="UIPanelButtonTemplate"
@@ -232,7 +232,7 @@
                             relativePoint="BOTTOM" y="-5" />
                     <Anchor point="LEFT" x="5"/>
                     <Anchor point="RIGHT" x="-34"/>
-                    <Anchor point="BOTTOM" y="5"/>
+                    <Anchor point="BOTTOM" y="10"/>
                 </Anchors>
 
                 <Frames>

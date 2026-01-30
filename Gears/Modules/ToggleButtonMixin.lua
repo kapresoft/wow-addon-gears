@@ -21,20 +21,27 @@ function o:OnLoad()
   self.owner = PaperDollFrame
   self.tooltipText = "Open Gears"
   
-  local tex = [[interface/icons/inv_misc_gear_06]]
-  --local tex = [[Interface\AddOns\Gears\Assets\gears-button]]
-  --- @type TextureObj
-  local icon = self:CreateTexture(nil, "ARTWORK")
-  icon:SetSize(36, 36)
-  icon:SetPoint("CENTER", self)
-  icon:SetTexture(tex)
-  self.Icon = icon
   
   -- green highlight
-  local hl = self:GetHighlightTexture()
+  --- @type TextureObj
+  local hl  = self:GetHighlightTexture()
   hl:SetColorTexture(0.2, 1.0, 0.4, 0.25)
-  self:SetScale(0.8)
+  hl:ClearAllPoints()
+  hl:SetPoint("TOPLEFT", self, "TOPLEFT", 3, -3)
+  hl:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -3, 3)
+  self:SetScale(0.9)
+  
+  local tex  = [[Interface\AddOns\Gears\Assets\gears-button-2]]
+  --- @type TextureObj
+  local icon = self:CreateTexture(nil, 'OVERLAY')
+  icon:SetSize(28, 28)
+  icon:SetPoint('CENTER', self)
+  icon:SetTexture(tex)
+  icon:SetDrawLayer('OVERLAY', 1)
+  self.Icon = icon
+  
   self:Show()
+
 end
 function o:OnClick()
   if self:GetChecked() then Gears_MainFrame:Show(); return end

@@ -16,7 +16,8 @@ Types and Alias
 
 -- Aliases -------------
 --- @alias ButtonsContainerFrame __ButtonsContainerFrame|FrameObj
---- @alias MainFrame MainFrameMixin | FrameObj
+--- @alias Gears_MainFrame Gears_MainFrameMixin | FrameObj
+--- @alias Gears_AddButton ButtonObj|IconButtonMixin
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -36,10 +37,8 @@ L['Create a new equipment set'] = 'Create a new equipment set'
 --[[-------------------------------------------------------------------
 Gears_AddButtonMixin
 ---------------------------------------------------------------------]]
---- @alias Gears_AddButton ButtonObj|IconButtonMixin
-
 --- @class Gears_AddButtonMixin : Button
---- @field owner MainFrame
+--- @field owner Gears_MainFrame
 Gears_AddButtonMixin = {}
 do
   --- @type Gears_AddButtonMixin | Gears_AddButton
@@ -54,14 +53,16 @@ end
 --[[-------------------------------------------------------------------
 MainFrame
 ---------------------------------------------------------------------]]
---- @class MainFrameMixin
+--- @alias Gears_MainFrame
+
+--- @class Gears_MainFrameMixin : Frame
 --- @field private framePool table<number, EquipmentSetFrame>
 --- @field protected ButtonsContainerFrame ButtonsContainerFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
 Gears_MainFrameMixin = {}
 
---- @type MainFrameMixin | MainFrame | AceEvent | AceBucket
+--- @type Gears_MainFrameMixin | Gears_MainFrame | AceEvent | AceBucket
 local o = Gears_MainFrameMixin
 LibStub("AceEvent-3.0"):Embed(o);
 LibStub("AceBucket-3.0"):Embed(o)
@@ -93,7 +94,7 @@ local function MainFrameMixin_AnchorToPaperDoll(frame)
   frame:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", osx, osy)
 end
 
---- @param self MainFrameMixin
+--- @param self Gears_MainFrameMixin
 --- @return ButtonObj
 local function MainFrameMixin_OnLoadButtons(self)
   local equipButton = self:GetEquipButton()
@@ -104,19 +105,19 @@ local function MainFrameMixin_OnLoadButtons(self)
   addButton.owner = self
 end
 
---- @param self MainFrameMixin
+--- @param self Gears_MainFrameMixin
 --- @param isEnabledState boolean
 local function MainFrameMixin_UpdateActionsEnabledState(self, isEnabledState)
   self:GetEquipButton():SetEnabled(isEnabledState)
   self:GetSaveButton():SetEnabled(isEnabledState)
 end
 
---- @param self MainFrameMixin
+--- @param self Gears_MainFrameMixin
 --- @param index number The equipment set frame index
 --- @return EquipmentSetFrame
 local function MainFrameMixin_EquipmentSet(self, index) return self.framePool[index] end
 
---- @param self MainFrameMixin
+--- @param self Gears_MainFrameMixin
 --- @param eqInfo EquipmentSetInfo
 --- @return EquipmentSetFrame
 local function MainFrameMixin_GetFrame(self, eqInfo)
@@ -131,11 +132,11 @@ local function MainFrameMixin_GetFrame(self, eqInfo)
   return self.framePool[index]
 end
 
---- @param self MainFrameMixin
+--- @param self Gears_MainFrameMixin
 local function MainFrameMixin_OnPlayerLogin(self) self:InitEquipmentSet() end
 
 --- @private
---- @param self MainFrameMixin
+--- @param self Gears_MainFrameMixin
 local function MainFrameMixin_OnEquipmentChanged(self)
   self:ForEachEquipment(function(info)
     local equipSet = MainFrameMixin_EquipmentSet(self, info.index)
@@ -152,7 +153,7 @@ end
 
 --- Fired when equipment set is created, updated, deleted
 --- via C_DeleteEquipmentSet()
---- @param self MainFrameMixin
+--- @param self Gears_MainFrameMixin
 local function MainFrameMixin_OnEquipmentSetsChanged(self) self:RefreshEquipmentSet() end
 
 --[[-------------------------------------------------------------------
