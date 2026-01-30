@@ -179,6 +179,8 @@ function o:OnLoad()
   PaperDollFrame:HookScript("OnShow", function()
     MainFrameMixin_AnchorToPaperDoll(_frame)
     _frame:Show()
+    if _frame:IsShown() then Gears_ToggleButton:SetChecked(true) end
+    -- todo next: sticky settings on showing gears
   end)
   PaperDollFrame:HookScript("OnHide", function()
     _frame:OnClickClose()

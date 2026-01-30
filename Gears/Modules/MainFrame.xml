@@ -14,21 +14,19 @@
     <CheckButton name="Gears_ToggleButton" inherits="UICheckButtonTemplate"
                  mixin="Gears_ToggleButtonMixin" registerForClicks="LeftButtonUp"
                  frameLevel="10" hidden="true">
-        <Size x="34" y="34"/>
+        <Size x="36" y="36"/>
         <Anchors>
             <Anchor point="BOTTOMRIGHT" relativeTo="CharacterHandsSlot"
-                    relativePoint="TOPRIGHT" x="-3" y="2"/>
+                    relativePoint="TOPRIGHT" x="-5" y="5"/>
         </Anchors>
         <Scripts>
             <OnLoad method="OnLoad"/>
             <OnClick method="OnClick"/>
         </Scripts>
-        <!--<NormalTexture file="Interface\Icons\INV_Misc_Gear_01"/>
-        <PushedTexture file="Interface\Icons\INV_Misc_Gear_01" alpha="0.7"/>-->
-        <NormalTexture file="Interface\Addons\Gears\Assets\gears-button"/>
-        <PushedTexture file="Interface\Addons\Gears\Assets\gears-button" alpha="0.7"/>
-        <CheckedTexture file="Interface\Buttons\CheckButtonHilight" alpha="0.8" alphaMode="ADD"/>
-        <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+        <NormalTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+        <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alpha="0.8" alphaMode="ADD"/>
+        <CheckedTexture file="Interface\Buttons\CheckButtonHilight" alpha="0.7" alphaMode="ADD"/>
     </CheckButton>
 
     <Button name="Gears_DeleteButtonTemplate" inherits="IconButtonTemplate" hidden="true"
