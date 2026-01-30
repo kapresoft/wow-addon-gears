@@ -79,12 +79,18 @@ end
 
 --- @param frame FrameObj
 local function MainFrameMixin_AnchorToPaperDoll(frame)
+  local anchorFrame = PaperDollFrame
+
   frame:ClearAllPoints()
   local osx, osy = 0, 2
-  if ns:IsTBC() then
+  if ns:IsTBC() or ns:IsClassicEra() then
     osx, osy = -34, -12
+    if EngravingFrame then
+      osx, osy = -3, 1
+      anchorFrame = EngravingFrame.Border.NineSlice
+    end
   end
-  frame:SetPoint("TOPLEFT", PaperDollFrame, "TOPRIGHT", osx, osy)
+  frame:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", osx, osy)
 end
 
 --- @param self MainFrameMixin
@@ -158,7 +164,7 @@ function o:OnLoad()
   --self:SetBackdrop(BACKDROP_DARK_DIALOG_32_32)
   
   -- set same parent so frame is scaled automatically
-  self:SetParent(PaperDollFrame:GetParent())
+  self:SetParent(PaperDollFrame)
   
   --- @type ScrollFrameObj
   local scrollFrame = self.ScrollFrame
