@@ -167,6 +167,30 @@ function o:OnLoad()
   -- set same parent so frame is scaled automatically
   self:SetParent(PaperDollFrame)
   
+  local sb = self.ScrollFrame.ScrollBar
+  local up = sb.ScrollUpButton
+  local down = sb.ScrollDownButton
+  
+  up:SetAlpha(0)
+  down:SetAlpha(0)
+  up:EnableMouse(false)
+  down:EnableMouse(false)
+  
+  --- @type TextureObj
+  local thumb = sb:GetThumbTexture()
+  local thumbAlpha, highlightAlpha = 0.4, 0.8
+  
+  thumb:SetTexture("Interface\\Buttons\\WHITE8X8")
+  thumb:SetVertexColor(0.75, 0.65, 0.25, thumbAlpha)
+  thumb:SetSize(7, 160)
+  
+  sb:HookScript("OnEnter", function()
+    thumb:SetAlpha(highlightAlpha)
+  end)
+  sb:HookScript("OnLeave", function()
+    thumb:SetAlpha(thumbAlpha)
+  end)
+  
   --- @type ScrollFrameObj
   local scrollFrame = self.ScrollFrame
   -- set scrollChild here to enable scrolling
