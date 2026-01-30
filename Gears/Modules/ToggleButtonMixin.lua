@@ -7,6 +7,11 @@ Alias
 --- @alias ToggleButton ToggleButtonMixin|CheckButtonObj
 
 --[[-------------------------------------------------------------------
+Local Vars
+---------------------------------------------------------------------]]
+local TOGGLE_BUTTON_ICON = [[Interface\AddOns\Gears\Assets\gears-button-2]]
+
+--[[-------------------------------------------------------------------
 ToggleButtonMixin
 ---------------------------------------------------------------------]]
 --- @class ToggleButtonMixin : CheckButton
@@ -31,12 +36,11 @@ function o:OnLoad()
   hl:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -3, 3)
   self:SetScale(0.9)
   
-  local tex  = [[Interface\AddOns\Gears\Assets\gears-button-2]]
   --- @type TextureObj
   local icon = self:CreateTexture(nil, 'OVERLAY')
   icon:SetSize(28, 28)
   icon:SetPoint('CENTER', self)
-  icon:SetTexture(tex)
+  icon:SetTexture(TOGGLE_BUTTON_ICON)
   icon:SetDrawLayer('OVERLAY', 1)
   self.Icon = icon
   
