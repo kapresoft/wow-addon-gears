@@ -81,29 +81,6 @@
                 </Anchors>
                 <NormalTexture file="Interface\Icons\INV_Misc_QuestionMark"/>
             </Button>
-            <!--<Button parentKey="DeleteButton" frameLevel="11"
-                    hidden="true"
-                    inherits="IconButtonTemplate">
-                <Size x="18" y="18"/>
-                <Anchors>
-                    <Anchor point="RIGHT" x="-34" />
-                </Anchors>
-                <Scripts>
-                    &lt;!&ndash;<OnLoad>
-                        self:SetPropagateMouseClicks(false)
-                        self:SetPropagateMouseMotion(false)
-                    </OnLoad>&ndash;&gt;
-                    <OnEnter>
-                        print('xxx delete btn hover')
-                    </OnEnter>
-                    &lt;!&ndash;<OnLeave>
-                        print('xxx delete btn LEAVE')
-                        self._hovered = nil
-                        self:GetNormalTexture():SetAlpha(0.5)
-                    </OnLeave>&ndash;&gt;
-                </Scripts>
-                <NormalTexture alpha="0.5" file="Interface\Buttons\UI-GroupLoot-Pass-Down"/>
-            </Button>-->
         </Frames>
 
         <Layers>
