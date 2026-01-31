@@ -91,8 +91,6 @@ local function MainFrameMixin_AnchorToPaperDoll(frame)
     else
       osx, osy    = -8, -3
     end
-  elseif ns:IsMists() then
-    osx, osy = 0, 0
   end
   
   --if ns:IsTBC() or ns:IsClassicEra() then

@@ -221,7 +221,7 @@ end
 
 function o:EquipGear()
   if ns:IsMists() then
-    PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
+    PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
   else
     PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
     C_Timer.After(0.2, function()
