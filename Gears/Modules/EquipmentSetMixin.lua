@@ -10,7 +10,7 @@ local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
 local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
 local CHECKBOX_TEXTURE = [[Interface\Buttons\UI-CheckBox-Check]]
 
-local TOOLTIP_DELAY = 0.5
+local TOOLTIP_DELAY = 0.01
 local BULLET        = '•'
 
 local bulletFmt = ' %s %s: %s'

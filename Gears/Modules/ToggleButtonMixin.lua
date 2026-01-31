@@ -11,6 +11,9 @@ Local Vars
 ---------------------------------------------------------------------]]
 local TOGGLE_BUTTON_ICON = [[Interface\AddOns\Gears\Assets\gears-button-2]]
 local TOOLTIP_DELAY = 0.35
+--- temp local
+local L = {}
+L['Click to open Gears panel'] = 'Click to open Gears panel'
 
 --[[-------------------------------------------------------------------
 ToggleButtonMixin
@@ -60,15 +63,13 @@ function o:OnClick()
 end
 
 function o:OnEnter()
-  if self:GetChecked() == true or not self:IsMouseOver() then return end
+  if self:GetChecked() then return end
   
-  local text = "Click to open Equipment"
   C_Timer.After(TOOLTIP_DELAY, function()
-    if self:IsMouseOver() then
-      GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-      GameTooltip:SetText(text, 1, 1, 1)
-      GameTooltip:Show()
-    end
+    if not self:IsMouseOver() then return end
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetText(L['Click to open Gears panel'], 1, 1, 1)
+    GameTooltip:Show()
   end)
 end
 
