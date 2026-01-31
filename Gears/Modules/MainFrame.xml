@@ -56,6 +56,7 @@
 
     <Button name="Gears_EquipmentSetTemplate" inherits="BackdropTemplate"
            mixin="Gears_EquipmentSetMixin"
+            enableMouse="true" movable="true" registerForDrag="LeftButton"
             frameLevel="10" virtual="true">
         <Size y="48"/>
 
@@ -65,6 +66,8 @@
             <OnLeave method="OnLeave"/>
             <OnMouseDown method="OnMouseDown"/>
             <OnDoubleClick method="OnDoubleClick"/>
+            <OnDragStart method="OnDragStart"/>
+            <OnDragStop method="OnDragStop"/>
         </Scripts>
 
         <Anchors>

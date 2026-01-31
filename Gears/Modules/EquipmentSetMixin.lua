@@ -7,9 +7,9 @@ local ns = select(2, ...)
 Local Vars
 ---------------------------------------------------------------------]]
 local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
+local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
 
 local CHECKBOX_TEXTURE = [[Interface\Buttons\UI-CheckBox-Check]]
-local NORMAL_TEXTURE_ALPHA = 0.4
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -63,6 +63,18 @@ function o:OnLoad()
   self:__OnLoadCheckMark()
   self:__CreateDeleteButton()
   self:__CreateChangeButton()
+end
+
+function o:OnDragStart()
+  ClearCursor()
+  C_PickupEquipmentSet(self:GetID())
+end
+
+--- If dropped nowhere valid, clear cursor
+function o:OnDragStop()
+  if CursorHasItem() or CursorHasSpell() or CursorHasMacro() then
+    ClearCursor()
+  end
 end
 
 function o:__CreateDeleteButton()
