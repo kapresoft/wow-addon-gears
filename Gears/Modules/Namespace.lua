@@ -89,6 +89,15 @@ do
     O[name] = obj
     return obj
   end
-
+  
+  --- @param rgbHex RGBHex|nil    @Optional
+  --- @return fun(key:string) : string The color formatted key
+  function ns:colorFn(rgbHex)
+    return function(text)
+      local c = CreateColorFromRGBHexString(rgbHex)
+      assert(c, ('Invalid RGBHex color: %s'):format(rgbHex))
+      return c:WrapTextInColorCode(text)
+    end
+  end
 end
 

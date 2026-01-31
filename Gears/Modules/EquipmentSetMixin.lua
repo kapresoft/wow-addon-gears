@@ -8,8 +8,28 @@ Local Vars
 ---------------------------------------------------------------------]]
 local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
 local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
-
 local CHECKBOX_TEXTURE = [[Interface\Buttons\UI-CheckBox-Check]]
+
+local TOOLTIP_DELAY = 0.5
+local BULLET        = '•'
+
+local bulletFmt = ' %s %s: %s'
+local c_white = ns:colorFn('afafaf')
+local c_blue = ns:colorFn('71ABFF')
+local c_yellow1 = ns:colorFn('E6BF33')
+local c_yellow = ns:colorFn('FFE680')
+
+--- temp locale
+local L = {}
+L['Equipment Set']         = 'Equipment Set'
+L['Left-click']            = 'Left-click'
+L['Double-click']          = 'Double-click'
+L['Drag']                  = 'Drag'
+L['Available Actions']     = 'Available Actions'
+L['Select']                = 'Select'
+L['Equip']                 = 'Equip'
+L['Drag to an action bar'] = 'Drag to an action bar'
+
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -42,14 +62,43 @@ local BACKDROP_WITH_BG = {
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
+--- @param self EquipmentSetFrame
 local function EquipmentSet_ShowTooltip(self)
-  local bullet = '  • '
-  GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-  GameTooltip:SetText("Available Actions" .. ':', 0.90, 0.75, 0.20)
-  GameTooltip:AddLine(bullet .. "Left-click to select.", 0.9, 0.9, 0.9, true)
-  GameTooltip:AddLine(bullet .. "Double-click to equip.", 0.9, 0.9, 0.9, true)
-  GameTooltip:AddLine(bullet .. "Drag-and-drop to an action bar.", 0.9, 0.9, 0.9, true)
-  GameTooltip:Show()
+  C_Timer.After(TOOLTIP_DELAY, function()
+    if not self:IsMouseOver() then return end
+    
+    local name, iconFileID, setID, isEquipped,
+    numItems, numEquipped, numInInventory,
+    numLost, numIgnored =
+    C_EquipmentSet.GetEquipmentSetInfo(self:GetID())
+    
+    local eq = {
+      name            = name,
+      iconFileID      = iconFileID,
+      setID           = setID,
+      isEquipped      = isEquipped,
+      numItems        = numItems,
+      numEquipped     = numEquipped,
+      numInInventory  = numInInventory,
+      numLost         = numLost,
+      numIgnored      = numIgnored,
+    }
+
+    local availableActions = c_blue(L['Available Actions']) .. ':'
+    local eqSet = c_yellow1(L['Equipment Set'] .. ':')
+    local leftClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Left-click']), c_white(L['Select']))
+    local doubleClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Double-click']),  c_white(L['Equip']))
+    local drag = (bulletFmt):format(c_white(BULLET), c_yellow(L['Drag']), c_white(L['Drag to an action bar']))
+    
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:AddDoubleLine(eqSet, c_blue(self.info.name))
+    GameTooltip:AddLine(" ")
+    GameTooltip:AddLine(availableActions)
+    GameTooltip:AddLine(leftClick)
+    GameTooltip:AddLine(doubleClick)
+    GameTooltip:AddLine(drag)
+    GameTooltip:Show()
+  end)
 end
 
 --[[-------------------------------------------------------------------

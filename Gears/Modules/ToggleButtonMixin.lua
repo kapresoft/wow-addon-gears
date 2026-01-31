@@ -10,6 +10,7 @@ Alias
 Local Vars
 ---------------------------------------------------------------------]]
 local TOGGLE_BUTTON_ICON = [[Interface\AddOns\Gears\Assets\gears-button-2]]
+local TOOLTIP_DELAY = 0.35
 
 --[[-------------------------------------------------------------------
 ToggleButtonMixin
@@ -47,11 +48,30 @@ function o:OnLoad()
   self:Show()
 
 end
+
 function o:OnClick()
+  GameTooltip:Hide()
   if self:GetChecked() then
     PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
     Gears_MainFrame:Show();
     return end
   PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   Gears_MainFrame:Hide()
+end
+
+function o:OnEnter()
+  if self:GetChecked() == true or not self:IsMouseOver() then return end
+  
+  local text = "Click to open Equipment"
+  C_Timer.After(TOOLTIP_DELAY, function()
+    if self:IsMouseOver() then
+      GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+      GameTooltip:SetText(text, 1, 1, 1)
+      GameTooltip:Show()
+    end
+  end)
+end
+
+function o:OnLeave()
+  GameTooltip:Hide()
 end

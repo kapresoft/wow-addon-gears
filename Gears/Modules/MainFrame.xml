@@ -22,6 +22,8 @@
         <Scripts>
             <OnLoad method="OnLoad"/>
             <OnClick method="OnClick"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
         </Scripts>
         <NormalTexture file="Interface\AddOns\Gears\Assets\ui-button-empty-grid"/>
         <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress" alpha="0.7" alphaMode="ADD"/>
