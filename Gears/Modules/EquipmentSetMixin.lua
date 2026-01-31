@@ -220,8 +220,14 @@ function o:HideActionButtons()
 end
 
 function o:EquipGear()
-  PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
-  PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
+  if ns:IsMists() then
+    PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
+  else
+    PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
+    C_Timer.After(0.2, function()
+      PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
+    end)
+  end
   
   if EquipmentManager_EquipSet then
     EquipmentManager_EquipSet(self:GetID())

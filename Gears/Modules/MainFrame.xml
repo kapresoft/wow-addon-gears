@@ -25,10 +25,10 @@
             <OnEnter method="OnEnter"/>
             <OnLeave method="OnLeave"/>
         </Scripts>
-        <NormalTexture file="Interface\AddOns\Gears\Assets\ui-button-empty-grid"/>
-        <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress" alpha="0.7" alphaMode="ADD"/>
+        <NormalTexture file="Interface\AddOns\Gears\Assets\ui-button-empty"/>
+        <PushedTexture file="Interface\AddOns\Gears\Assets\ui-button-empty" alpha="0.9" alphaMode="ADD"/>
         <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alpha="0.8" alphaMode="ADD"/>
-        <CheckedTexture file="Interface\Buttons\CheckButtonHilight" alpha="0.4" alphaMode="ADD" />
+        <CheckedTexture file="Interface\Buttons\CheckButtonHilight" alpha="0.9" alphaMode="ADD" />
     </CheckButton>
 
     <Button name="Gears_DeleteButtonTemplate" inherits="IconButtonTemplate" hidden="true"

@@ -80,18 +80,33 @@ end
 
 --- @param frame FrameObj
 local function MainFrameMixin_AnchorToPaperDoll(frame)
-  local anchorFrame = PaperDollFrame
+  p('MainFrameMixin_AnchorToPaperDoll...')
+  local anchorFrame = CharacterFrameCloseButton
+  local osx, osy = -6, -4
+  
+  if EngravingFrame then
+    if EngravingFrame:IsShown() then
+      anchorFrame = EngravingFrame.Border.NineSlice
+      osx, osy = -4, 1
+    else
+      osx, osy    = -8, -3
+    end
+  elseif ns:IsMists() then
+    osx, osy = 0, 0
+  end
+  
+  --if ns:IsTBC() or ns:IsClassicEra() then
+  --  osx, osy = -34, -12
+  --  if EngravingFrame then
+  --    p('xx EngravingFrame')
+  --    osx, osy = -3, 1
+  --    anchorFrame = EngravingFrame.Border.NineSlice
+  --  end
+  --end
 
   frame:ClearAllPoints()
-  local osx, osy = 0, 2
-  if ns:IsTBC() or ns:IsClassicEra() then
-    osx, osy = -34, -12
-    if EngravingFrame then
-      osx, osy = -3, 1
-      anchorFrame = EngravingFrame.Border.NineSlice
-    end
-  end
   frame:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", osx, osy)
+  Gears_ToggleButton.AnchorToPaperDoll()
 end
 
 --- @param self Gears_MainFrameMixin
@@ -151,6 +166,27 @@ local function MainFrameMixin_OnEquipmentChanged(self)
   end)
 end
 
+--- @param self Gears_MainFrameMixin
+local function MainFrameMixin_EngravingFrameHook(self)
+  if not EngravingFrame then return end
+  hooksecurefunc(EngravingFrame, "Show", function() MainFrameMixin_AnchorToPaperDoll(self) end)
+  hooksecurefunc(EngravingFrame, "Hide", function() MainFrameMixin_AnchorToPaperDoll(self) end)
+end
+
+--- @param self Gears_MainFrameMixin
+local function MainFrameMixin_OnToggleHook(self)
+  PaperDollFrame:HookScript("OnShow", function()
+    self:Show()
+    if self:IsShown() then
+      Gears_ToggleButton:SetChecked(true)
+      MainFrameMixin_AnchorToPaperDoll(self)
+      MainFrameMixin_EngravingFrameHook(self)
+    end
+    -- todo next: sticky settings on showing gears
+  end)
+  PaperDollFrame:HookScript("OnHide", function() self:OnClickClose() end)
+end
+
 --- Fired when equipment set is created, updated, deleted
 --- via C_DeleteEquipmentSet()
 --- @param self Gears_MainFrameMixin
@@ -200,22 +236,44 @@ function o:OnLoad()
   local headerText = self.HeaderTitle
   headerText:SetText(ns.addon)
   
-  local _frame = self
+  --[[local _frame = self
   PaperDollFrame:HookScript("OnShow", function()
     MainFrameMixin_AnchorToPaperDoll(_frame)
+
     _frame:Show()
-    if _frame:IsShown() then Gears_ToggleButton:SetChecked(true) end
+    if _frame:IsShown() then
+      Gears_ToggleButton:SetChecked(true)
+      
+      if EngravingFrame then
+        hooksecurefunc(EngravingFrame, "Show", function()
+          p('EngravingFrame Show()')
+          MainFrameMixin_AnchorToPaperDoll(self)
+        end)
+        
+        hooksecurefunc(EngravingFrame, "Hide", function()
+          p('EngravingFrame Hide()')
+          MainFrameMixin_AnchorToPaperDoll(self)
+          --self:ClearAllPoints()
+          --self:SetPoint("TOPLEFT", CharacterFrameCloseButton, "TOPRIGHT", -8, -3)
+        end)
+        self.EngravingFrame__hooked = true
+      end
+      
+    end
     -- todo next: sticky settings on showing gears
   end)
+  
   PaperDollFrame:HookScript("OnHide", function()
     _frame:OnClickClose()
-  end)
+  end)]]
   
+  MainFrameMixin_OnToggleHook(self)
   MainFrameMixin_OnLoadButtons(self)
   
   self:RegisterEvent('PLAYER_LOGIN', fn(MainFrameMixin_OnPlayerLogin, self))
   
 end
+
 
 --- When the mouse is out of the EquipmentSetFrame and into the main frame,
 --- hide other EquipmentSet specific action buttons
