@@ -1,21 +1,24 @@
 --- @type Namespace
 local ns = select(2, ...)
 
--- todo: Drag and drop to actionbars
+--[[-------------------------------------------------------------------
+Blizzard Vars
+---------------------------------------------------------------------]]
+local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
+local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
+local CURRENTLY_EQUIPPED = CURRENTLY_EQUIPPED
 
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
-local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
-local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
 local CHECKBOX_TEXTURE = [[Interface\Buttons\UI-CheckBox-Check]]
-
 local TOOLTIP_DELAY = 0.01
 local BULLET        = '•'
 
 local bulletFmt = ' %s %s: %s'
 local c_white = ns:colorFn('afafaf')
 local c_blue = ns:colorFn('71ABFF')
+local c_green = ns:colorFn('6EE6A0')
 local c_yellow1 = ns:colorFn('E6BF33')
 local c_yellow = ns:colorFn('FFE680')
 
@@ -40,7 +43,6 @@ Mixin
 --- @field owner Gears_MainFrame
 --- @field info EquipmentSetInfo
 --- @field selected boolean
---- @field equipSetID Identifier
 --- @field CheckMark TextureObj
 --- @field DeleteButton ButtonObj
 --- @field ChangeButton ButtonObj
@@ -58,32 +60,56 @@ local BACKDROP_WITH_BG = {
   edgeSize = 12,
   insets   = { left = 3, right = 3, top = 3, bottom = 3 },
 }
-
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
+--- @param id Identifier The equipmentSet ID
+--- @return EquipmentSetDetails
+local function GetEquipmentSet(id)
+  assert(id, "GetEquipmentSet:: The param id is required.")
+  
+  local c_eq = C_EquipmentSet.GetEquipmentSetInfo
+  local name, iconFileID, setID, isEquipped,
+  numItems, numEquipped, numInInventory,
+  numLost, numIgnored = c_eq(id)
+  
+  if not name then return nil end
+  
+  --- @class EquipmentSetDetails
+  local eq = {
+    name           = name,
+    iconID         = iconFileID,
+    id             = setID,
+    isEquipped     = isEquipped,
+    numItems       = numItems,
+    numEquipped    = numEquipped,
+    numInInventory = numInInventory,
+    numLost        = numLost,
+    numIgnored     = numIgnored,
+  }
+  return eq
+end
+
+--- @param id Identifier The equipmentSet ID
+--- @return boolean
+local function IsFullyEquipped(id)
+  local eqs = GetEquipmentSet(id); return eqs and eqs.isEquipped
+end
+
+--- @param tt GameTooltip
+--- @param id Identifier EquipmentSet ID
+local function GameTooltip_AddEquipmentDetails(tt, id)
+  local eqs = GetEquipmentSet(id)
+  if eqs and eqs.isEquipped then
+    tt:AddLine(c_green(CURRENTLY_EQUIPPED))
+  end
+end
+
 --- @param self EquipmentSetFrame
 local function EquipmentSet_ShowTooltip(self)
   C_Timer.After(TOOLTIP_DELAY, function()
     if not self:IsMouseOver() then return end
     
-    local name, iconFileID, setID, isEquipped,
-    numItems, numEquipped, numInInventory,
-    numLost, numIgnored =
-    C_EquipmentSet.GetEquipmentSetInfo(self:GetID())
-    
-    local eq = {
-      name            = name,
-      iconFileID      = iconFileID,
-      setID           = setID,
-      isEquipped      = isEquipped,
-      numItems        = numItems,
-      numEquipped     = numEquipped,
-      numInInventory  = numInInventory,
-      numLost         = numLost,
-      numIgnored      = numIgnored,
-    }
-
     local availableActions = c_blue(L['Available Actions']) .. ':'
     local eqSet = c_yellow1(L['Equipment Set'] .. ':')
     local leftClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Left-click']), c_white(L['Select']))
@@ -91,7 +117,10 @@ local function EquipmentSet_ShowTooltip(self)
     local drag = (bulletFmt):format(c_white(BULLET), c_yellow(L['Drag']), c_white(L['Drag to an action bar']))
     
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:ClearLines()
     GameTooltip:AddDoubleLine(eqSet, c_blue(self.info.name))
+    GameTooltip:SetEquipmentSet(self.info.name)
+    GameTooltip_AddEquipmentDetails(GameTooltip, self:GetID())
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine(availableActions)
     GameTooltip:AddLine(leftClick)
@@ -110,23 +139,11 @@ function o:OnLoad()
   self:SetBackdrop(BACKDROP_WITH_BG)
   self:HideBorder()
   self:__OnLoadCheckMark()
-  self:__CreateDeleteButton()
-  self:__CreateChangeButton()
+  self:__OnLoadCreateDeleteButton()
+  self:__OnLoadCreateChangeButton()
 end
 
-function o:OnDragStart()
-  ClearCursor()
-  C_PickupEquipmentSet(self:GetID())
-end
-
---- If dropped nowhere valid, clear cursor
-function o:OnDragStop()
-  if CursorHasItem() or CursorHasSpell() or CursorHasMacro() then
-    ClearCursor()
-  end
-end
-
-function o:__CreateDeleteButton()
+function o:__OnLoadCreateDeleteButton()
   --- @type ButtonObj
   local btn = CreateFrame(
           "Button",
@@ -141,7 +158,7 @@ function o:__CreateDeleteButton()
   btn:Hide()
 end
 
-function o:__CreateChangeButton()
+function o:__OnLoadCreateChangeButton()
   --- @type ButtonObj
   local btn = CreateFrame(
           "Button",
@@ -164,26 +181,19 @@ function o:__OnLoadCheckMark()
   t:Hide()
 end
 
---- @return Gears_MainFrame
-function o:GetMainFrame() return self.owner end
+function o:OnDragStart() C_PickupEquipmentSet(self:GetID()) end
+--- Nothing to do here
+function o:OnDragStop() end
 
 --- Show check-mark if fully equipped.
 --- The `callbackFn` is optional.
 --- @param callbackFn nil|fun(isFullyEquipped:boolean) | "function(isFullyEquipped) end"
 function o:UpdateFullyEquippedState(callbackFn)
-  local equipped = self:IsFullyEquipped()
-  if equipped then
-    self.CheckMark:Show()
-  else
-    self.CheckMark:Hide()
+  local equipped = IsFullyEquipped(self:GetID())
+  if equipped then self.CheckMark:Show()
+  else self.CheckMark:Hide()
   end
   if callbackFn then callbackFn(equipped) end
-end
-
-function o:IsFullyEquipped()
-  local name, _, _, isEquipped = C_GetEquipmentSetInfo(self:GetID())
-  --print(('yy equipped[%s::%s]: %s'):format(self.equipSetID, name, tostring(isEquipped)))
-  return isEquipped
 end
 
 function o:OnMouseDown() self:GetMainFrame():SelectEquipmentSet(self) end
@@ -272,8 +282,6 @@ function o:HideBorder()
 end
 
 function o:ShowAsSelectedBorder()
-  --self:SetBackdropColor(1, 1, 1, 1)
-  --self:SetBackdropColor(0, 0, 0, 0)
   self:SetBackdropColor(1, 1, 1, 0.1)
   self:SetBackdropBorderColor(1.0, 0.82, 0.0, 0.9)
 end
@@ -290,3 +298,6 @@ function o:GetEquipmentSetName()
   local info = self.owner.info
   return info and info.name
 end
+
+--- @return Gears_MainFrame
+function o:GetMainFrame() return self.owner end
