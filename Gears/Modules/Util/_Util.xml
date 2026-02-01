@@ -4,6 +4,7 @@
 
     <Script file="EventTracePrinter.lua"/>
     <Script file="GameVersionMixin.lua"/>
+    <Script file="CharacterFrameUtil.lua"/>
     <Script file="LibIconPickerUtil.lua"/>
 
 </Ui>

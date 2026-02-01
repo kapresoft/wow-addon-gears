@@ -11,9 +11,9 @@
           justifyH="LEFT" virtual="true">
     </Font>
 
-    <CheckButton name="Gears_ToggleButton" inherits="UICheckButtonTemplate"
+    <CheckButton name="Gears_ToggleButtonTemplate" inherits="UICheckButtonTemplate"
                  mixin="Gears_ToggleButtonMixin" registerForClicks="LeftButtonUp"
-                 frameLevel="10" hidden="true">
+                 frameLevel="10" hidden="true" virtual="true">
         <Size x="36" y="36"/>
         <Anchors>
             <Anchor point="BOTTOMRIGHT" relativeTo="CharacterHandsSlot"
@@ -237,4 +237,5 @@
     <Frame name="Gears_MainFrame" hidden="true" movable="true" enableMouse="true"
            inherits="BackdropTemplate, Gears_MainFrameTemplate">
     </Frame>
+    <CheckButton name="Gears_ToggleButton" inherits="Gears_ToggleButtonTemplate"/>
 </Ui>

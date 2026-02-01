@@ -58,7 +58,6 @@ function o:ShowPicker()
     lip:Open(function(sel)
       if not sel.textInputValue then return end
       C_ModifyEquipmentSet(self.owner:GetID(), sel.textInputValue, sel.icon)
-      p('Updated name:', sel.textInputValue, ', icon:', sel.icon)
     end, opt)
   end)
 end

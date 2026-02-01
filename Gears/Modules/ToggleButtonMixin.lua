@@ -1,5 +1,6 @@
 --- @type Namespace
 local ns = select(2, ...)
+local cfu = ns.O.CharacterFrameUtil
 
 --[[-------------------------------------------------------------------
 Alias
@@ -11,6 +12,7 @@ Local Vars
 ---------------------------------------------------------------------]]
 local TOGGLE_BUTTON_ICON = [[Interface\AddOns\Gears\Assets\gears-button-2b]]
 local TOOLTIP_DELAY = 0.01
+
 --- temp local
 local L = {}
 L['Open Gears Panel'] = 'Open Gears Panel'
@@ -20,17 +22,36 @@ ToggleButtonMixin
 ---------------------------------------------------------------------]]
 --- @class ToggleButtonMixin : CheckButton
 --- @field Icon TextureObj
+--- @field owner PaperDollFrame
 Gears_ToggleButtonMixin = {}
 local p = ns:log('ToggleButtonMixin')
 
 --- @type ToggleButtonMixin | ToggleButton
 local o  = Gears_ToggleButtonMixin
 
+--- Handles Clicks on the Original Blizz Equipment Gear tab
+--- @param self ToggleButton
+local function ToggleButton_BlizzEquipmentGearHook(self)
+  if not PaperDollSidebarTab3 then return end
+  PaperDollSidebarTab3:HookScript("OnClick", function(btn)
+    if self:IsChecked() then
+      self:__HideGearsIsShownBlizzEquipUI()
+    end
+  end)
+end
+
+--- @see Gears_MainFrameMixin#MainFrameMixin_OnPlayerLogin()
+--- @param gearsMainFrame Gears_MainFrameMixin
+function o:OnPlayerLogin(gearsMainFrame)
+  ToggleButton_BlizzEquipmentGearHook(self)
+end
+
 function o:OnLoad()
+  ns.toggleButton = self
+  
   self:SetParent(PaperDollFrame)
   self.owner = PaperDollFrame
   self.tooltipText = "Open Gears"
-  
   
   -- green highlight
   --- @type TextureObj
@@ -53,18 +74,36 @@ function o:OnLoad()
   self.Icon = icon
   
   self:Show()
+  self:__ShowGears()
+end
 
+--- @param enable boolean
+function o:EnableEquipmentSlots(enable)
+  cfu:ForEachEquipmentSlot(function(s, btn, po)
+    --p(('slot[%s]:'):format(s.name), s)
+    if enable then po:Show() else po:Hide() end
+  end)
 end
 
 function o:OnClick()
   GameTooltip:Hide()
-  if self:GetChecked() then
-    PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
-    Gears_MainFrame:Show()
-    return end
-  PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
-  Gears_MainFrame:Hide()
-  --self:GetNormalTexture():SetAlpha(0.99)
+  if self:IsChecked() then
+    self:__ShowGears()
+    
+    -- in MoPs, there is an existing EquipmentManager,
+    -- We will show character stats when this is the case
+    -- so the player is not confused.
+    -- todo next: Prompt the user to use Gears as main equipment manager?
+    --    • then, replace EquipmentManager with Gears icon, click logic, etc.
+    local emp = PaperDollFrame and PaperDollSidebarTab1 and PaperDollFrame.EquipmentManagerPane
+    if emp and emp:IsShown() then
+      PaperDollSidebarTab1:Click()
+      self:EnableEquipmentSlots(true)
+    end
+    return
+  end
+  
+  self:__HideGears()
 end
 
 function o:OnEnter()
@@ -80,6 +119,29 @@ end
 
 function o:OnLeave()
   GameTooltip:Hide()
+end
+
+function o:IsChecked() return self:GetChecked() end
+
+function o:__ShowGears()
+  PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
+  ns.gears:Show()
+  ns.gears.__stickyHide = false
+  self:EnableEquipmentSlots(true)
+end
+
+function o:__HideGears()
+  PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
+  ns.gears:Hide()
+  ns.gears.__stickyHide = true
+  self:EnableEquipmentSlots(false)
+end
+function o:__HideGearsIsShownBlizzEquipUI()
+  PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
+  ns.gears:Hide()
+  ns.gears.__stickyHide = true
+  self:SetChecked(false)
+  self:EnableEquipmentSlots(true)
 end
 
 function o.AnchorToPaperDoll()

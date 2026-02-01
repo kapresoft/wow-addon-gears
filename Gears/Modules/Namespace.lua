@@ -6,6 +6,8 @@ Type: Namespace
 --- @field gameVersion GameVersion
 --- @field tracer EventTracePrinter
 --- @field p LibPrettyPrint_Printer The base printer
+--- @field gears Gears_MainFrame
+--- @field toggleButton ToggleButton
 --- @type string
 
 --[[-------------------------------------------------------------------
@@ -14,6 +16,7 @@ Type: NamespaceObjects
 --- @class NamespaceObjects
 --- @field GameVersion GameVersion
 --- @field LibIconPickerUtil LibIconPickerUtil
+--- @field CharacterFrameUtil CharacterFrameUtil
 
 --[[-------------------------------------------------------------------
 Aliases

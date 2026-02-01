@@ -60,6 +60,7 @@ MainFrame
 --- @field protected ButtonsContainerFrame ButtonsContainerFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
+--- @field __stickyHide boolean
 Gears_MainFrameMixin = {}
 
 --- @type Gears_MainFrameMixin | Gears_MainFrame | AceEvent | AceBucket
@@ -78,9 +79,15 @@ local function fn(targetFn, ...)
   return function(...) targetFn(unpack(boundArgs), ...) end
 end
 
+--- @param self Gears_MainFrameMixin
+local function MainFrameMixin_OnPlayerLogin(self)
+  self.__stickyHide = false
+  self:InitEquipmentSet()
+  ns.toggleButton:OnPlayerLogin(self)
+end
+
 --- @param frame FrameObj
 local function MainFrameMixin_AnchorToPaperDoll(frame)
-  p('MainFrameMixin_AnchorToPaperDoll...')
   local anchorFrame = CharacterFrameCloseButton
   local osx, osy = -6, -4
   
@@ -93,15 +100,6 @@ local function MainFrameMixin_AnchorToPaperDoll(frame)
     end
   end
   
-  --if ns:IsTBC() or ns:IsClassicEra() then
-  --  osx, osy = -34, -12
-  --  if EngravingFrame then
-  --    p('xx EngravingFrame')
-  --    osx, osy = -3, 1
-  --    anchorFrame = EngravingFrame.Border.NineSlice
-  --  end
-  --end
-
   frame:ClearAllPoints()
   frame:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", osx, osy)
   Gears_ToggleButton.AnchorToPaperDoll()
@@ -145,9 +143,6 @@ local function MainFrameMixin_GetFrame(self, eqInfo)
   return self.framePool[index]
 end
 
---- @param self Gears_MainFrameMixin
-local function MainFrameMixin_OnPlayerLogin(self) self:InitEquipmentSet() end
-
 --- @private
 --- @param self Gears_MainFrameMixin
 local function MainFrameMixin_OnEquipmentChanged(self)
@@ -171,18 +166,35 @@ local function MainFrameMixin_EngravingFrameHook(self)
   hooksecurefunc(EngravingFrame, "Hide", function() MainFrameMixin_AnchorToPaperDoll(self) end)
 end
 
+--- When the blizzard `CharacterFrameExpandButton` button is expanded
+--- the `CharacterLevelText` is misaligned, i.e. "Level 80 Survival Hunter".
+--- This is a correction to top/mid align the character level text.
+local function MainFrameMixin_AlignCharacterLevelText()
+  --- @type FontStringObj
+  local c = CharacterLevelText; if not c then return end
+  c:ClearAllPoints()
+  c:SetPoint("BOTTOM", CharacterModelScene, 'TOP', 2, 5)
+end
+
+local function MainFrameMixin_CharacterFrameExpandButtonHook()
+  local cfeb = CharacterFrameExpandButton; if not cfeb then return end
+  cfeb:HookScript("OnClick", MainFrameMixin_AlignCharacterLevelText)
+end
+
 --- @param self Gears_MainFrameMixin
-local function MainFrameMixin_OnToggleHook(self)
+local function MainFrameMixin_CharacterFrameHooks(self)
   PaperDollFrame:HookScript("OnShow", function()
-    self:Show()
+    if not self.__stickyHide then self:Show() end
     if self:IsShown() then
-      Gears_ToggleButton:SetChecked(true)
+      ns.toggleButton:SetChecked(true)
       MainFrameMixin_AnchorToPaperDoll(self)
       MainFrameMixin_EngravingFrameHook(self)
     end
-    -- todo next: sticky settings on showing gears
+    MainFrameMixin_AlignCharacterLevelText()
+    
   end)
   PaperDollFrame:HookScript("OnHide", function() self:OnClickClose() end)
+  MainFrameMixin_CharacterFrameExpandButtonHook()
 end
 
 --- Fired when equipment set is created, updated, deleted
@@ -194,6 +206,7 @@ local function MainFrameMixin_OnEquipmentSetsChanged(self) self:RefreshEquipment
 Methods: Gears_MainFrameMixin
 ---------------------------------------------------------------------]]
 function o:OnLoad()
+  ns.gears = self
   BackdropTemplateMixin.OnBackdropLoaded(self)
   self:SetBackdrop(BACKDROP_TOAST_12_12)
   --self:SetBackdrop(BACKDROP_DARK_DIALOG_32_32)
@@ -234,42 +247,10 @@ function o:OnLoad()
   local headerText = self.HeaderTitle
   headerText:SetText(ns.addon)
   
-  --[[local _frame = self
-  PaperDollFrame:HookScript("OnShow", function()
-    MainFrameMixin_AnchorToPaperDoll(_frame)
-
-    _frame:Show()
-    if _frame:IsShown() then
-      Gears_ToggleButton:SetChecked(true)
-      
-      if EngravingFrame then
-        hooksecurefunc(EngravingFrame, "Show", function()
-          p('EngravingFrame Show()')
-          MainFrameMixin_AnchorToPaperDoll(self)
-        end)
-        
-        hooksecurefunc(EngravingFrame, "Hide", function()
-          p('EngravingFrame Hide()')
-          MainFrameMixin_AnchorToPaperDoll(self)
-          --self:ClearAllPoints()
-          --self:SetPoint("TOPLEFT", CharacterFrameCloseButton, "TOPRIGHT", -8, -3)
-        end)
-        self.EngravingFrame__hooked = true
-      end
-      
-    end
-    -- todo next: sticky settings on showing gears
-  end)
-  
-  PaperDollFrame:HookScript("OnHide", function()
-    _frame:OnClickClose()
-  end)]]
-  
-  MainFrameMixin_OnToggleHook(self)
+  MainFrameMixin_CharacterFrameHooks(self)
   MainFrameMixin_OnLoadButtons(self)
   
   self:RegisterEvent('PLAYER_LOGIN', fn(MainFrameMixin_OnPlayerLogin, self))
-  
 end
 
 
@@ -441,7 +422,6 @@ function o:OnClick_AddButton(button)
       local esName = strtrim(sel.textInputValue)
       if #esName <= 0 then return end
       C_CreateEquipmentSet(esName, sel.icon)
-      p('Create set:: name:', esName, ', icon:', sel.icon)
       PlaySound(SOUNDKIT.IG_MAINMENU_QUIT)
     end, opt)
   end)
