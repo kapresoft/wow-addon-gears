@@ -35,10 +35,8 @@ function o:New(addon, predicateFn)
   return tracer
 end
 
-local DEVTOOLS_TYPE_COLOR = "|cff88ff88";
-
-local EVENT_BASE_COLOR = CreateColorFromRGBHexString('88ff88')
-local function cbase(text) return EVENT_BASE_COLOR:WrapTextInColorCode(text) end
+-- light green
+local c_base = ns:colorFn('88ff88')
 
 --- @private
 --- @param addon Name
@@ -47,7 +45,7 @@ function o:__Init(addon, predicateFn)
   assert(addon, "The param addon is required.")
 
   self.logName     = addon
-  self.eventBase   = upperc(cbase(addon))
+  self.eventBase   = upperc(c_base(addon))
   self.predicateFn = predicateFn or function() return true  end
   self.evt         = self:LoadEventTrace()
 end

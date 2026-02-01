@@ -81,8 +81,8 @@ do
 
   function ns:t(prefix, ...) return self.tracer(prefix, ...) end
   function ns:tf(prefix, ...) return self.tracer:tf(prefix, ...) end
-  function ns:td(prefix, ...) return self.tracer:td(...) end
-  function ns:tdf(prefix, ...) return self.tracer:tdf(...) end
+  function ns:td(...) return self.tracer:td(...) end
+  function ns:tdf(...) return self.tracer:tdf(...) end
 
   --- @param name Name The module name; see NamespaceObjects
   --- @param obj any The namespace object
