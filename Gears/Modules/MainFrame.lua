@@ -61,6 +61,7 @@ MainFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
 --- @field __stickyHide boolean
+--- @field __lastIcon IconIDOrPath
 Gears_MainFrameMixin = {}
 
 --- @type Gears_MainFrameMixin | Gears_MainFrame | AceEvent | AceBucket
@@ -388,7 +389,7 @@ end
 --- @param callback fun(sel:EquipmentSetFrame) : void
 function o:WithSelectedEquipmentSet(callback)
   for _, eqs in pairs(self.framePool) do
-    if eqs.selected and callback then callback(eqs) end
+    if eqs.selected and callback then return callback(eqs) end
   end
 end
 
@@ -414,7 +415,7 @@ end
 function o:OnClick_AddButton(button)
   PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN)
   local opt = {
-    icon = icon, showTextInput = true,
+    icon = self.__lastIcon, showTextInput = true,
     textInput = { label = 'New Equipment Set:' }
   }
   LibIconPickerUtil:Get(function(lip)
@@ -423,6 +424,7 @@ function o:OnClick_AddButton(button)
       if #esName <= 0 then return end
       C_CreateEquipmentSet(esName, sel.icon)
       PlaySound(SOUNDKIT.IG_MAINMENU_QUIT)
+      self.__lastIcon = sel.icon
     end, opt)
   end)
 end
