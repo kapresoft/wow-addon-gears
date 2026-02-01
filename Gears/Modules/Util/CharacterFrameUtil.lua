@@ -39,11 +39,16 @@ end
 function o:ForEachEquipmentSlot(callbackFn)
   local pdif = PaperDollItemsFrame
   if not (pdif and GetInventorySlotInfo) then
-    --p('ForEachEquipmentSlot::', c_error('PaperDollItemsFrame or GetInventorySlotInfo is not available.'))
     return
   end
   
-  for _, slotItemButton in ipairs({ pdif:GetChildren() }) do
+  --- @class SlotItemButton
+  --- @field popoutButton ButtonObj
+  
+  --- @type table<number, SlotItemButton>
+  local children = { pdif:GetChildren() }
+  
+  for _, slotItemButton in ipairs(children) do
     local parentName = slotItemButton:GetParent():GetName()
     if parentName == 'PaperDollItemsFrame' then
       local slotInfo = GetSlotInfo(slotItemButton)
