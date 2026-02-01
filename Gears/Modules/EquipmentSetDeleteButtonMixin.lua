@@ -1,10 +1,16 @@
 --- @type Namespace
 local ns = select(2, ...)
+--[[-------------------------------------------------------------------
+Blizzard Vars
+---------------------------------------------------------------------]]
+local C_DeleteEquipmentSet = C_EquipmentSet.DeleteEquipmentSet
+local DELETE = DELETE
+local CONFIRM_DELETE_EQUIPMENT_SET = 'CONFIRM_DELETE_EQUIPMENT_SET'
 
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
-local C_DeleteEquipmentSet = C_EquipmentSet.DeleteEquipmentSet
+local p = ns:log('EquipmentSetDeleteButtonMixin')
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -15,8 +21,6 @@ Mixin
 --- @field owner EquipmentSetFrame
 --- @field DeleteButton boolean
 Gears_EquipmentSetDeleteButtonMixin = {}
-local p           = ns:log('EquipmentSetDeleteButtonMixin')
-local OBJECT_TYPE = 'Gears_EquipmentSetDeleteButton'
 
 --- @type EquipmentSetDeleteButtonMixin | EquipmentSetDeleteButton
 local o  = Gears_EquipmentSetDeleteButtonMixin
@@ -32,7 +36,7 @@ function o:OnLoad()
   self.Icon:SetAlpha(0.4)
   self.onClickHandler = function()
     local id, name = self.owner:GetIdentity()
-    StaticPopup_Show("CONFIRM_DELETE_EQUIPMENT_SET", name, nil, id)
+    StaticPopup_Show(CONFIRM_DELETE_EQUIPMENT_SET, name, nil, id)
   end
 end
 
