@@ -13,8 +13,8 @@
 
     <Script file="Libs\LibStub\LibStub.lua"/>
     <!--@non-debug@
-    @end-non-debug@-->
     <Include file="Ace3.xml"/>
+    @end-non-debug@-->
     <Include file='LibPrettyPrint.xml'/>
     <Include file="Libs\LibSharedMedia\LibSharedMedia-3.0\lib.xml"/>
 
