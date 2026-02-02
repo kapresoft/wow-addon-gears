@@ -54,7 +54,8 @@ ignore:
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.yaml
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.sh
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
-  - Gears/Gears-OptionsUI
+  - Gears-OptionsUI
+### Ignore Gears-OptionsUI for now
 
 # REQUIRED for CurseForge packager (non-obvious):
 # The LEFT side MUST be <repo-folder>/<addon-folder>
@@ -71,4 +72,4 @@ ignore:
 # ⚠️ Do not change unless you also change the repo/addon layout.
 move-folders:
   Gears/Gears: Gears
-#  Gears/Gears-OptionsUI: Gears-OptionsUI
+  Gears/Gears-OptionsUI: Gears-OptionsUI
