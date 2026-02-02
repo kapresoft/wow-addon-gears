@@ -12,10 +12,11 @@
     --><!--@end-do-not-package@-->
 
     <Script file="Libs\LibStub\LibStub.lua"/>
+    <Include file="Libs\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
+    <Include file="Libs\LibSharedMedia\LibSharedMedia-3.0\lib.xml"/>
     <!--@non-debug@
     <Include file="Ace3.xml"/>
     @end-non-debug@-->
     <Include file='LibPrettyPrint.xml'/>
-    <Include file="Libs\LibSharedMedia\LibSharedMedia-3.0\lib.xml"/>
 
 </Ui>
