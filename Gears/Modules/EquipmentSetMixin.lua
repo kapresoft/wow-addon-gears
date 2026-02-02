@@ -196,7 +196,7 @@ function o:UpdateFullyEquippedState(callbackFn)
   if callbackFn then callbackFn(equipped) end
 end
 
-function o:OnMouseDown() self:GetMainFrame():SelectEquipmentSet(self) end
+function o:OnMouseDown() ns.gears:SelectEquipmentSet(self) end
 
 function o:OnEnter()
   EquipmentSet_ShowTooltip(self)
@@ -298,6 +298,3 @@ function o:GetEquipmentSetName()
   local info = self.owner.info
   return info and info.name
 end
-
---- @return Gears_MainFrame
-function o:GetMainFrame() return self.owner end

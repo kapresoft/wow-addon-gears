@@ -87,7 +87,7 @@ local function MainFrameMixin_OnPlayerLogin(self)
   ns.toggleButton:OnPlayerLogin(self)
 end
 
---- @param frame FrameObj
+--- @param frame Gears_MainFrameMixin
 local function MainFrameMixin_AnchorToPaperDoll(frame)
   local anchorFrame = CharacterFrameCloseButton
   local osx, osy = -6, -4
@@ -103,7 +103,7 @@ local function MainFrameMixin_AnchorToPaperDoll(frame)
   
   frame:ClearAllPoints()
   frame:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", osx, osy)
-  Gears_ToggleButton.AnchorToPaperDoll()
+  ns.toggleButton:AnchorToPaperDoll()
 end
 
 --- @param self Gears_MainFrameMixin

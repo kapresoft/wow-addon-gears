@@ -23,6 +23,7 @@ ToggleButtonMixin
 --- @class ToggleButtonMixin : CheckButton
 --- @field Icon TextureObj
 --- @field owner PaperDollFrame
+--- @field private __blizzEquipHooked boolean
 Gears_ToggleButtonMixin = {}
 local p = ns:log('ToggleButtonMixin')
 
@@ -33,11 +34,10 @@ local o  = Gears_ToggleButtonMixin
 --- @param self ToggleButton
 local function ToggleButton_BlizzEquipmentGearHook(self)
   if not PaperDollSidebarTab3 then return end
-  PaperDollSidebarTab3:HookScript("OnClick", function(btn)
-    if self:IsChecked() then
-      self:__HideGearsIsShownBlizzEquipUI()
-    end
-  end)
+  if self.__blizzEquipHooked then return end
+
+  self.__blizzEquipHooked = true
+  PaperDollSidebarTab3:HookScript("OnClick", function(btn) self:OnClick_BlizzEquipmentPanel() end)
 end
 
 --- @see Gears_MainFrameMixin#MainFrameMixin_OnPlayerLogin()
@@ -51,7 +51,6 @@ function o:OnLoad()
   
   self:SetParent(PaperDollFrame)
   self.owner = PaperDollFrame
-  self.tooltipText = "Open Gears"
   
   -- green highlight
   --- @type TextureObj
@@ -136,7 +135,11 @@ function o:__HideGears()
   ns.gears.__stickyHide = true
   self:EnableEquipmentSlots(false)
 end
-function o:__HideGearsIsShownBlizzEquipUI()
+
+--- Hide 'Gears' panel if Blizz EquipmentSet Panel is shown
+function o:OnClick_BlizzEquipmentPanel()
+  if not self:IsChecked() then return end
+  
   PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:Hide()
   ns.gears.__stickyHide = true
@@ -144,22 +147,13 @@ function o:__HideGearsIsShownBlizzEquipUI()
   self:EnableEquipmentSlots(true)
 end
 
-function o.AnchorToPaperDoll()
-  if EngravingFrame and RuneFrameControlButton then
-    --- @type CheckButtonObj
-    local anch = RuneFrameControlButton
-    --- @type CheckButtonObj
-    local btn = Gears_ToggleButton
-    btn:ClearAllPoints()
-    btn:SetPoint('TOPRIGHT', anch, 'TOPLEFT', -2, 1)
-    --anch:GetCheckedTexture():SetAlpha(0.6)
-    --anch:GetCheckedTexture():SetBlendMode('ADD')
-    
-    
-    --btn:SetPoint('TOPRIGHT', RuneFrameControlButton, 'TOPLEFT', -2, 0)
-    --btn:SetPoint('TOPRIGHT', Gears_ToggleButton, 'TOPLEFT', -2, -4)
-    --btn:SetPoint('TOPRIGHT', Gears_ToggleButton, 'TOPLEFT', -2, -1)
-    --btn:GetCheckedTexture():SetAlpha(0.4)
-    --btn:GetCheckedTexture():SetBlendMode('ADD')
-  end
+function o:AnchorToPaperDoll()
+  if not (EngravingFrame and RuneFrameControlButton) then return end
+  
+  --- @type CheckButtonObj
+  local anch = RuneFrameControlButton
+  --- @type CheckButtonObj
+  local btn  = Gears_ToggleButton
+  btn:ClearAllPoints()
+  btn:SetPoint('TOPRIGHT', anch, 'TOPLEFT', -2, 1)
 end

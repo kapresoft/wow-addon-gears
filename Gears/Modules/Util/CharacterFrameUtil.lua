@@ -27,10 +27,8 @@ local function GetSlotInfo(slotItemButton)
     local slot, icon, checkRelic = GetInventorySlotInfo(slotName)
     return { name = slotName, id = slot, iconID = icon, checkRelic = checkRelic }
   end)
-  if not ok then
-    p(('Slot[%s] not available:: %s'):format(slotName, c_warn(result)))
-    return nil
-  end
+  if not ok then return nil end
+  
   return result
 end
 
