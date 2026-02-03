@@ -80,14 +80,15 @@ local function fn(targetFn, ...)
   return function(...) targetFn(unpack(boundArgs), ...) end
 end
 
---- @param self Gears_MainFrameMixin
+--- @param self Gears_MainFrameMixin|FrameObj
 local function MainFrameMixin_OnPlayerLogin(self)
   self.__stickyHide = false
+  self.__origHeight = self:GetHeight()
   self:InitEquipmentSet()
   ns.toggleButton:OnPlayerLogin(self)
 end
 
---- @param frame Gears_MainFrameMixin
+--- @param frame Gears_MainFrameMixin|FrameObj
 local function MainFrameMixin_AnchorToPaperDoll(frame)
   local anchorFrame = CharacterFrameCloseButton
   local osx, osy = -6, -4
@@ -99,6 +100,9 @@ local function MainFrameMixin_AnchorToPaperDoll(frame)
     else
       osx, osy    = -8, -3
     end
+  elseif ns:IsMainLine() then
+    osx, osy = -2, 0
+    if frame.__origHeight then frame:SetHeight(frame.__origHeight - 3) end
   end
   
   frame:ClearAllPoints()

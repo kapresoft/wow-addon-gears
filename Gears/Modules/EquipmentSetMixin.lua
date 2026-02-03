@@ -119,7 +119,9 @@ local function EquipmentSet_ShowTooltip(self)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:ClearLines()
     GameTooltip:AddDoubleLine(eqSet, c_blue(self.info.name))
-    GameTooltip:SetEquipmentSet(self.info.name)
+    --- @type string|number
+    local eqID = self.info.name
+    if ns:IsMainLine() then eqID = self:GetID() end GameTooltip:SetEquipmentSet(eqID)
     GameTooltip_AddEquipmentDetails(GameTooltip, self:GetID())
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine(availableActions)
