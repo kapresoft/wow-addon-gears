@@ -155,5 +155,22 @@ do
     return AceBucket:Embed({})
   end
   
+  --- >Safe wrapper for PlaySound.
+  --- >Returns two results: willPlay:boolean, soundHandle:boolean
+  --- [Documentation](https://warcraft.wiki.gg/wiki/API_PlaySound)
+  --- ##### Example:
+  --- ```
+  --- local willPlay, soundHandle = PlaySound(...)
+  --- ```
+  --- @param soundKitID number
+  --- @param channel SoundChannel|Optional The default is 'Effects' or 'SFX' (both are same)
+  --- @param forceNoDuplicates boolean|Optional
+  --- @param runFinishCallback boolean|Optional
+  --- @return boolean, number
+  function ns:PlaySound(soundKitID, channel, forceNoDuplicates, runFinishCallback)
+    if not soundKitID then return end
+    return PlaySound(soundKitID, channel, forceNoDuplicates, runFinishCallback)
+  end
+  
 end
 

@@ -68,10 +68,9 @@ Support Functions
 local function GetEquipmentSet(id)
   assert(id, "GetEquipmentSet:: The param id is required.")
   
-  local c_eq = C_EquipmentSet.GetEquipmentSetInfo
   local name, iconFileID, setID, isEquipped,
   numItems, numEquipped, numInInventory,
-  numLost, numIgnored = c_eq(id)
+  numLost, numIgnored = C_GetEquipmentSetInfo(id)
   
   if not name then return nil end
   
@@ -233,11 +232,11 @@ end
 
 function o:EquipGear()
   if ns:IsMists() then
-    PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
+    ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
   else
-    PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
+    ns:PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
     C_Timer.After(0.2, function()
-      PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
+      ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
     end)
   end
   
@@ -249,7 +248,7 @@ function o:EquipGear()
 end
 
 function o:SaveGear()
-  PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
+  ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
   C_EquipmentSet.SaveEquipmentSet(self:GetID(), self.info.icon)
 end
 
@@ -265,7 +264,7 @@ end
 function o:SetSelected(selected)
   assert(type(selected) == 'boolean', 'Expected SetSelected(selected:boolean)')
   
-  PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF, "Ambience")
+  ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
   self.selected = selected
   if self.selected then self:ShowAsSelectedBorder(); return end
   self:HideBorder()
