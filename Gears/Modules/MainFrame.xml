@@ -6,6 +6,7 @@
     <Script file="EquipmentSetMixin.lua"/>
     <Script file="MainFrame.lua"/>
     <Script file="ToggleButtonMixin.lua"/>
+    <Script file="MainController.lua"/>
 
     <Font name="Gears_LabelFont" inherits="GameFontNormalOutline"
           justifyH="LEFT" virtual="true">
