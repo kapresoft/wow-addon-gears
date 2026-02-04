@@ -32,7 +32,6 @@ ToggleButtonMixin
 --- @field private __blizzEquipHooked boolean
 --- @field private __ecsOnClickHooked boolean
 --- @field private __ecsToggleButtonHooked boolean
---- @field private __XXinitialOpen boolean This makes the hidden state (un-checked) sticky during the session until reload.
 Gears_ToggleButtonMixin = {};
 
 local p = ns:log('ToggleButtonMixin')
@@ -49,7 +48,7 @@ local function ToggleButtonMixin_BlizzEquipmentGearHook(self)
 end
 
 function o:OnLoad()
-  ns.toggleButton    = self
+  ns.toggleButton = self
   
   self:SetParent(PaperDollFrame)
   self.owner = PaperDollFrame
@@ -162,7 +161,6 @@ function o:IsChecked() return self:GetChecked() end
 function o:__ShowGears()
   PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
   ns.gears:Show()
-  p('xx showing gears:', ns.gears:IsShown())
   self:EnableEquipmentSlots(true)
   self:__HideECS()
 end
