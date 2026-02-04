@@ -16,7 +16,7 @@ Types and Alias
 
 -- Aliases -------------
 --- @alias ButtonsContainerFrame __ButtonsContainerFrame|FrameObj
---- @alias Gears_MainFrame Gears_MainFrameMixin | FrameObj
+--- @alias Gears_MainFrame Gears_MainFrameMixin | FrameObj | AceEvent | AceBucket
 --- @alias Gears_AddButton ButtonObj|IconButtonMixin
 
 --[[-------------------------------------------------------------------
@@ -53,21 +53,19 @@ end
 --[[-------------------------------------------------------------------
 MainFrame
 ---------------------------------------------------------------------]]
---- @alias Gears_MainFrame
 
 --- @class Gears_MainFrameMixin : Frame
 --- @field private framePool table<number, EquipmentSetFrame>
 --- @field protected ButtonsContainerFrame ButtonsContainerFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
---- @field __stickyHide boolean
 --- @field __lastIcon IconIDOrPath
+--- @field __ecsToggleButtonHooked boolean
 Gears_MainFrameMixin = {}
 
---- @type Gears_MainFrameMixin | Gears_MainFrame | AceEvent | AceBucket
-local o = Gears_MainFrameMixin
-LibStub("AceEvent-3.0"):Embed(o);
-LibStub("AceBucket-3.0"):Embed(o)
+--- @type Gears_MainFrameMixin | Gears_MainFrame
+local o = Gears_MainFrameMixin; ns:AceEvent(o); ns:AceBucket(o)
+
 o.framePool = {}
 
 --[[-------------------------------------------------------------------
@@ -80,15 +78,15 @@ local function fn(targetFn, ...)
   return function(...) targetFn(unpack(boundArgs), ...) end
 end
 
---- @param self Gears_MainFrameMixin|FrameObj
-local function MainFrameMixin_OnPlayerLogin(self)
-  self.__stickyHide = false
-  self.__origHeight = self:GetHeight()
-  self:InitEquipmentSet()
-  ns.toggleButton:OnPlayerLogin(self)
+--- @param self Gears_MainFrameMixin|Gears_MainFrame
+local function MainFrame_PaperDollFrameHooks(self)
+  PaperDollFrame:HookScript("OnShow", function(pdf)
+    self:OnShow_PaperDollFrame()
+    self:SendMessage(ns:msg('OnShowPaperDollFrame'), self, pdf)
+  end)
 end
 
---- @param frame Gears_MainFrameMixin|FrameObj
+--- @param frame Gears_MainFrameMixin|Gears_MainFrame
 local function MainFrameMixin_AnchorToPaperDoll(frame)
   local anchorFrame = CharacterFrameCloseButton
   local osx, osy = -6, -4
@@ -181,25 +179,19 @@ local function MainFrameMixin_AlignCharacterLevelText()
   c:SetPoint("BOTTOM", CharacterModelScene, 'TOP', 2, 5)
 end
 
-local function MainFrameMixin_CharacterFrameExpandButtonHook()
-  local cfeb = CharacterFrameExpandButton; if not cfeb then return end
-  cfeb:HookScript("OnClick", MainFrameMixin_AlignCharacterLevelText)
+function o:OnShow_PaperDollFrame()
+  if self:IsShown() then
+    MainFrameMixin_AnchorToPaperDoll(self)
+    MainFrameMixin_EngravingFrameHook(self)
+  end
+  MainFrameMixin_AlignCharacterLevelText()
 end
 
---- @param self Gears_MainFrameMixin
+--- @param self Gears_MainFrameMixin|Gears_MainFrame
 local function MainFrameMixin_CharacterFrameHooks(self)
-  PaperDollFrame:HookScript("OnShow", function()
-    if not self.__stickyHide then self:Show() end
-    if self:IsShown() then
-      ns.toggleButton:SetChecked(true)
-      MainFrameMixin_AnchorToPaperDoll(self)
-      MainFrameMixin_EngravingFrameHook(self)
-    end
-    MainFrameMixin_AlignCharacterLevelText()
-    
-  end)
-  PaperDollFrame:HookScript("OnHide", function() self:OnClickClose() end)
-  MainFrameMixin_CharacterFrameExpandButtonHook()
+  --MainFrameMixin_ECSHooks(self)
+  local cfeb = CharacterFrameExpandButton; if not cfeb then return end
+  cfeb:HookScript("OnClick", MainFrameMixin_AlignCharacterLevelText)
 end
 
 --- Fired when equipment set is created, updated, deleted
@@ -218,6 +210,8 @@ function o:OnLoad()
   
   -- set same parent so frame is scaled automatically
   self:SetParent(PaperDollFrame)
+  -- set high so it is above other addons attached to char frame
+  self:SetFrameLevel(100)
   
   local sb = self.ScrollFrame.ScrollBar
   local up = sb.ScrollUpButton
@@ -255,9 +249,18 @@ function o:OnLoad()
   MainFrameMixin_CharacterFrameHooks(self)
   MainFrameMixin_OnLoadButtons(self)
   
-  self:RegisterEvent('PLAYER_LOGIN', fn(MainFrameMixin_OnPlayerLogin, self))
+  self:Show()
+  self:RegisterEvent('PLAYER_LOGIN', 'OnPlayerLogin')
 end
 
+--- Only called once
+function o:OnPlayerLogin()
+  self.__origHeight = self:GetHeight()
+  self:InitEquipmentSet()
+  
+  MainFrame_PaperDollFrameHooks(self)
+  self:SendMessage(ns:msg('OnPlayerLogin'), self)
+end
 
 --- When the mouse is out of the EquipmentSetFrame and into the main frame,
 --- hide other EquipmentSet specific action buttons
@@ -396,9 +399,6 @@ function o:WithSelectedEquipmentSet(callback)
     if eqs.selected and callback then return callback(eqs) end
   end
 end
-
---- @private
-function o:OnClickClose() self:Hide() end
 
 --- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/EquipButton
 --- @param button ButtonObj

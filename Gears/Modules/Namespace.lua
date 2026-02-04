@@ -24,12 +24,18 @@ Aliases
 --- @alias Namespace NamespaceImpl | GameVersionMixin
 
 --[[-------------------------------------------------------------------
-Start
+Blizzard Vars
+---------------------------------------------------------------------]]
+local strtrim = strtrim
+
+--[[-------------------------------------------------------------------
+Local Vars
 ---------------------------------------------------------------------]]
 local addon
 --- @type NamespaceImpl | Namespace
 local ns
 addon, ns = ...; ns.addon = addon; GEARS_NS = ns
+
 
 --- Used in XML files to hook frame events: OnLoad and OnEvent
 --- Example: <OnLoad>GEARS_XML:[TypeName]_OnLoad(self)</OnLoad>
@@ -75,6 +81,13 @@ end
 Namespace: Methods
 -------------------------------------------------------------------------------]]
 do
+  --- @type AceEvent
+  local AceEvent = LibStub("AceEvent-3.0")
+  --- @type AceBucket
+  local AceBucket = LibStub("AceBucket-3.0")
+  
+  local function IsNilOrBlank(v) return v == nil or strtrim(v) == "" end
+  
   ns.sformat        = string.format
   ns.settings       = settings
   ns.O              = {}
@@ -102,5 +115,23 @@ do
       return c:WrapTextInColorCode(text)
     end
   end
+  
+  function ns:msg(msgName)
+    assert(not IsNilOrBlank(msgName), 'Message name is required.')
+    return ('%s::%s'):format(ns.addon, msgName)
+  end
+  
+  --- @param targetObj any|nil An optional targetObj for embedding
+  function ns:AceEvent(targetObj)
+    if targetObj then return AceEvent:Embed(targetObj) end
+    return AceEvent:Embed({})
+  end
+  
+  --- @param targetObj any|nil An optional targetObj for embedding
+  function ns:AceBucket(targetObj)
+    if targetObj then return AceBucket:Embed(targetObj) end
+    return AceBucket:Embed({})
+  end
+  
 end
 

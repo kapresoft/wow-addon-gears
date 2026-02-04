@@ -5,13 +5,17 @@ local cfu = ns.O.CharacterFrameUtil
 --[[-------------------------------------------------------------------
 Alias
 ---------------------------------------------------------------------]]
---- @alias ToggleButton ToggleButtonMixin|CheckButtonObj
+--- @alias ToggleButton ToggleButtonMixin | CheckButtonObj| AceEvent
 
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
 local TOGGLE_BUTTON_ICON = [[Interface\AddOns\Gears\Assets\gears-button-2b]]
 local TOOLTIP_DELAY = 0.01
+
+--- The equipment manager tab on advanced versions of wow like MoP, Retail, etc.
+--- @type FrameObj
+local PaperDollSidebarTab3 = PaperDollSidebarTab3
 
 --- temp local
 local L = {}
@@ -23,31 +27,29 @@ ToggleButtonMixin
 --- @class ToggleButtonMixin : CheckButton
 --- @field Icon TextureObj
 --- @field owner PaperDollFrame
+--- @field private __ecsFrame FrameObj The ECS_StatsFrame (Extended Character Stats addon)
+--- @field private __ecsButton ButtonObj The ECS_ToggleButton (Extended Character Stats addon)
 --- @field private __blizzEquipHooked boolean
-Gears_ToggleButtonMixin = {}
+--- @field private __ecsOnClickHooked boolean
+--- @field private __ecsToggleButtonHooked boolean
+--- @field private __XXinitialOpen boolean This makes the hidden state (un-checked) sticky during the session until reload.
+Gears_ToggleButtonMixin = {};
+
 local p = ns:log('ToggleButtonMixin')
 
 --- @type ToggleButtonMixin | ToggleButton
-local o  = Gears_ToggleButtonMixin
+local o  = Gears_ToggleButtonMixin; ns:AceEvent(o)
 
 --- Handles Clicks on the Original Blizz Equipment Gear tab
 --- @param self ToggleButton
-local function ToggleButton_BlizzEquipmentGearHook(self)
-  if not PaperDollSidebarTab3 then return end
-  if self.__blizzEquipHooked then return end
-
+local function ToggleButtonMixin_BlizzEquipmentGearHook(self)
+  if not PaperDollSidebarTab3 or self.__blizzEquipHooked then return end
   self.__blizzEquipHooked = true
   PaperDollSidebarTab3:HookScript("OnClick", function(btn) self:OnClick_BlizzEquipmentPanel() end)
 end
 
---- @see Gears_MainFrameMixin#MainFrameMixin_OnPlayerLogin()
---- @param gearsMainFrame Gears_MainFrameMixin
-function o:OnPlayerLogin(gearsMainFrame)
-  ToggleButton_BlizzEquipmentGearHook(self)
-end
-
 function o:OnLoad()
-  ns.toggleButton = self
+  ns.toggleButton    = self
   
   self:SetParent(PaperDollFrame)
   self.owner = PaperDollFrame
@@ -72,8 +74,45 @@ function o:OnLoad()
   icon:SetDrawLayer('OVERLAY', 1)
   self.Icon = icon
   
+  self:RegisterMessage(ns:msg('OnPlayerLogin'), 'OnPlayerLogin_Message')
+  self:RegisterMessage(ns:msg('OnShowPaperDollFrame'), 'OnShowPaperDollFrame_Message')
+  
   self:Show()
-  self:__ShowGears()
+end
+
+--- @param evt Name
+--- @param gearsMainFrame Gears_MainFrameMixin
+function o:OnPlayerLogin_Message(evt, gearsMainFrame)
+  self.__ecsFrame, self.__ecsButton = ECS_StatsFrame, ECS_ToggleButton
+  ToggleButtonMixin_BlizzEquipmentGearHook(self)
+  self:Click()
+end
+
+--- @param self ToggleButtonMixin|ToggleButton
+local function ToggleButtonMixin_ECS_ToggleButton_Hook(self)
+  if not ECS_ToggleButton or self.__ecsToggleButtonHooked then return end
+  print('xx ECS_ToggleButtonHook hooked...')
+  ECS_ToggleButton:HookScript("OnClick", function(btn)
+    self:OnClick_ECS_ToggleButton()
+  end)
+  self.__ecsToggleButtonHooked = true
+end
+
+--- @param evt Name
+--- @param gearsMainFrame Gears_MainFrameMixin
+--- @param pdf PaperDollFrame|FrameObj
+function o:OnShowPaperDollFrame_Message(evt, gearsMainFrame, pdf)
+  --ns:tf('STICKY_HIDE_OnShowPaperDollFrame', self.__initialOpen)
+  self.__ecsFrame = ECS_StatsFrame
+  ToggleButtonMixin_BlizzEquipmentGearHook(self)
+  ToggleButtonMixin_ECS_ToggleButton_Hook(self)
+end
+
+function o:OnClick_ECS_ToggleButton()
+  print('xx OnClick_ECS_ToggleButton_Message...')
+  if self:IsChecked() then
+    self:Click()
+  end
 end
 
 --- @param enable boolean
@@ -84,11 +123,13 @@ function o:EnableEquipmentSlots(enable)
   end)
 end
 
+-- Clicks are always sticky
 function o:OnClick()
+  --self.__initialOpen = true
+
   GameTooltip:Hide()
   if self:IsChecked() then
     self:__ShowGears()
-    
     -- in MoPs, there is an existing EquipmentManager,
     -- We will show character stats when this is the case
     -- so the player is not confused.
@@ -103,6 +144,7 @@ function o:OnClick()
   end
   
   self:__HideGears()
+  --ns:tf('STICKY_HIDE_ONCLICK', self.__initialOpen)
 end
 
 function o:OnEnter()
@@ -116,24 +158,31 @@ function o:OnEnter()
   end)
 end
 
-function o:OnLeave()
-  GameTooltip:Hide()
-end
+function o:OnLeave() GameTooltip:Hide() end
 
 function o:IsChecked() return self:GetChecked() end
 
 function o:__ShowGears()
+  ns:tf('ShowGears::Gears_Shown', ns.gears:IsShown())
+  
   PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
   ns.gears:Show()
-  ns.gears.__stickyHide = false
+  p('xx showing gears:', ns.gears:IsShown())
   self:EnableEquipmentSlots(true)
+  self:__HideECS()
 end
 
 function o:__HideGears()
+  ns:tf('HideGears::Gears_Shown', ns.gears:IsShown())
+  
   PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:Hide()
-  ns.gears.__stickyHide = true
   self:EnableEquipmentSlots(false)
+end
+
+function o:__HideECS()
+  if not self.__ecsFrame then return end
+  self.__ecsFrame:Hide()
 end
 
 --- Hide 'Gears' panel if Blizz EquipmentSet Panel is shown
@@ -142,7 +191,6 @@ function o:OnClick_BlizzEquipmentPanel()
   
   PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:Hide()
-  ns.gears.__stickyHide = true
   self:SetChecked(false)
   self:EnableEquipmentSlots(true)
 end
