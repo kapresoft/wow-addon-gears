@@ -17,6 +17,9 @@ local TOOLTIP_DELAY = 0.01
 --- @type FrameObj
 local PaperDollSidebarTab3 = PaperDollSidebarTab3
 
+local libName = 'ToggleButton'
+local p, t, tt = ns:log(libName)
+
 --- temp local
 local L = {}
 L['Open Gears Panel'] = 'Open Gears Panel'
@@ -33,8 +36,6 @@ ToggleButtonMixin
 --- @field private __ecsOnClickHooked boolean
 --- @field private __ecsToggleButtonHooked boolean
 Gears_ToggleButtonMixin = {};
-
-local p = ns:log('ToggleButtonMixin')
 
 --- @type ToggleButtonMixin | ToggleButton
 local o  = Gears_ToggleButtonMixin; ns:AceEvent(o)
@@ -73,7 +74,7 @@ function o:OnLoad()
   icon:SetDrawLayer('OVERLAY', 1)
   self.Icon = icon
   
-  self:RegisterMessage(ns:msg('OnPlayerLogin'), 'OnPlayerLogin_Message')
+  self:RegisterMessage(ns:msg('OnAfterInit'), 'OnAfterInit')
   self:RegisterMessage(ns:msg('OnShowPaperDollFrame'), 'OnShowPaperDollFrame_Message')
   
   self:Show()
@@ -82,9 +83,9 @@ end
 --- Gears will be shown by default on PaperDollFrame::Open
 --- @param evt Name
 --- @param gearsMainFrame Gears_MainFrameMixin
-function o:OnPlayerLogin_Message(evt, gearsMainFrame)
+function o:OnAfterInit(evt, gearsMainFrame)
   self.__ecsFrame, self.__ecsButton = ECS_StatsFrame, ECS_ToggleButton
-  ns:t('onplayerlogin', 'ecsFrame=', self.__ecsFrame, 'ecsBtn=', self.__ecsButton)
+  t('OnAfterInit', ('ecsFrame=%s, ecsBtn=%s'):format(tostring(self.__ecsFrame), tostring(self.__ecsButton)))
   
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   
@@ -108,10 +109,9 @@ function o:OnShowPaperDollFrame_Message(evt, gearsMainFrame, pdf)
   ToggleButtonMixin_ECS_ToggleButton_Hook(self)
 end
 
+--- If Gears is shown, hide it
 function o:OnClick_ECS_ToggleButton()
-  if self:IsChecked() then
-    self:Click()
-  end
+  if self:IsChecked() then self:Click() end
 end
 
 --- @param enable boolean
@@ -166,8 +166,6 @@ function o:__ShowGears()
 end
 
 function o:__HideGears()
-  ns:tf('HideGears::Gears_Shown', ns.gears:IsShown())
-  
   PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:Hide()
   self:EnableEquipmentSlots(false)
