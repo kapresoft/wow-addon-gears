@@ -64,7 +64,6 @@ MainFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
 --- @field __lastIcon IconIDOrPath
---- @field __ecsToggleButtonHooked boolean
 Gears_MainFrameMixin = {}
 
 --- @type Gears_MainFrameMixin | Gears_MainFrame
@@ -82,6 +81,7 @@ local function fn(targetFn, ...)
   return function(...) targetFn(unpack(boundArgs), ...) end
 end
 
+-- todo next: move to MainController?
 --- @param self Gears_MainFrameMixin|Gears_MainFrame
 local function MainFrame_PaperDollFrameHooks(self)
   PaperDollFrame:HookScript("OnShow", function(pdf)
@@ -421,7 +421,7 @@ end
 --- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/AddButton
 --- @param button ButtonObj
 function o:OnClick_AddButton(button)
-  PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN)
+  ns:PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN)
   local opt = {
     icon = self.__lastIcon, showTextInput = true,
     textInput = { label = 'New Equipment Set:' }
@@ -431,7 +431,7 @@ function o:OnClick_AddButton(button)
       local esName = strtrim(sel.textInputValue)
       if #esName <= 0 then return end
       C_CreateEquipmentSet(esName, sel.icon)
-      PlaySound(SOUNDKIT.IG_MAINMENU_QUIT)
+      ns:PlaySound(SOUNDKIT.IG_MAINMENU_QUIT)
       self.__lastIcon = sel.icon
     end, opt)
   end)

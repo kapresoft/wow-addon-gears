@@ -24,6 +24,8 @@ local p, t, tt = ns:log(libName)
 local L = {}
 L['Open Gears Panel'] = 'Open Gears Panel'
 
+--- todo next: move ecs methods on it's own lua file? publish events on open/close
+
 --[[-------------------------------------------------------------------
 ToggleButtonMixin
 ---------------------------------------------------------------------]]
@@ -159,14 +161,14 @@ function o:OnLeave() GameTooltip:Hide() end
 function o:IsChecked() return self:GetChecked() end
 
 function o:__ShowGears()
-  PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
+  ns:PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
   ns.gears:Show()
   self:EnableEquipmentSlots(true)
   self:__HideECS()
 end
 
 function o:__HideGears()
-  PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
+  ns:PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:Hide()
   self:EnableEquipmentSlots(false)
 end
@@ -177,7 +179,7 @@ function o:__HideECS() return self.__ecsFrame and self.__ecsFrame:Hide() end
 function o:OnClick_BlizzEquipmentPanel()
   if not self:IsChecked() then return end
   
-  PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
+  ns:PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:Hide()
   self:SetChecked(false)
   self:EnableEquipmentSlots(true)
