@@ -80,19 +80,22 @@ function o:OnLoad()
   self:Show()
 end
 
+--- Gears will be shown by default on PaperDollFrame::Open
 --- @param evt Name
 --- @param gearsMainFrame Gears_MainFrameMixin
 function o:OnPlayerLogin_Message(evt, gearsMainFrame)
   self.__ecsFrame, self.__ecsButton = ECS_StatsFrame, ECS_ToggleButton
+  ns:t('onplayerlogin', 'ecsFrame=', self.__ecsFrame, 'ecsBtn=', self.__ecsButton)
+  
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
+  
   self:Click()
 end
 
 --- @param self ToggleButtonMixin|ToggleButton
 local function ToggleButtonMixin_ECS_ToggleButton_Hook(self)
-  if not ECS_ToggleButton or self.__ecsToggleButtonHooked then return end
-  print('xx ECS_ToggleButtonHook hooked...')
-  ECS_ToggleButton:HookScript("OnClick", function(btn)
+  if not self.__ecsButton or self.__ecsToggleButtonHooked then return end
+  self.__ecsButton:HookScript("OnClick", function(btn)
     self:OnClick_ECS_ToggleButton()
   end)
   self.__ecsToggleButtonHooked = true
@@ -102,8 +105,6 @@ end
 --- @param gearsMainFrame Gears_MainFrameMixin
 --- @param pdf PaperDollFrame|FrameObj
 function o:OnShowPaperDollFrame_Message(evt, gearsMainFrame, pdf)
-  --ns:tf('STICKY_HIDE_OnShowPaperDollFrame', self.__initialOpen)
-  self.__ecsFrame = ECS_StatsFrame
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   ToggleButtonMixin_ECS_ToggleButton_Hook(self)
 end
@@ -163,8 +164,6 @@ function o:OnLeave() GameTooltip:Hide() end
 function o:IsChecked() return self:GetChecked() end
 
 function o:__ShowGears()
-  ns:tf('ShowGears::Gears_Shown', ns.gears:IsShown())
-  
   PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
   ns.gears:Show()
   p('xx showing gears:', ns.gears:IsShown())
@@ -180,10 +179,7 @@ function o:__HideGears()
   self:EnableEquipmentSlots(false)
 end
 
-function o:__HideECS()
-  if not self.__ecsFrame then return end
-  self.__ecsFrame:Hide()
-end
+function o:__HideECS() return self.__ecsFrame and self.__ecsFrame:Hide() end
 
 --- Hide 'Gears' panel if Blizz EquipmentSet Panel is shown
 function o:OnClick_BlizzEquipmentPanel()

@@ -5,5 +5,6 @@ local sformat, upper, date = string.format, string.upper, date
 
 --- @type Namespace
 local ns = select(2, ...)
-ns.settings.developer = true
-
+local s = ns.settings
+s.developer = true
+s.enableTraceUI = true

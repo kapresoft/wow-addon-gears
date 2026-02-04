@@ -50,6 +50,7 @@ Override in DeveloperSetup to enable
 -------------------------------------------------------------------------------]]
 --- @class LibIconPickerSettings
 --- @field developer boolean if true: enables developer mode
+--- @field enableTraceUI boolean if true: shows Blizz EventTrace UI on load
 local settings = { developer = false }; ns.settings = settings
 
 
@@ -70,7 +71,10 @@ do
   }, predicateFn)
 
   --- @param tracer EventTracePrinter
-  function ns:RegisterTracer(tracer) self.tracer = tracer:New(ns.addon, predicateFn) end
+  function ns:RegisterTracer(tracer)
+    self.tracer = tracer:New(ns.addon, predicateFn)
+    if not settings.enableTraceUI then self.tracer.evt:Hide() end
+  end
   function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
   --- @param moduleName Name
   --- @return LibPrettyPrint_Printer | LibPrettyPrint_PrintFn
