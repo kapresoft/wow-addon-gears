@@ -73,7 +73,9 @@ do
   --- @param tracer EventTracePrinter
   function ns:RegisterTracer(tracer)
     self.tracer = tracer:New(ns.addon, predicateFn)
-    if not predicateFn() and settings.enableTraceUI then self.tracer.evt:Hide() end
+    if not (ns:IsDev() and settings.enableTraceUI) then
+      self.tracer.evt:Hide()
+    end
   end
   function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
   --- @param moduleName Name
