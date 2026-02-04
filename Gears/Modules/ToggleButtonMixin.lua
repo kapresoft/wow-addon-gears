@@ -110,7 +110,6 @@ function o:OnShowPaperDollFrame_Message(evt, gearsMainFrame, pdf)
 end
 
 function o:OnClick_ECS_ToggleButton()
-  print('xx OnClick_ECS_ToggleButton_Message...')
   if self:IsChecked() then
     self:Click()
   end
@@ -119,14 +118,12 @@ end
 --- @param enable boolean
 function o:EnableEquipmentSlots(enable)
   cfu:ForEachEquipmentSlot(function(s, btn, po)
-    --p(('slot[%s]:'):format(s.name), s)
     if enable then po:Show() else po:Hide() end
   end)
 end
 
 -- Clicks are always sticky
 function o:OnClick()
-  --self.__initialOpen = true
 
   GameTooltip:Hide()
   if self:IsChecked() then
@@ -145,7 +142,6 @@ function o:OnClick()
   end
   
   self:__HideGears()
-  --ns:tf('STICKY_HIDE_ONCLICK', self.__initialOpen)
 end
 
 function o:OnEnter()
