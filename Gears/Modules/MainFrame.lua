@@ -28,8 +28,12 @@ local strtrim = strtrim
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
+local libName = 'MainFrame'
 local LibIconPickerUtil = ns.O.LibIconPickerUtil
-local p = ns:log('MainFrame')
+
+local p = ns:log(libName)
+local t = ns:traceFnWithFormatting(libName)
+
 -- tmp locale
 local L = {}
 L['Create a new equipment set'] = 'Create a new equipment set'
@@ -250,16 +254,16 @@ function o:OnLoad()
   MainFrameMixin_OnLoadButtons(self)
   
   self:Show()
-  self:RegisterEvent('PLAYER_LOGIN', 'OnPlayerLogin')
+  self:RegisterMessage(ns:msg('OnInit'), 'OnInit')
 end
 
 --- Only called once
-function o:OnPlayerLogin()
+function o:OnInit()
   self.__origHeight = self:GetHeight()
   self:InitEquipmentSet()
   
   MainFrame_PaperDollFrameHooks(self)
-  self:SendMessage(ns:msg('OnPlayerLogin'), self)
+  self:SendMessage(ns:msg('OnAfterInit'), self)
 end
 
 --- When the mouse is out of the EquipmentSetFrame and into the main frame,

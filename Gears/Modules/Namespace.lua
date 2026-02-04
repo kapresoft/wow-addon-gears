@@ -73,12 +73,17 @@ do
   --- @param tracer EventTracePrinter
   function ns:RegisterTracer(tracer)
     self.tracer = tracer:New(ns.addon, predicateFn)
-    if not settings.enableTraceUI then self.tracer.evt:Hide() end
+    if not predicateFn() and settings.enableTraceUI then self.tracer.evt:Hide() end
   end
   function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
   --- @param moduleName Name
-  --- @return LibPrettyPrint_Printer | LibPrettyPrint_PrintFn
-  function ns:log(moduleName) return self.printer:WithSubPrefix(moduleName) end
+  --- @return LibPrettyPrint_Printer | LibPrettyPrint_PrintFn, fun(...), fun(...)
+  function ns:log(moduleName)
+    local printer = self.printer:WithSubPrefix(moduleName)
+    local tracer1 = ns:traceFnWithFormatting(moduleName)
+    local tracer2 = ns:traceFn(moduleName)
+    return printer, tracer1, tracer2
+  end
 end
 
 --[[-----------------------------------------------------------------------------
@@ -100,6 +105,17 @@ do
   function ns:tf(prefix, ...) return self.tracer:tf(prefix, ...) end
   function ns:td(...) return self.tracer:td(...) end
   function ns:tdf(...) return self.tracer:tdf(...) end
+  
+  --- @param prefix string
+  --- @return fun(...): any
+  function ns:traceFn(prefix)
+    return function(...) return self.tracer:t(prefix, ...) end
+  end
+  --- @param prefix string
+  --- @return fun(...): any
+  function ns:traceFnWithFormatting(prefix)
+    return function(...) return self.tracer:tf(prefix, ...) end
+  end
 
   --- @param name Name The module name; see NamespaceObjects
   --- @param obj any The namespace object
