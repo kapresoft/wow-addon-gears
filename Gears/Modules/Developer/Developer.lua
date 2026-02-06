@@ -1,7 +1,8 @@
-local eq = C_EquipmentSet
 
 --- @type Namespace
 local ns = select(2, ...)
+local eq = C_EquipmentSet
+local LibIconPickerUtil = ns.O.LibIconPickerUtil
 
 --- @class Gears_Developer
 local o = {}; gdev = o
@@ -11,6 +12,18 @@ C_Timer.After(0.7, function()
     p('Is-Dev:', ns:IsDev())
 end)
 
+function o:PickIcon()
+  --- @type LibIconPicker_Options
+  local opt = {
+    icon = 132111, showTextInput = true,
+    textInput = { label = 'Set Name:', value = 'xx' }
+  }
+  LibIconPickerUtil:Get(function(lip)
+    lip:Open(function(sel)
+      p('Sel:', sel)
+    end, opt)
+  end)
+end
 
 function o:eqDel(index)
   if not index then return self:eqIds() end
