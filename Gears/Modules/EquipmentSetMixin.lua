@@ -6,6 +6,9 @@ Blizzard Vars
 ---------------------------------------------------------------------]]
 local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
 local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
+local C_UseEquipmentSet = C_EquipmentSet.UseEquipmentSet
+local C_SaveEquipmentSet = C_EquipmentSet.SaveEquipmentSet
+
 local CURRENTLY_EQUIPPED = CURRENTLY_EQUIPPED
 
 --[[-------------------------------------------------------------------
@@ -32,7 +35,7 @@ L['Available Actions']     = 'Available Actions'
 L['Select']                = 'Select'
 L['Equip']                 = 'Equip'
 L['Drag to an action bar'] = 'Drag to an action bar'
-
+L['Equip While Combat']    = 'Equipment sets cannot be changed during combat.'
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -63,6 +66,13 @@ local BACKDROP_WITH_BG = {
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
+--- Show an error message
+--- @param msg string
+local function ShowError(msg)
+  assert(type(msg) == 'string', 'The msg param is a required string.')
+  UIErrorsFrame:AddMessage(msg, 1.0, 0.1, 0.1)
+end
+
 --- @param id Identifier The equipmentSet ID
 --- @return EquipmentSetDetails
 local function GetEquipmentSet(id)
@@ -219,6 +229,7 @@ function o:OnLeave()
   self:HideBorder()
 end
 
+--- @NotCombatSafe
 function o:OnDoubleClick() self:EquipGear() end
 
 function o:ShowActionButtons()
@@ -230,6 +241,7 @@ function o:HideActionButtons()
   self.ChangeButton:Hide()
 end
 
+--- @NotCombatSafe
 function o:EquipGear()
   if ns:IsMists() then
     ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
@@ -240,16 +252,17 @@ function o:EquipGear()
     end)
   end
   
+  if InCombatLockdown() then return ShowError(L['Equip While Combat']) end
   if EquipmentManager_EquipSet then
     EquipmentManager_EquipSet(self:GetID())
   else
-    C_EquipmentSet.UseEquipmentSet(self:GetID())
+    C_UseEquipmentSet(self:GetID())
   end
 end
 
 function o:SaveGear()
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
-  C_EquipmentSet.SaveEquipmentSet(self:GetID(), self.info.icon)
+  C_SaveEquipmentSet(self:GetID(), self.info.icon)
 end
 
 ---@param info EquipmentSetInfo
