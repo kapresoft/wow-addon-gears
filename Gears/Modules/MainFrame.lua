@@ -31,12 +31,12 @@ Local Vars
 local libName = 'MainFrame'
 local LibIconPickerUtil = ns.O.LibIconPickerUtil
 
-local p = ns:log(libName)
-local t = ns:traceFnWithFormatting(libName)
+local p, t = ns:log(libName), ns:traceFnWithFormatting(libName)
 
 -- tmp locale
 local L = {}
 L['Create a new equipment set'] = 'Create a new equipment set'
+L['New Equipment Set'] = 'New Equipment Set'
 
 --[[-------------------------------------------------------------------
 Gears_AddButtonMixin
@@ -424,7 +424,7 @@ function o:OnClick_AddButton(button)
   ns:PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN)
   local opt = {
     icon = self.__lastIcon, showTextInput = true,
-    textInput = { label = 'New Equipment Set:' }
+    textInput = { label = L['New Equipment Set'] .. ':', max = ns.MAX_CHARS_SET_NAME }
   }
   LibIconPickerUtil:Get(function(lip)
     lip:Open(function(sel)
