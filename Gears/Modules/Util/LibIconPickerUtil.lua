@@ -4,9 +4,7 @@ local ns = select(2, ...)
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
-local libName = 'LibIconPicker'
--- The old GetAddOnEnableState requires the second arg 'character'
-local GetAddOnEnableState = C_AddOns.GetAddOnEnableState or GetAddOnEnableState
+local iconPickerAddOn = 'LibIconPicker'
 local LoadAddOn   = C_AddOns.LoadAddOn or LoadAddOn
 local EnableAddOn = C_AddOns.EnableAddOn or EnableAddOn
 local OKAY = OKAY
@@ -37,14 +35,15 @@ Methods
 --- @return LibIconPicker
 function o:Get(callbackFn)
   -- if embedded
-  if LibIconPicker then callbackFn(LibIconPicker); return end
+  local lip = LibIconPicker
+  if lip then callbackFn(lip); return end
   
   -- if on demand
-  EnableAddOn(libName, UnitName('player'))
-  local loaded, reason = LoadAddOn(libName)
-  if loaded == true then callbackFn(LibIconPicker); return end
+  EnableAddOn(iconPickerAddOn, UnitName('player'))
+  local loaded, reason = LoadAddOn(iconPickerAddOn)
+  if loaded == true then callbackFn(lip); return end
   
-  p(('LoadAddOn(%q) failed to load with reason=%q'):format(libName, reason))
+  p(('LoadAddOn(%q) failed to load with reason=%q'):format(iconPickerAddOn, reason))
   StaticPopup_Show("LibIconPicker_Missing")
 end
 

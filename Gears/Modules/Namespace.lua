@@ -102,6 +102,7 @@ do
   ns.sformat        = string.format
   ns.settings       = settings
   ns.O              = {}
+  ns.MAX_CHARS_SET_NAME = 32
 
   function ns:t(prefix, ...) return self.tracer(prefix, ...) end
   function ns:tf(prefix, ...) return self.tracer:tf(prefix, ...) end
