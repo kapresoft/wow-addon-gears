@@ -16,7 +16,7 @@ Types and Alias
 
 -- Aliases -------------
 --- @alias ButtonsContainerFrame __ButtonsContainerFrame|FrameObj
---- @alias Gears_MainFrame Gears_MainFrameMixin | FrameObj | AceEvent | AceBucket
+--- @alias Gears_MainFrame Gears_MainFrameMixin | FrameObj | AceEvent_3_0 | AceBucket_3_0
 --- @alias Gears_AddButton ButtonObj|IconButtonMixin
 
 --[[-------------------------------------------------------------------
@@ -31,7 +31,7 @@ Local Vars
 local libName = 'MainFrame'
 local LibIconPickerUtil = ns.O.LibIconPickerUtil
 
-local p, t = ns:log(libName), ns:traceFnWithFormatting(libName)
+local p, t, tt = ns:log(libName)
 
 -- tmp locale
 local L = {}
@@ -63,6 +63,7 @@ MainFrame
 --- @field protected ButtonsContainerFrame ButtonsContainerFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrameObj
+--- @field HeaderIconLeft TextureObj
 --- @field __lastIcon IconIDOrPath
 Gears_MainFrameMixin = {}
 
@@ -210,7 +211,11 @@ function o:OnLoad()
   ns.gears = self
   BackdropTemplateMixin.OnBackdropLoaded(self)
   self:SetBackdrop(BACKDROP_TOAST_12_12)
-  --self:SetBackdrop(BACKDROP_DARK_DIALOG_32_32)
+  
+  -- Reassert draw layer after SetBackdrop(); backdrop textures are created
+  -- after XML construction and can overlap this texture due to same layer/sublevel.
+  -- Calling SetDrawLayer here ensures HeaderIconLeft renders on top.
+  self.HeaderIconLeft:SetDrawLayer("OVERLAY")
   
   -- set same parent so frame is scaled automatically
   self:SetParent(PaperDollFrame)

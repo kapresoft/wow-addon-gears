@@ -149,7 +149,7 @@
                     </Anchors>
                 </FontString>
                 <Texture parentKey="HeaderIconLeft" alpha="0.3"
-                         file="Interface\AddOns\Gears\Assets\gears-button-2" >
+                         file="Interface\AddOns\Gears\Assets\gears-button-2b" >
                     <Size x="20" y="20"/>
                     <Anchors>
                         <Anchor point="RIGHT" relativeKey="$parent.HeaderTitle"
