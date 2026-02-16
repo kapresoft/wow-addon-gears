@@ -3,12 +3,12 @@ Type: Namespace
 -------------------------------------------------------------------------------]]
 --- @class NamespaceImpl
 --- @field xml table
+--- @field O NamespaceObjects
 --- @field gameVersion GameVersion
 --- @field tracer EventTracePrinter
 --- @field p LibPrettyPrint_Printer The base printer
 --- @field gears Gears_MainFrame
 --- @field toggleButton ToggleButton
---- @type string
 
 --[[-------------------------------------------------------------------
 Type: NamespaceObjects
@@ -31,6 +31,7 @@ local strtrim = strtrim
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
+--- @type string
 local addon
 --- @type NamespaceImpl | Namespace
 local ns
@@ -48,7 +49,7 @@ local O = ns.O or {}; ns.O = O
 Type: Settings
 Override in DeveloperSetup to enable
 -------------------------------------------------------------------------------]]
---- @class LibIconPickerSettings
+--- @class Gears_Settings
 --- @field developer boolean if true: enables developer mode
 --- @field enableTraceUI boolean if true: shows Blizz EventTrace UI on load
 local settings = { developer = false }; ns.settings = settings

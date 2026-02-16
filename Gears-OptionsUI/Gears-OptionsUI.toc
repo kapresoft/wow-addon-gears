@@ -1,8 +1,10 @@
-## Interface: 120000
+## Interface: 120001
 ## Version: @project-version@
-## Title: |TInterface/Addons/Gears/Assets/gears-logo-1:18:18|t |cff1784d1Gears|r-OptionsUI
+## Title: |cff1784d1Gears|r-OptionsUI
 ## Notes: A lightweight World of Warcraft addon that lets players quickly |nsave, manage, and switch between gear sets to adapt to different |nroles, specs, and gameplay situations with ease. |n|cff1784d1This addon is provided 'as is' without any warranties. |nAll rights reserved. |nRedistribution or modification is not permitted.|r
 ## Author: Antonio W. Lagnada (kapresoft@gmail.com)
+## IconTexture: Interface/AddOns/Gears/Assets/gears-logo-1
+
 ## Dependencies: Gears
 ## Group: Gears
 ## DefaultState: enabled
