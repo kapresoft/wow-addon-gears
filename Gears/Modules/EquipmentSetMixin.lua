@@ -1,5 +1,6 @@
 --- @type Namespace
 local ns = select(2, ...)
+local L = ns:GetLocale()
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -24,18 +25,6 @@ local c_blue = ns:colorFn('71ABFF')
 local c_green = ns:colorFn('6EE6A0')
 local c_yellow1 = ns:colorFn('E6BF33')
 local c_yellow = ns:colorFn('FFE680')
-
---- temp locale
-local L = {}
-L['Equipment Set']         = 'Equipment Set'
-L['Left-click']            = 'Left-click'
-L['Double-click']          = 'Double-click'
-L['Drag']                  = 'Drag'
-L['Available Actions']     = 'Available Actions'
-L['Select']                = 'Select'
-L['Equip']                 = 'Equip'
-L['Drag to an action bar'] = 'Drag to an action bar'
-L['Equip While Combat']    = 'Equipment sets cannot be changed during combat.'
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -120,14 +109,11 @@ local function EquipmentSet_ShowTooltip(self)
     if not self:IsMouseOver() then return end
     
     local availableActions = c_blue(L['Available Actions']) .. ':'
-    local eqSet = c_yellow1(L['Equipment Set'] .. ':')
     local leftClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Left-click']), c_white(L['Select']))
     local doubleClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Double-click']),  c_white(L['Equip']))
     local drag = (bulletFmt):format(c_white(BULLET), c_yellow(L['Drag']), c_white(L['Drag to an action bar']))
     
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    GameTooltip:ClearLines()
-    GameTooltip:AddDoubleLine(eqSet, c_blue(self.info.name))
     local eqID = self:GetID()
     GameTooltip:SetEquipmentSet(eqID)
     GameTooltip_AddEquipmentDetails(GameTooltip, eqID)

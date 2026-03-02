@@ -1,5 +1,6 @@
 --- @type Namespace
 local ns = select(2, ...)
+local L = ns:GetLocale()
 local cfu = ns.O.CharacterFrameUtil
 
 --[[-------------------------------------------------------------------
@@ -19,10 +20,6 @@ local PaperDollSidebarTab3 = PaperDollSidebarTab3
 
 local libName = 'ToggleButton'
 local p, t, tt = ns:log(libName)
-
---- temp local
-local L = {}
-L['Open Gears Panel'] = 'Open Gears Panel'
 
 --- todo next: move ecs methods on it's own lua file? publish events on open/close
 

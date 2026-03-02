@@ -1,5 +1,7 @@
 --- @type Namespace
 local ns = select(2, ...)
+local L = ns:GetLocale()
+
 --[[-------------------------------------------------------------------
 Types and Alias
 ---------------------------------------------------------------------]]
@@ -30,13 +32,7 @@ Local Vars
 ---------------------------------------------------------------------]]
 local libName = 'MainFrame'
 local LibIconPickerUtil = ns.O.LibIconPickerUtil
-
-local p, t, tt = ns:log(libName)
-
--- tmp locale
-local L = {}
-L['Create a new equipment set'] = 'Create a new equipment set'
-L['New Equipment Set'] = 'New Equipment Set'
+local p, pd, t, tf = ns:log(libName)
 
 --[[-------------------------------------------------------------------
 Gears_AddButtonMixin

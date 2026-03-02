@@ -6,9 +6,8 @@
     <!--@do-not-package@-->
     <Script file="Modules\Developer\DeveloperSetup.lua" />
     <!--@end-do-not-package@-->
+    <Include file="Modules\Locales\_Locales.xml"/>
     <Include file="Modules\Util\_Util.xml"/>
-
-    <!--<Include file="Modules\Locales\_Locales.xml"/>-->
 
     <!--@do-not-package@-->
     <Script file="Modules\Developer\Developer.lua" />

@@ -6,6 +6,8 @@ Type: Namespace
 --- @field O NamespaceObjects
 --- @field gameVersion GameVersion
 --- @field tracer EventTracePrinter
+--- @field private printer LibPrettyPrint_Printer
+--- @field private logBuilder Gears_LogBuilderFn
 --- @field p LibPrettyPrint_Printer The base printer
 --- @field gears Gears_MainFrame
 --- @field toggleButton ToggleButton
@@ -22,6 +24,9 @@ Type: NamespaceObjects
 Aliases
 ---------------------------------------------------------------------]]
 --- @alias Namespace NamespaceImpl | GameVersionMixin
+--- @alias Gears_TraceFn fun(...: any) : void @Printer function that outputs plain values to Blizzard Trace UI (like print)
+--- @alias Gears_TraceFnFormatted fun(...: any) : void @Printer function that outputs formatted values to Blizzard Trace UI (like print)
+--- @alias Gears_LogBuilderFn fun(moduleName:string) : LibPrettyPrint_PrintFn, LibPrettyPrint_PrintFn, Gears_TraceFn, Gears_TraceFnFormatted
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -63,9 +68,18 @@ Logger Methods
 ---------------------------------------------------------------------]]
 do
   local function predicateFn() return ns:IsDev() end
+  local function DelayedCall(delay, fn, ...)
+    assert(type(delay) == 'number' and delay > 0)
+    return function(...)
+      local args = { ... }
+      C_Timer.After(delay, function() fn(unpack(args)) end)
+    end
+  end
+  
   ns.fmt     = LibPrettyPrint:Formatter({
     show_all = true, depth_limit = 3
-  })
+  }); if not fmt then fmt = ns.fmt end
+  
   ns.printer = LibPrettyPrint:Printer({
     prefix = ns.addon, prefix_color = '466EFF', sub_prefix_color = '9CFF9C',
     formatter = ns.fmt
@@ -79,13 +93,36 @@ do
     end
   end
   function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
+  
   --- @param moduleName Name
-  --- @return LibPrettyPrint_Printer | LibPrettyPrint_PrintFn, fun(...), fun(...)
+  --- @return LibPrettyPrint_Printer, LibPrettyPrint_PrintFn, Gears_TraceFn, Gears_TraceFnFormatted
   function ns:log(moduleName)
-    local printer = self.printer:WithSubPrefix(moduleName)
-    local tracer1 = ns:traceFnWithFormatting(moduleName)
-    local tracer2 = ns:traceFn(moduleName)
-    return printer, tracer1, tracer2
+    if not self.logBuilder then self.logBuilder = self:__CreateLogBuilder(self.printer) end
+    return self.logBuilder(moduleName)
+  end
+  
+  --- @protected
+  --- @param printer LibPrettyPrint_Printer
+  --- @return Gears_LogBuilderFn
+  function ns:__CreateLogBuilder(printer)
+    assert(printer, 'Printer is required.')
+    
+    --- @param moduleName Name
+    local function builderFn(moduleName)
+      local m = moduleName
+      local pr = printer
+      if type(m) == 'string' then m = strtrim(m)
+      else m = nil end
+      
+      if m and #m > 0 then pr = printer:WithSubPrefix(m) end
+      
+      local printerDelayed = DelayedCall(1, pr)
+      local tracer1 = self:traceFn(m)
+      local tracer2 = self:traceFnWithFormatting(m)
+      return pr, printerDelayed, tracer1, tracer2
+    end
+    
+    return builderFn
   end
 end
 
@@ -93,10 +130,14 @@ end
 Namespace: Methods
 -------------------------------------------------------------------------------]]
 do
-  --- @type AceEvent
+  --- @type AceEvent_3_0
   local AceEvent = LibStub("AceEvent-3.0")
-  --- @type AceBucket
+  --- @type AceBucket_3_0
   local AceBucket = LibStub("AceBucket-3.0")
+  --- @type AceLocale_3_0
+  local AceLocale = LibStub('AceLocale-3.0')
+  --- @type Kapresoft_AceLocaleUtil_2_0
+  local AceLocaleUtil = LibStub('Kapresoft-AceLocaleUtil-2.0')
   
   local function IsNilOrBlank(v) return v == nil or strtrim(v) == "" end
   
@@ -105,20 +146,23 @@ do
   ns.O              = {}
   ns.MAX_CHARS_SET_NAME = 32
 
-  function ns:t(prefix, ...) return self.tracer(prefix, ...) end
-  function ns:tf(prefix, ...) return self.tracer:tf(prefix, ...) end
-  function ns:td(...) return self.tracer:td(...) end
-  function ns:tdf(...) return self.tracer:tdf(...) end
-  
-  --- @param prefix string
-  --- @return fun(...): any
+  --- @param prefix string|nil
+  --- @return Gears_TraceFn @Printer function that outputs plain values to Blizzard Trace UI (like print)
   function ns:traceFn(prefix)
-    return function(...) return self.tracer:t(prefix, ...) end
+    if not self.tracer then return function()  end end
+    if type(prefix) ~= 'string' then
+      return function(...) return self.tracer:td(...) end
+    end
+    return function(...) return self.tracer:t(strtrim(prefix), ...) end
   end
   --- @param prefix string
-  --- @return fun(...): any
+  --- @return Gears_TraceFnFormatted @Printer function that outputs formatted values to Blizzard Trace UI (like print)
   function ns:traceFnWithFormatting(prefix)
-    return function(...) return self.tracer:tf(prefix, ...) end
+    if not self.tracer then return function()  end end
+    if type(prefix) ~= 'string' then
+      return function(...) return self.tracer:tdf(...) end
+    end
+    return function(...) return self.tracer:tf(strtrim(prefix), ...) end
   end
 
   --- @param name Name The module name; see NamespaceObjects
@@ -156,6 +200,12 @@ do
     if targetObj then return AceBucket:Embed(targetObj) end
     return AceBucket:Embed({})
   end
+  
+  --- @return AceLocale_3_0
+  function ns:AceLocale() return AceLocale end
+  
+  --- @return table<string, string>
+  function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, ns:IsDev()) end
   
   --- >Safe wrapper for PlaySound.
   --- >Returns two results: willPlay:boolean, soundHandle:boolean
