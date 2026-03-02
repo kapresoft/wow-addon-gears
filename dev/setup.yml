@@ -18,6 +18,7 @@ externals:
   ThirdParty-Libs/LibPrettyPrint: https://github.com/kapresoft/wow-addon-LibPrettyPrint
   ThirdParty-Libs/Ace3: https://github.com/WoWUIDev/Ace3
   ThirdParty-Libs/LibSharedMedia/LibSharedMedia-3.0: https://repos.wowace.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
+  ThirdParty-Libs/Kapresoft-LibUtil: https://github.com/kapresoft/wow-lib-util
 
 ignore:
   - "*.sh"
@@ -38,6 +39,10 @@ ignore:
   - ThirdParty-Libs/LibPrettyPrint/dev
   - ThirdParty-Libs/LibPrettyPrint/doc
   - ThirdParty-Libs/LibPrettyPrint/*.toc
+  - ThirdParty-Libs/Kapresoft-LibUtil/dev
+  - ThirdParty-Libs/Kapresoft-LibUtil/External
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib
+  - ThirdParty-Libs/Kapresoft-LibUtil/_Lib.xml
 
 # Base path is .release/
 move-folders:

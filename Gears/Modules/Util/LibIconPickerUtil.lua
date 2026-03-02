@@ -1,5 +1,6 @@
 --- @type Namespace
 local ns = select(2, ...)
+local L = ns:GetLocale()
 
 --[[-------------------------------------------------------------------
 Local Vars
@@ -17,10 +18,6 @@ local S = {}; ns.O.LibIconPickerUtil = S
 local p = ns:log('LibIconPickerUtil')
 --- @type LibIconPickerUtil
 local o = S;
-
---- temp locale
-local L = {}
-L['LibIconPicker Missing'] = 'This feature requires LibIconPicker.|nPlease make sure LibIconPicker is installed and enabled, then reload the UI.'
 
 StaticPopupDialogs["LibIconPicker_Missing"] = {
   text = L['LibIconPicker Missing'],

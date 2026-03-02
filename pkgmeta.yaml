@@ -30,6 +30,7 @@ externals:
   Gears/ThirdParty/Libs/LibPrettyPrint: https://github.com/kapresoft/wow-addon-LibPrettyPrint
   Gears/ThirdParty/Libs/Ace3: https://github.com/WoWUIDev/Ace3
   Gears/ThirdParty/Libs/LibSharedMedia/LibSharedMedia-3.0: https://repos.wowace.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
+  Gears/ThirdParty/Libs/Kapresoft-LibUtil: https://github.com/kapresoft/wow-lib-util
 
 ignore:
   - README.md
@@ -47,6 +48,10 @@ ignore:
   - Gears/ThirdParty/Libs/LibPrettyPrint/Developer
   - Gears/ThirdParty/Libs/LibPrettyPrint/*.toc
   - Gears/ThirdParty/Libs/LibPrettyPrint/*.md
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/dev
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/External
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/_Lib.xml
   - Gears-OptionsUI
 ### Ignore Gears-OptionsUI for now
 

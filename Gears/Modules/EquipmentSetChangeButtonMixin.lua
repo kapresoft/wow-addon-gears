@@ -1,14 +1,12 @@
 --- @type Namespace
 local ns = select(2, ...)
+local L = ns:GetLocale()
+
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
 local LibIconPickerUtil    = ns.O.LibIconPickerUtil
 local C_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
-
--- Temp Locale
-local L = {}
-L['Set Name'] = 'Set Name'
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -19,7 +17,7 @@ Mixin
 --- @field owner EquipmentSetFrame
 --- @field ChangeButton boolean
 Gears_EquipmentSetChangeButtonMixin = {}
-local p = ns:log('EquipmentSetChangeButtonMixin')
+local p, pd, t, tf = ns:log('EquipmentSetChangeButtonMixin')
 
 --- @type EquipmentSetChangeButtonMixin | EquipmentSetChangeButton
 local o  = Gears_EquipmentSetChangeButtonMixin
