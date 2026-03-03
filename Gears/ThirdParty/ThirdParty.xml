@@ -18,5 +18,5 @@
     <Include file="Ace3.xml"/>
     @end-non-debug@-->
     <Include file='LibPrettyPrint.xml'/>
-    <Script file="Libs\Kapresoft-LibUtil\Lib-2.0\AceLocaleUtil.lua"/>
+    <Script file="Libs\Kapresoft-LibUtil\Lib-2-0\AceLocaleUtil.lua"/>
 </Ui>
