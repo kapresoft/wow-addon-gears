@@ -137,7 +137,7 @@ do
   --- @type AceLocale_3_0
   local AceLocale = LibStub('AceLocale-3.0')
   --- @type Kapresoft_AceLocaleUtil_2_0
-  local AceLocaleUtil = LibStub('Kapresoft-AceLocaleUtil-2.0')
+  local AceLocaleUtil = LibStub('Kapresoft-AceLocaleUtil-2-0')
   
   local function IsNilOrBlank(v) return v == nil or strtrim(v) == "" end
   
