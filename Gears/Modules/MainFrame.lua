@@ -170,14 +170,18 @@ local function MainFrameMixin_EngravingFrameHook(self)
   hooksecurefunc(EngravingFrame, "Hide", function() MainFrameMixin_AnchorToPaperDoll(self) end)
 end
 
---- When the blizzard `CharacterFrameExpandButton` button is expanded
---- the `CharacterLevelText` is misaligned, i.e. "Level 80 Survival Hunter".
---- This is a correction to top/mid align the character level text.
+--- When the Blizzard EquipmentSet UI is visible and the
+--- `CharacterFrameExpandButton` is expanded, the
+--- `CharacterLevelText` becomes misaligned (e.g., "Level 80 Survival Hunter").
+--- This adjusts the alignment to properly top/middle align the character level text.
 local function MainFrameMixin_AlignCharacterLevelText()
+  -- PaperDollInnerBorderTop: retail and MoP Adjustments
+  if not PaperDollInnerBorderTop then return end
+
   --- @type FontStringObj
   local c = CharacterLevelText; if not c then return end
   c:ClearAllPoints()
-  c:SetPoint("BOTTOM", CharacterModelScene, 'TOP', 2, 5)
+  c:SetPoint("BOTTOM", PaperDollInnerBorderTop, 'TOP', 0, 0)
 end
 
 function o:OnShow_PaperDollFrame()
@@ -188,9 +192,10 @@ function o:OnShow_PaperDollFrame()
   MainFrameMixin_AlignCharacterLevelText()
 end
 
+--- In Retail (as of 12.x), CharStats/Titles/EquipmentSet is
+--- always expanded.
 --- @param self Gears_MainFrameMixin|Gears_MainFrame
 local function MainFrameMixin_CharacterFrameHooks(self)
-  --MainFrameMixin_ECSHooks(self)
   local cfeb = CharacterFrameExpandButton; if not cfeb then return end
   cfeb:HookScript("OnClick", MainFrameMixin_AlignCharacterLevelText)
 end
