@@ -12,7 +12,7 @@ local ns = select(2, ...)
 Library
 -------------------------------------------------------------------------------]]
 --- @class EventTracePrinter
-local S = {};
+local S = {}; ns.EvenTracePrinter = S
 S.__index = S
 S.__type = 'EventTracePrinter'
 
@@ -25,11 +25,13 @@ Library: Methods
 --- @type EventTracePrinter
 local o = S
 
+--- @class EventTracerObj : EventTracePrinter
+
 --- @param addon Name
 --- @param predicateFn PredicateFn|nil  | "function() return true end"
 --- @return EventTracePrinter
 function o:New(addon, predicateFn)
-  --- @type EventTracePrinter
+  --- @type EventTracerObj
   local tracer = setmetatable({}, o)
   tracer:__Init(addon, predicateFn)
   return tracer
@@ -48,7 +50,18 @@ function o:__Init(addon, predicateFn)
   self.eventBase   = upperc(c_base(addon))
   self.predicateFn = predicateFn or function() return true  end
   self.evt         = self:LoadEventTrace()
+  self:SetInitialDefaultSearchKeyword()
+  if self.evt then self.evt:SetClampedToScreen(true) end
 end
+
+function o:SetInitialDefaultSearchKeyword()
+  local s = self.evt.Log.Bar.SearchBox
+  if s then s:SetText(ns.settings.traceKeyword or '') end
+end
+
+function o:ShowUI() self.evt:Show() end
+
+function o:HideUI() self.evt:Hide() end
 
 --- Trace with default prefix as the addon name
 --- @param ... any
@@ -91,7 +104,6 @@ function o:LoadEventTrace()
             self.logName, addOnName, reason))
   end
   assert(EventTrace, ('%s:: Failed to load [%s].'):format(self.logName, addOnName))
-  --EventTrace:Hide()
   return EventTrace
 end
 
@@ -101,7 +113,4 @@ function o:_EventName(prefix)
   return ("%s::%s"):format(self.eventBase, upperc(prefix))
 end
 
---[[-------------------------------------------------------------------
-Register
----------------------------------------------------------------------]]
-ns:RegisterTracer(o)
+
