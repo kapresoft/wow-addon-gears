@@ -40,7 +40,7 @@ Mixin
 --- @field ChangeButton ButtonObj
 --- @field private __used boolean|nil
 Gears_EquipmentSetMixin = {}
-local p = ns:log('EquipmentSetMixin')
+local p, pd, t, tf = ns:log('EquipmentSetMixin')
 
 --- @type EquipmentSetMixin | EquipmentSetFrame
 local o = Gears_EquipmentSetMixin
@@ -171,10 +171,9 @@ end
 
 --- @private
 function o:__OnLoadCheckMark()
-  local t = self.CheckMark
-  t:SetTexture(CHECKBOX_TEXTURE)
-  t:SetVertexColor(1, 1, 1, 1)
-  t:Hide()
+  self.CheckMark:SetTexture(CHECKBOX_TEXTURE)
+  self.CheckMark:SetVertexColor(1, 1, 1, 1)
+  self.CheckMark:Hide()
 end
 
 function o:OnDragStart() C_PickupEquipmentSet(self:GetID()) end
@@ -247,6 +246,7 @@ end
 
 function o:SaveGear()
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
+  t('SaveGear', 'EquipID=', self:GetID())
   C_SaveEquipmentSet(self:GetID(), self.info.icon)
 end
 

@@ -5,7 +5,8 @@ Type: Namespace
 --- @field xml table
 --- @field O NamespaceObjects
 --- @field gameVersion GameVersion
---- @field tracer EventTracePrinter
+--- @field EvenTracePrinter EventTracePrinter
+--- @field tracer EventTracerObj
 --- @field private printer LibPrettyPrint_Printer
 --- @field private logBuilder Gears_LogBuilderFn
 --- @field p LibPrettyPrint_Printer The base printer
@@ -19,6 +20,11 @@ Type: NamespaceObjects
 --- @field GameVersion GameVersion
 --- @field LibIconPickerUtil LibIconPickerUtil
 --- @field CharacterFrameUtil CharacterFrameUtil
+--- @field AceEvent AceEvent_3_0
+--- @field AceBucket AceBucket_3_0
+--- @field AceLocale AceLocale_3_0
+--- @field AceAddon AceAddon_3_0
+--- @field AceDB AceDB_3_0
 
 --[[-------------------------------------------------------------------
 Aliases
@@ -41,7 +47,7 @@ local addon
 --- @type NamespaceImpl | Namespace
 local ns
 addon, ns = ...; ns.addon = addon; GEARS_NS = ns
-
+ns.O = ns.O or {}
 
 --- Used in XML files to hook frame events: OnLoad and OnEvent
 --- Example: <OnLoad>GEARS_XML:[TypeName]_OnLoad(self)</OnLoad>
@@ -57,7 +63,7 @@ Override in DeveloperSetup to enable
 --- @class Gears_Settings
 --- @field developer boolean if true: enables developer mode
 --- @field enableTraceUI boolean if true: shows Blizz EventTrace UI on load
-local settings = { developer = false }; ns.settings = settings
+local settings = { developer = false, enableTraceUI = false, traceKeyword='gears' }; ns.settings = settings
 
 
 --- @return boolean
@@ -66,8 +72,8 @@ function ns:IsDev() return ns.settings.developer == true end
 --[[-------------------------------------------------------------------
 Logger Methods
 ---------------------------------------------------------------------]]
+local function predicateFn() return ns:IsDev() end
 do
-  local function predicateFn() return ns:IsDev() end
   local function DelayedCall(delay, fn, ...)
     assert(type(delay) == 'number' and delay > 0)
     return function(...)
@@ -86,12 +92,12 @@ do
   }, predicateFn)
 
   --- @param tracer EventTracePrinter
-  function ns:RegisterTracer(tracer)
-    self.tracer = tracer:New(ns.addon, predicateFn)
-    if not (ns:IsDev() and settings.enableTraceUI) then
-      self.tracer.evt:Hide()
-    end
-  end
+  --function ns:RegisterTracer(tracer)
+  --  self.tracer = tracer:New(ns.addon, predicateFn)
+  --  if not (ns:IsDev() and settings.enableTraceUI) then
+  --    self.tracer.evt:Hide()
+  --  end
+  --end
   function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
   
   --- @param moduleName Name
@@ -125,17 +131,43 @@ do
     return builderFn
   end
 end
+--[[-----------------------------------------------------------------------------
+NamespaceObjects: Ace-3.0
+-------------------------------------------------------------------------------]]
+do
+  local obj = ns.O
+  --- @type AceEvent_3_0
+  obj.AceEvent = LibStub("AceEvent-3.0")
+  --- @type AceBucket_3_0
+  obj.AceBucket = LibStub("AceBucket-3.0")
+  --- @type AceLocale_3_0
+  obj.AceLocale = LibStub("AceLocale-3.0")
+  --- @type AceAddon_3_0
+  obj.AceAddon = LibStub("AceAddon-3.0")
+  --- @type AceDB_3_0
+  obj.AceDB = LibStub("AceDB-3.0")
+  
+  --- @generic T
+  --- @param targetObj T|nil An optional targetObj for embedding
+  --- @return T
+  function ns:AceEvent(targetObj)
+    if targetObj then return self.O.AceEvent:Embed(targetObj) end
+    return self.O.AceEvent:Embed({})
+  end
+  --- @generic T
+  --- @param targetObj T|nil An optional targetObj for embedding
+  --- @return T
+  function ns:AceBucket(targetObj)
+    if targetObj then return self.O.AceBucket:Embed(targetObj) end
+    return self.O.AceBucket:Embed({})
+  end
+  --- @return AceLocale_3_0
+  function ns:AceLocale() return self.O.AceLocale end end
 
 --[[-----------------------------------------------------------------------------
 Namespace: Methods
 -------------------------------------------------------------------------------]]
 do
-  --- @type AceEvent_3_0
-  local AceEvent = LibStub("AceEvent-3.0")
-  --- @type AceBucket_3_0
-  local AceBucket = LibStub("AceBucket-3.0")
-  --- @type AceLocale_3_0
-  local AceLocale = LibStub('AceLocale-3.0')
   --- @type Kapresoft_AceLocaleUtil_2_0
   local AceLocaleUtil = LibStub('Kapresoft-AceLocaleUtil-2-0')
   
@@ -143,7 +175,6 @@ do
   
   ns.sformat        = string.format
   ns.settings       = settings
-  ns.O              = {}
   ns.MAX_CHARS_SET_NAME = 32
 
   --- @param prefix string|nil
@@ -189,23 +220,14 @@ do
     return ('%s::%s'):format(ns.addon, msgName)
   end
   
-  --- @param targetObj any|nil An optional targetObj for embedding
-  function ns:AceEvent(targetObj)
-    if targetObj then return AceEvent:Embed(targetObj) end
-    return AceEvent:Embed({})
-  end
-  
-  --- @param targetObj any|nil An optional targetObj for embedding
-  function ns:AceBucket(targetObj)
-    if targetObj then return AceBucket:Embed(targetObj) end
-    return AceBucket:Embed({})
-  end
-  
-  --- @return AceLocale_3_0
-  function ns:AceLocale() return AceLocale end
-  
   --- @return table<string, string>
   function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, ns:IsDev()) end
+  
+  --- @param name Name
+  --- @param predicateFn fun():boolean @Optional - The predicate function
+  --- @return EventTracerObj
+  function ns:NewTracer() return self.EvenTracePrinter:New(self.addon, predicateFn) end
+  
   
   --- >Safe wrapper for PlaySound.
   --- >Returns two results: willPlay:boolean, soundHandle:boolean
@@ -224,5 +246,19 @@ do
     return PlaySound(soundKitID, channel, forceNoDuplicates, runFinishCallback)
   end
   
+end
+
+--[[-------------------------------------------------------------------
+Init Tracer
+---------------------------------------------------------------------]]
+--- @param callbackFn fun() : void
+function ns:InitTracer(callbackFn)
+  if not predicateFn() then return end
+  
+  self.tracer = self:NewTracer()
+  if not settings.enableTraceUI then self.tracer:HideUI()
+  else self.tracer:ShowUI() end
+  
+  callbackFn()
 end
 
