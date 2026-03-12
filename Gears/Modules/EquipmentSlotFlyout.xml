@@ -1,0 +1,77 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+    <Script file="EquipmentSlotFlyoutMixin.lua"/>
+
+    <!-- Flyout Arrow Button -->
+    <Button name="GearsEquipmentSlotFlyoutTemplate" mixin="Gears_EquipmentSlotFlyoutMixin"
+            frameStrata="HIGH" frameLevel="1000" virtual="true">
+        <Size x="52" y="16"/>
+
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture parentKey="Arrow">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnClick method="OnClick"/>
+        </Scripts>
+
+        <Frames>
+            <!-- Flyout Container -->
+            <Frame parentKey="Flyout" hidden="false" inherits="BackdropTemplate">
+                <KeyValues>
+                    <KeyValue key="backdropInfo" value="GEARS_BACKDROP_TOAST_12_12" type="global"/>
+                </KeyValues>
+                <Size x="48" y="48"/>
+                <Anchors>
+                    <Anchor point="CENTER" relativePoint="RIGHT" x="2" y="0"/>
+                </Anchors>
+
+                <Frames>
+                    <Button parentKey="ExcludeButton" inherits="UIButtonTemplate">
+                        <Size x="38" y="38"/>
+                        <Anchors>
+                            <Anchor point="CENTER" x=".5" y=".5"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <Texture parentKey="Icon" setAllPoints="true"/>
+                            </Layer>
+                        </Layers>
+
+                        <Scripts>
+                            <OnLoad>
+                                -- placeholder icon
+                                self.Icon:SetTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+                            </OnLoad>
+
+                            <OnClick>
+                                print("Slot excluded")
+                                self:GetParent():Hide()
+                            </OnClick>
+                        </Scripts>
+                        <NormalTexture file="Interface\AddOns\Gears\Assets\ui-button-empty"/>
+                        <PushedTexture file="Interface\AddOns\Gears\Assets\ui-button-empty" alpha="0.9" alphaMode="ADD"/>
+                        <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alpha="0.6" alphaMode="ADD"/>
+                    </Button>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Button>
+
+    <Button name="TestFlyoutButton" parent="UIParent" inherits="GearsEquipmentSlotFlyoutTemplate"
+            hidden="true">
+        <Anchors>
+            <Anchor point="LEFT" relativeTo="CharacterNeckSlot"
+                    relativePoint="RIGHT" x="-10"/>
+        </Anchors>
+    </Button>
+
+</Ui>

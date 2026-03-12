@@ -84,6 +84,16 @@ local function MainFrame_PaperDollFrameHooks(self)
   PaperDollFrame:HookScript("OnShow", function(pdf)
     self:OnShow_PaperDollFrame()
     self:SendMessage(ns:msg('OnShowPaperDollFrame'), self, pdf)
+    --- @type ButtonObj
+    local btn = TestFlyoutButton
+    --btn:ClearAllPoints()
+    --btn:SetPoint('LEFT', CharacterNeckSlot, 'RIGHT', -10, 0)
+    btn:Show()
+  end)
+  PaperDollFrame:HookScript("OnHide", function(pdf)
+    --- @type ButtonObj
+    local btn = TestFlyoutButton
+    btn:Hide()
   end)
 end
 

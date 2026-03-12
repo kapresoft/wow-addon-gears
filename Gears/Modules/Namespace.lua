@@ -262,3 +262,14 @@ function ns:InitTracer(callbackFn)
   callbackFn()
 end
 
+
+-- todo: temporary, need to place somewhere
+GEARS_BACKDROP_TOAST_12_12 = {
+  bgFile = "Interface\\Buttons\\WHITE8X8",
+  edgeFile = "Interface\\FriendsFrame\\UI-Toast-Border",
+  tile = true,
+  tileEdge = true,
+  tileSize = 12,
+  edgeSize = 12,
+  insets = { left = 3, right = 3, top = 3, bottom = 3 },
+};
