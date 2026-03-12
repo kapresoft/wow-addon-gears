@@ -22,15 +22,21 @@ function o:OnLoad()
   self.Flyout:SetBackdropColor(0.25, 0.32, 0.50, 0.95)
   self.Flyout:SetBackdropBorderColor(1.0, 0.84, 0.0, 0.95)
   self.Arrow:SetTexture(310765);
-  self.Arrow:SetRotation(math.rad(-90));
   self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
+  self:FlyoutShow()
+end
+
+function o:FlyoutHide()
+  self.Arrow:SetRotation(math.rad(-90)) -- ▶ collapsed
+  self.Flyout:Hide()
+end
+
+function o:FlyoutShow()
+  self.Flyout:Show()
+  self.Arrow:SetRotation(math.rad(90)) -- ◀ expanded
 end
 
 function o:OnClick()
-  print('xx Clicked...')
-  if self.Flyout:IsShown() then
-    self.Flyout:Hide()
-  else
-    self.Flyout:Show()
-  end
+  if self.Flyout:IsShown() then self:FlyoutHide()
+  else self:FlyoutShow() end
 end
