@@ -3,12 +3,24 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
+--[[-------------------------------------------------------------------
+Types
+---------------------------------------------------------------------]]
+--- @class EquipmentSlotFlyout__ : Frame Flyout Container
+--- @field ExcludeButton ButtonObj
+--- @field IncludeButton ButtonObj
+--- @field buttons ButtonObj[]
+--
+--
+--- @alias EquipmentSlotFlyout EquipmentSlotFlyout__ | FrameObjWithBackdrop
 
 --[[-----------------------------------------------------------------------------
 Module::EquipmentSlotFlyoutMixin
 -------------------------------------------------------------------------------]]
 local libName = 'EquipmentSlotFlyoutMixin'
 --- @class EquipmentSlotFlyoutMixin
+--- @field Flyout EquipmentSlotFlyout Flyout Container
+--- @field Arrow TextureObj
 Gears_EquipmentSlotFlyoutMixin = {}
 local p, pd, t, tf = ns:log(libName)
 
@@ -21,9 +33,35 @@ local o = Gears_EquipmentSlotFlyoutMixin
 function o:OnLoad()
   self.Flyout:SetBackdropColor(0.25, 0.32, 0.50, 0.95)
   self.Flyout:SetBackdropBorderColor(1.0, 0.84, 0.0, 0.95)
+  self:CreateActionButtons()
   self.Arrow:SetTexture(310765);
   self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
   self:FlyoutShow()
+end
+
+function o:CreateActionButtons()
+  local flyout = self.Flyout
+  flyout.buttons = {}
+  
+  --- @type ButtonObj - Include Button
+  local placeInBagsBtn = CreateFrame("Button", nil, flyout, "GearsEquipmentSlotActionButton")
+  placeInBagsBtn:SetParentKey('PlaceInBagsButton')
+  placeInBagsBtn.Icon:SetTexture([[Interface\Icons\INV_Misc_Bag_09]])
+  placeInBagsBtn:ClearAllPoints()
+  placeInBagsBtn:SetPoint("LEFT", flyout, "LEFT", 8, 0)
+  table.insert(flyout.buttons, placeInBagsBtn)
+  
+  --- @type ButtonObj - Exclude Button
+  local excludeBtn = CreateFrame("Button", nil, flyout, "GearsEquipmentSlotActionButton")
+  excludeBtn:SetParentKey('ExcludeButton')
+  excludeBtn.Icon:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
+  excludeBtn:ClearAllPoints()
+  excludeBtn:SetPoint("LEFT", placeInBagsBtn, "RIGHT", 1, 0)
+  table.insert(flyout.buttons, excludeBtn)
+  
+  local widthPadding = 16
+  flyout:SetWidth(placeInBagsBtn:GetWidth() + excludeBtn:GetWidth() + widthPadding)
+  flyout:SetHeight(flyout:GetHeight() + 4)
 end
 
 function o:FlyoutHide()

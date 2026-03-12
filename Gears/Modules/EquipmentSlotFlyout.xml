@@ -2,6 +2,28 @@
 
     <Script file="EquipmentSlotFlyoutMixin.lua"/>
 
+    <Button name="GearsEquipmentSlotActionButton" inherits="UIButtonTemplate"
+            virtual="true">
+        <Size x="38" y="38"/>
+        <Anchors>
+            <Anchor point="CENTER" x=".5" y=".5"/>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <Texture parentKey="Icon" setAllPoints="true"/>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnClick>
+                print("xx Slot excluded")
+                self:GetParent():Hide()
+            </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\AddOns\Gears\Assets\ui-button-empty"/>
+        <PushedTexture file="Interface\AddOns\Gears\Assets\ui-button-empty" alpha="0.9" alphaMode="ADD"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alpha="0.6" alphaMode="ADD"/>
+    </Button>
+
     <!-- Flyout Arrow Button -->
     <Button name="GearsEquipmentSlotFlyoutTemplate" mixin="Gears_EquipmentSlotFlyoutMixin"
             frameStrata="HIGH" frameLevel="1000" virtual="true">
@@ -24,44 +46,34 @@
         </Scripts>
 
         <Frames>
-            <!-- Flyout Container -->
             <Frame parentKey="Flyout" hidden="false" inherits="BackdropTemplate">
                 <KeyValues>
                     <KeyValue key="backdropInfo" value="GEARS_BACKDROP_TOAST_12_12" type="global"/>
                 </KeyValues>
                 <Size x="48" y="48"/>
                 <Anchors>
-                    <Anchor point="CENTER" relativePoint="RIGHT" x="2" y="0"/>
+                    <Anchor point="LEFT" relativePoint="RIGHT" x="-23" y="0"/>
                 </Anchors>
 
-                <Frames>
-                    <Button parentKey="ExcludeButton" inherits="UIButtonTemplate">
-                        <Size x="38" y="38"/>
-                        <Anchors>
-                            <Anchor point="CENTER" x=".5" y=".5"/>
-                        </Anchors>
-                        <Layers>
-                            <Layer level="OVERLAY">
-                                <Texture parentKey="Icon" setAllPoints="true"/>
-                            </Layer>
-                        </Layers>
-
+                <!--<Frames>
+                    <Button parentKey="ExcludeButton" name="$parentExcludeButton" inherits="GearsEquipmentSlotActionButton">
                         <Scripts>
                             <OnLoad>
-                                -- placeholder icon
-                                self.Icon:SetTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+                                self.Icon:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
                             </OnLoad>
-
-                            <OnClick>
-                                print("Slot excluded")
-                                self:GetParent():Hide()
-                            </OnClick>
                         </Scripts>
-                        <NormalTexture file="Interface\AddOns\Gears\Assets\ui-button-empty"/>
-                        <PushedTexture file="Interface\AddOns\Gears\Assets\ui-button-empty" alpha="0.9" alphaMode="ADD"/>
-                        <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alpha="0.6" alphaMode="ADD"/>
                     </Button>
-                </Frames>
+                    <Button parentKey="IncludeButton" name="$parentIncludeButton" inherits="GearsEquipmentSlotActionButton">
+                        <Anchors>
+                            <Anchor point="LEFT" relativeKey="$parentExcludeButton" relativePoint="RIGHT" x="0" y="0"/>
+                        </Anchors>
+                        <Scripts>
+                            <OnLoad>
+                                self.Icon:SetTexture([[Interface\Icons\INV_Misc_Bag_08]])
+                            </OnLoad>
+                        </Scripts>
+                    </Button>
+                </Frames>-->
             </Frame>
         </Frames>
     </Button>
@@ -69,8 +81,8 @@
     <Button name="TestFlyoutButton" parent="UIParent" inherits="GearsEquipmentSlotFlyoutTemplate"
             hidden="true">
         <Anchors>
-            <Anchor point="LEFT" relativeTo="CharacterNeckSlot"
-                    relativePoint="RIGHT" x="-10"/>
+            <Anchor point="LEFT" relativeTo="CharacterShoulderSlot"
+                    relativePoint="RIGHT" x="0"/>
         </Anchors>
     </Button>
 
