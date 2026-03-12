@@ -27,14 +27,13 @@
     <!-- Flyout Arrow Button -->
     <Button name="GearsEquipmentSlotFlyoutTemplate" mixin="Gears_EquipmentSlotFlyoutMixin"
             frameStrata="HIGH" frameLevel="1000" virtual="true">
-        <Size x="52" y="16"/>
-
+        <Size x="14" y="14"/>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture parentKey="Arrow">
+                    <Size x="52" y="14"/>
                     <Anchors>
-                        <Anchor point="TOPLEFT"/>
-                        <Anchor point="BOTTOMRIGHT"/>
+                        <Anchor point="CENTER"/>
                     </Anchors>
                 </Texture>
             </Layer>
@@ -43,6 +42,8 @@
         <Scripts>
             <OnLoad method="OnLoad"/>
             <OnClick method="OnClick"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
         </Scripts>
 
         <Frames>
@@ -52,28 +53,8 @@
                 </KeyValues>
                 <Size x="48" y="48"/>
                 <Anchors>
-                    <Anchor point="LEFT" relativePoint="RIGHT" x="-23" y="0"/>
+                    <Anchor point="LEFT" relativePoint="RIGHT" x="0" y="0"/>
                 </Anchors>
-
-                <!--<Frames>
-                    <Button parentKey="ExcludeButton" name="$parentExcludeButton" inherits="GearsEquipmentSlotActionButton">
-                        <Scripts>
-                            <OnLoad>
-                                self.Icon:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
-                            </OnLoad>
-                        </Scripts>
-                    </Button>
-                    <Button parentKey="IncludeButton" name="$parentIncludeButton" inherits="GearsEquipmentSlotActionButton">
-                        <Anchors>
-                            <Anchor point="LEFT" relativeKey="$parentExcludeButton" relativePoint="RIGHT" x="0" y="0"/>
-                        </Anchors>
-                        <Scripts>
-                            <OnLoad>
-                                self.Icon:SetTexture([[Interface\Icons\INV_Misc_Bag_08]])
-                            </OnLoad>
-                        </Scripts>
-                    </Button>
-                </Frames>-->
             </Frame>
         </Frames>
     </Button>
@@ -82,7 +63,7 @@
             hidden="true">
         <Anchors>
             <Anchor point="LEFT" relativeTo="CharacterShoulderSlot"
-                    relativePoint="RIGHT" x="0"/>
+                    relativePoint="RIGHT" x="20"/>
         </Anchors>
     </Button>
 

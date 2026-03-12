@@ -31,6 +31,7 @@ Module::EquipmentSlotFlyoutMixin (Methods)
 local o = Gears_EquipmentSlotFlyoutMixin
 
 function o:OnLoad()
+  BackdropTemplateMixin.OnBackdropLoaded(self)
   self.Flyout:SetBackdropColor(0.25, 0.32, 0.50, 0.95)
   self.Flyout:SetBackdropBorderColor(1.0, 0.84, 0.0, 0.95)
   self:CreateActionButtons()
@@ -77,4 +78,14 @@ end
 function o:OnClick()
   if self.Flyout:IsShown() then self:FlyoutHide()
   else self:FlyoutShow() end
+end
+
+function o:OnEnter()
+  self.Arrow:SetVertexColor(1, 0.95, 0.4, 1)
+  self.Arrow:SetBlendMode("ADD")
+end
+
+function o:OnLeave()
+  self.Arrow:SetVertexColor(1, 1, 1, 1)
+  self.Arrow:SetBlendMode("BLEND")
 end
