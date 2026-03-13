@@ -1,6 +1,6 @@
 --- @type Namespace
 local ns = select(2, ...)
-local p, pd, t, tf
+local p, pd, t, tf = ns:log('Gears')
 
 --[[-----------------------------------------------------------------------------
 Local Vars
@@ -34,14 +34,6 @@ Addon Methods
 --[[-------------------------------------------------------------------
 Event Hooks
 ---------------------------------------------------------------------]]
-a:RegisterEvent('ADDON_LOADED', function(evt, addonName)
-  if addonName ~= ns.addon then return end
-  ns:InitTracer(function()
-    p, pd, t, tf = ns:log('addon')
-    t('OnAddonLoaded', 'Tracer Initialized', 'ns.tracer=', ns.tracer)
-  end)
-end)
-
 function a:OnAddOnReady(evt, isInitialLogin, isReloadingUi)
   t('OnAddOnReady', 'isInitialLogin=', isInitialLogin, 'isReloadingUi=', isReloadingUi)
   self:SendMessage('GEARS::ADDON_READY', isInitialLogin, isReloadingUi)

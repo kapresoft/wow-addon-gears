@@ -20,6 +20,7 @@ Type: NamespaceObjects
 --- @field GameVersion GameVersion
 --- @field LibIconPickerUtil LibIconPickerUtil
 --- @field CharacterFrameUtil CharacterFrameUtil
+--- @field EquipmentSlotFactory EquipmentSlotFactory
 --- @field AceEvent AceEvent_3_0
 --- @field AceBucket AceBucket_3_0
 --- @field AceLocale AceLocale_3_0
@@ -180,7 +181,7 @@ do
   --- @param prefix string|nil
   --- @return Gears_TraceFn @Printer function that outputs plain values to Blizzard Trace UI (like print)
   function ns:traceFn(prefix)
-    if not self.tracer then return function()  end end
+    if not self.tracer then return function() end end
     if type(prefix) ~= 'string' then
       return function(...) return self.tracer:td(...) end
     end
