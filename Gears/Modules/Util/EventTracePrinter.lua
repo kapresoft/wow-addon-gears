@@ -113,4 +113,11 @@ function o:_EventName(prefix)
   return ("%s::%s"):format(self.eventBase, upperc(prefix))
 end
 
-
+--[[-------------------------------------------------------------------
+Initialize Tracer
+---------------------------------------------------------------------]]
+ns:InitTracer(function()
+  if not ns:IsDev() then return end
+  local _, _, t = ns:log('EventTracePrinter')
+  t('InitTracer', 'ns.tracer=', ns.tracer)
+end)

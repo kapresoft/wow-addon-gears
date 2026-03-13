@@ -2,6 +2,7 @@
 local ns = select(2, ...)
 local L = ns:GetLocale()
 local cfu = ns.O.CharacterFrameUtil
+local esf = ns.O.EquipmentSlotFactory
 
 --[[-------------------------------------------------------------------
 Alias
@@ -19,7 +20,7 @@ local TOOLTIP_DELAY = 0.01
 local PaperDollSidebarTab3 = PaperDollSidebarTab3
 
 local libName = 'ToggleButton'
-local p, t, tt = ns:log(libName)
+local p, pd, t, tf = ns:log(libName)
 
 --- todo next: move ecs methods on it's own lua file? publish events on open/close
 
@@ -106,6 +107,7 @@ end
 function o:OnShowPaperDollFrame_Message(evt, gearsMainFrame, pdf)
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   ToggleButtonMixin_ECS_ToggleButton_Hook(self)
+  esf:UpdateVisibility()
 end
 
 --- If Gears is shown, hide it
@@ -115,8 +117,13 @@ end
 
 --- @param enable boolean
 function o:EnableEquipmentSlots(enable)
-  cfu:ForEachEquipmentSlot(function(s, btn, po)
-    if enable then po:Show() else po:Hide() end
+  if not self:__HasBlizzEquipManager() then
+    esf:SetFlyoutState(enable); return
+  end
+  
+  local fn = enable and "Show" or "Hide"
+  cfu:ForEachEquipmentSlot(function(s, btn, blizzFlyout)
+    if blizzFlyout then blizzFlyout[fn](blizzFlyout) end
   end)
 end
 
@@ -131,8 +138,7 @@ function o:OnClick()
     -- so the player is not confused.
     -- todo next: Prompt the user to use Gears as main equipment manager?
     --    • then, replace EquipmentManager with Gears icon, click logic, etc.
-    local emp = PaperDollFrame and PaperDollSidebarTab1 and PaperDollFrame.EquipmentManagerPane
-    if emp and emp:IsShown() then
+    if self:__BlizzEquipManagerIsShown() then
       PaperDollSidebarTab1:Click()
       self:EnableEquipmentSlots(true)
     end
@@ -192,3 +198,16 @@ function o:AnchorToPaperDoll()
   btn:ClearAllPoints()
   btn:SetPoint('TOPRIGHT', anch, 'TOPLEFT', -2, 1)
 end
+
+--- @return FrameObj Container
+function o:__GetBlizzEquipManager()
+  return PaperDollFrame and PaperDollSidebarTab1 and PaperDollFrame.EquipmentManagerPane
+end
+
+--- @return boolean
+function o:__BlizzEquipManagerIsShown()
+  local em = self:__GetBlizzEquipManager(); return em and em:IsShown()
+end
+
+--- @boolean
+function o:__HasBlizzEquipManager() return self:__GetBlizzEquipManager() ~= nil end

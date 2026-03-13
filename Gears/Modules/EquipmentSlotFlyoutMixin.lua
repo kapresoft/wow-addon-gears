@@ -6,27 +6,7 @@ local ns = select(2, ...)
 --[[-------------------------------------------------------------------
 Slot Mapping
 ---------------------------------------------------------------------]]
-local SLOT_NAMES = {
-  [INVSLOT_HEAD] = "HeadSlot",
-  [INVSLOT_NECK] = "NeckSlot",
-  [INVSLOT_SHOULDER] = "ShoulderSlot",
-  [INVSLOT_BODY] = "ShirtSlot",
-  [INVSLOT_CHEST] = "ChestSlot",
-  [INVSLOT_WAIST] = "WaistSlot",
-  [INVSLOT_LEGS] = "LegsSlot",
-  [INVSLOT_FEET] = "FeetSlot",
-  [INVSLOT_WRIST] = "WristSlot",
-  [INVSLOT_HAND] = "HandsSlot",
-  [INVSLOT_FINGER1] = "Finger0Slot",
-  [INVSLOT_FINGER2] = "Finger1Slot",
-  [INVSLOT_TRINKET1] = "Trinket0Slot",
-  [INVSLOT_TRINKET2] = "Trinket1Slot",
-  [INVSLOT_BACK] = "BackSlot",
-  [INVSLOT_MAINHAND] = "MainHandSlot",
-  [INVSLOT_OFFHAND] = "SecondaryHandSlot",
-  [INVSLOT_RANGED] = "RangedSlot",
-  [INVSLOT_TABARD] = "TabardSlot",
-};
+
 -- /dump CharacterFinger0Slot:IconOverlay:SetAlpha(0.4)
 -- /dump CharacterFinger0Slot:GetName()
 -- /dump CharacterFinger0Slot:LockHighlight()
@@ -34,22 +14,27 @@ local SLOT_NAMES = {
 --[[-------------------------------------------------------------------
 Types
 ---------------------------------------------------------------------]]
---- @class EquipmentSlotFlyout__ : Frame Flyout Container
+--- @class FlyoutFrame__ : Frame Flyout Container
 --- @field ExcludeButton ButtonObj
 --- @field IncludeButton ButtonObj
 --- @field buttons ButtonObj[]
 --
 --
---- @alias EquipmentSlotFlyout EquipmentSlotFlyout__ | FrameObjWithBackdrop
+--- @alias FlyoutFrame FlyoutFrame__ | FrameObjWithBackdrop
 
 --[[-----------------------------------------------------------------------------
 Module::EquipmentSlotFlyoutMixin
 -------------------------------------------------------------------------------]]
 local libName = 'EquipmentSlotFlyoutMixin'
 --- @class EquipmentSlotFlyoutMixin
---- @field Flyout EquipmentSlotFlyout Flyout Container
+--- @field widget EquipmentSlotFlyoutWidget
+--- @field Flyout FlyoutFrame Flyout Container
 --- @field Arrow TextureObj
 Gears_EquipmentSlotFlyoutMixin = {}
+--
+--- @alias EquipmentSlotFlyout EquipmentSlotFlyoutMixin|ButtonObj
+--
+
 local p, pd, t, tf = ns:log(libName)
 
 --[[-----------------------------------------------------------------------------
@@ -70,11 +55,6 @@ local o = Gears_EquipmentSlotFlyoutMixin
 --local texture = GetInventoryItemTexture("player", slotID)
 --- /dump "Character"..select(1, GetInventorySlotInfo(3))
 function o:OnLoad()
-  self:ClearAllPoints()
-  local ofsx, ofsy = -2, 0
-  if ns:HasBlizzEquipmentManager() then ofsx = -10 end
-  self:SetPoint('LEFT', CharacterShoulderSlot, 'RIGHT', ofsx, ofsy)
-  
   self.Flyout:SetBackdropColor(0.25, 0.32, 0.50, 0.95)
   self.Flyout:SetBackdropBorderColor(1.0, 0.84, 0.0, 0.95)
   self:CreateActionButtons()
@@ -82,7 +62,7 @@ function o:OnLoad()
   self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
   
   self:FlyoutHide()
-  self:Show()
+  self:Hide()
 end
 
 function o:CreateActionButtons()

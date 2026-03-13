@@ -27,6 +27,8 @@ Blizzard Vars
 local C_CreateEquipmentSet = C_EquipmentSet.CreateEquipmentSet
 local strtrim = strtrim
 
+local esf = ns.O.EquipmentSlotFactory
+
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
@@ -84,14 +86,6 @@ local function MainFrame_PaperDollFrameHooks(self)
   PaperDollFrame:HookScript("OnShow", function(pdf)
     self:OnShow_PaperDollFrame()
     self:SendMessage(ns:msg('OnShowPaperDollFrame'), self, pdf)
-    --- @type ButtonObj
-    local btn = Gears_ShoulderSlotFlyout
-    --btn:Show()
-  end)
-  PaperDollFrame:HookScript("OnHide", function(pdf)
-    --- @type ButtonObj
-    local btn = Gears_ShoulderSlotFlyout
-    --btn:Hide()
   end)
 end
 
@@ -275,6 +269,7 @@ end
 function o:OnInit()
   self.__origHeight = self:GetHeight()
   self:InitEquipmentSet()
+  esf:CreateSlotFlyouts()
   
   MainFrame_PaperDollFrameHooks(self)
   self:SendMessage(ns:msg('OnAfterInit'), self)

@@ -9,11 +9,41 @@ local PaperDollItemsFrame, GetInventorySlotInfo = PaperDollItemsFrame, GetInvent
 local c_error = ns:colorFn('FF513C')
 local c_warn = ns:colorFn('FFAA6D')
 --[[-------------------------------------------------------------------
+Constants: Slot Names
+---------------------------------------------------------------------]]
+--- @class CharacterFrameUtil_Constants
+local C = { }
+
+local SLOT_NAMES = {
+  [INVSLOT_HEAD] = "HeadSlot",
+  [INVSLOT_NECK] = "NeckSlot",
+  [INVSLOT_SHOULDER] = "ShoulderSlot",
+  [INVSLOT_BODY] = "ShirtSlot",
+  [INVSLOT_CHEST] = "ChestSlot",
+  [INVSLOT_WAIST] = "WaistSlot",
+  [INVSLOT_LEGS] = "LegsSlot",
+  [INVSLOT_FEET] = "FeetSlot",
+  [INVSLOT_WRIST] = "WristSlot",
+  [INVSLOT_HAND] = "HandsSlot",
+  [INVSLOT_FINGER1] = "Finger0Slot",
+  [INVSLOT_FINGER2] = "Finger1Slot",
+  [INVSLOT_TRINKET1] = "Trinket0Slot",
+  [INVSLOT_TRINKET2] = "Trinket1Slot",
+  [INVSLOT_BACK] = "BackSlot",
+  [INVSLOT_MAINHAND] = "MainHandSlot",
+  [INVSLOT_OFFHAND] = "SecondaryHandSlot",
+  [INVSLOT_RANGED] = "RangedSlot",
+  [INVSLOT_TABARD] = "TabardSlot",
+}
+C.SlotNames = SLOT_NAMES
+--[[-------------------------------------------------------------------
 New Library
 ---------------------------------------------------------------------]]
 --- @class CharacterFrameUtil
+--- @field C CharacterFrameUtil_Constants
 local S = {}; ns.O.CharacterFrameUtil = S
-local p = ns:log('CharacterFrameUtil')
+local p, pd, t, tf = ns:log('CharacterFrameUtil')
+
 --- @type CharacterFrameUtil
 local o = S;
 
@@ -32,6 +62,9 @@ local function GetSlotInfo(slotItemButton)
   return result
 end
 
+--- @class SlotItemButton
+--- @field popoutButton|nil ButtonObj Only on versions with Blizz Equipment Managers
+
 --- See Also:: PaperDollFrame.xml # Frame/PaperDollItemsFrame
 --- @param callbackFn fun(info:InventorySlotInfo, btn:ButtonObj, po:ButtonObj) | "function(info, btn, po) end"
 function o:ForEachEquipmentSlot(callbackFn)
@@ -39,9 +72,6 @@ function o:ForEachEquipmentSlot(callbackFn)
   if not (pdif and GetInventorySlotInfo) then
     return
   end
-  
-  --- @class SlotItemButton
-  --- @field popoutButton ButtonObj
   
   --- @type table<number, SlotItemButton>
   local children = { pdif:GetChildren() }
@@ -51,7 +81,7 @@ function o:ForEachEquipmentSlot(callbackFn)
     if parentName == 'PaperDollItemsFrame' then
       local slotInfo = GetSlotInfo(slotItemButton)
       -- slotItemButton has a popoutButton
-      if slotInfo and slotItemButton.popoutButton then
+      if slotInfo then
         callbackFn(slotInfo, slotItemButton, slotItemButton.popoutButton)
       end
     end

@@ -4,6 +4,7 @@
     <Script file="EquipmentSetDeleteButtonMixin.lua"/>
     <Script file="EquipmentSetChangeButtonMixin.lua"/>
     <Script file="EquipmentSetMixin.lua"/>
+    <Script file="EquipmentSlotFactory.lua"/>
     <Script file="MainFrame.lua"/>
     <Script file="ToggleButtonMixin.lua"/>
     <Script file="MainController.lua"/>
