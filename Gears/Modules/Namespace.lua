@@ -245,6 +245,12 @@ do
     if not soundKitID then return end
     return PlaySound(soundKitID, channel, forceNoDuplicates, runFinishCallback)
   end
+
+  --- @boolean
+  function ns:HasBlizzEquipmentManager()
+    return PaperDollFrame and PaperDollSidebarTab1
+            and PaperDollFrame.EquipmentManagerPane
+  end
   
 end
 
