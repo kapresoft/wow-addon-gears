@@ -59,8 +59,11 @@
         </Frames>
     </Button>
 
-    <Button name="TestFlyoutButton" parent="UIParent" inherits="GearsEquipmentSlotFlyoutTemplate"
+    <Button name="Gears_ShoulderSlotFlyout" parent="PaperDollFrame" inherits="GearsEquipmentSlotFlyoutTemplate"
             hidden="true">
+        <KeyValues>
+            <KeyValue key="slotID" value="INVSLOT_SHOULDER" type="global"/>
+        </KeyValues>
     </Button>
 
 </Ui>

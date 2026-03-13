@@ -4,6 +4,34 @@ Local Vars
 --- @type Namespace
 local ns = select(2, ...)
 --[[-------------------------------------------------------------------
+Slot Mapping
+---------------------------------------------------------------------]]
+local SLOT_NAMES = {
+  [INVSLOT_HEAD] = "HeadSlot",
+  [INVSLOT_NECK] = "NeckSlot",
+  [INVSLOT_SHOULDER] = "ShoulderSlot",
+  [INVSLOT_BODY] = "ShirtSlot",
+  [INVSLOT_CHEST] = "ChestSlot",
+  [INVSLOT_WAIST] = "WaistSlot",
+  [INVSLOT_LEGS] = "LegsSlot",
+  [INVSLOT_FEET] = "FeetSlot",
+  [INVSLOT_WRIST] = "WristSlot",
+  [INVSLOT_HAND] = "HandsSlot",
+  [INVSLOT_FINGER1] = "Finger0Slot",
+  [INVSLOT_FINGER2] = "Finger1Slot",
+  [INVSLOT_TRINKET1] = "Trinket0Slot",
+  [INVSLOT_TRINKET2] = "Trinket1Slot",
+  [INVSLOT_BACK] = "BackSlot",
+  [INVSLOT_MAINHAND] = "MainHandSlot",
+  [INVSLOT_OFFHAND] = "SecondaryHandSlot",
+  [INVSLOT_RANGED] = "RangedSlot",
+  [INVSLOT_TABARD] = "TabardSlot",
+};
+-- /dump CharacterFinger0Slot:IconOverlay:SetAlpha(0.4)
+-- /dump CharacterFinger0Slot:GetName()
+-- /dump CharacterFinger0Slot:LockHighlight()
+
+--[[-------------------------------------------------------------------
 Types
 ---------------------------------------------------------------------]]
 --- @class EquipmentSlotFlyout__ : Frame Flyout Container
@@ -30,6 +58,17 @@ Module::EquipmentSlotFlyoutMixin (Methods)
 --- @type EquipmentSlotFlyoutMixin | ButtonObj
 local o = Gears_EquipmentSlotFlyoutMixin
 
+--local slotID = INVSLOT_SHOULDER
+--
+---- ignore slot for equipment set
+--C_EquipmentSet.IgnoreSlotForSave(slotID)
+--
+---- get item currently equipped
+--local link = GetInventoryItemLink("player", slotID)
+--
+---- get icon
+--local texture = GetInventoryItemTexture("player", slotID)
+--- /dump "Character"..select(1, GetInventorySlotInfo(3))
 function o:OnLoad()
   self:ClearAllPoints()
   local ofsx, ofsy = -2, 0
@@ -41,12 +80,9 @@ function o:OnLoad()
   self:CreateActionButtons()
   self.Arrow:SetTexture(310765);
   self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
-  self:FlyoutShow()
   
-end
-
-function o:OnShow()
-
+  self:FlyoutHide()
+  self:Show()
 end
 
 function o:CreateActionButtons()
