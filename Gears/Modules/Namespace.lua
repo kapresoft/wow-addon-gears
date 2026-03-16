@@ -20,12 +20,14 @@ Type: NamespaceObjects
 --- @field GameVersion GameVersion
 --- @field LibIconPickerUtil LibIconPickerUtil
 --- @field CharacterFrameUtil CharacterFrameUtil
---- @field EquipmentSlotFactory EquipmentSlotFactory
+--- @field EquipmentSlotFlyoutManager EquipmentSlotFlyoutManager
 --- @field AceEvent AceEvent_3_0
 --- @field AceBucket AceBucket_3_0
 --- @field AceLocale AceLocale_3_0
 --- @field AceAddon AceAddon_3_0
 --- @field AceDB AceDB_3_0
+--- @field Table Kapresoft_Table_2_0
+--- @field String Kapresoft_String_2_0
 
 --[[-------------------------------------------------------------------
 Aliases
@@ -164,6 +166,14 @@ do
   end
   --- @return AceLocale_3_0
   function ns:AceLocale() return self.O.AceLocale end end
+--[[-------------------------------------------------------------------
+Kapresoft Modules
+---------------------------------------------------------------------]]
+do
+  local obj = ns.O
+  obj.Table = LibStub('Kapresoft-Table-2-0')
+  obj.String = LibStub('Kapresoft-String-2-0')
+end
 
 --[[-----------------------------------------------------------------------------
 Namespace: Methods
@@ -177,7 +187,9 @@ do
   ns.sformat        = string.format
   ns.settings       = settings
   ns.MAX_CHARS_SET_NAME = 32
-
+  
+  function ns.TRUE() return true end
+  
   --- @param prefix string|nil
   --- @return Gears_TraceFn @Printer function that outputs plain values to Blizzard Trace UI (like print)
   function ns:traceFn(prefix)

@@ -12,7 +12,6 @@
     <!--@do-not-package@-->
     <Script file="Modules\Developer\Developer.lua" />
     <!--@end-do-not-package@-->
-    <Include file="Modules\EquipmentSlotFlyout.xml"/>
     <Include file="Modules\MainFrame.xml"/>
     <Script file="Gears.lua"/>
 </Ui>

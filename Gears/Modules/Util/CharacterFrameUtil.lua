@@ -69,9 +69,7 @@ end
 --- @param callbackFn fun(info:InventorySlotInfo, btn:ButtonObj, po:ButtonObj) | "function(info, btn, po) end"
 function o:ForEachEquipmentSlot(callbackFn)
   local pdif = PaperDollItemsFrame
-  if not (pdif and GetInventorySlotInfo) then
-    return
-  end
+  if not (pdif and GetInventorySlotInfo) then return end
   
   --- @type table<number, SlotItemButton>
   local children = { pdif:GetChildren() }
