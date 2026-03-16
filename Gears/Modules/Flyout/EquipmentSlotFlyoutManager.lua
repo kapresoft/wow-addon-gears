@@ -35,7 +35,7 @@ local o = S
 function o:OnEquipmentSetSelected(msg, equipSetInfo)
   ns.toggleButton:EnableEquipmentSlots(true)
   C_ClearIgnoredSlotsForSave()
-  self:ForEachEquipmentSetSlots(equipSetInfo.id, function(flyout, slotBtn, ignored)
+  self:ForEachEquipSetSlots(equipSetInfo.id, function(flyout, slotBtn, ignored)
     flyout.widget:SyncIgnoredState(ignored)
   end)
 end
@@ -87,7 +87,7 @@ end
 --- Slots by EquipmentSetID
 --- @param equipSetID EquipSetID
 --- @param callbackFn fun(slotFlyout:EquipmentSlotFlyout, slotBtn:BlizzCharacterSlotItemButton, ignored:boolean) : void | "'function(slotFlyout, slotBtn, ignored) end'"
-function o:ForEachEquipmentSetSlots(equipSetID, callbackFn)
+function o:ForEachEquipSetSlots(equipSetID, callbackFn)
   if not (callbackFn) then return end
   
   local ignoredSlots = C_GetIgnoredSlots(equipSetID)
@@ -103,7 +103,7 @@ end
 --- @param equipSetID EquipSetID
 --- @param callbackFn fun(slotFlyout:EquipmentSlotFlyout, slotBtn:BlizzCharacterSlotItemButton) : void | "'function(slotFlyout, slotBtn) end'"
 function o:ForEachEquipSetIgnoredSlots(equipSetID, callbackFn)
-  self:ForEachEquipmentSetSlots(equipSetID, function(slotFlyout, slotBtn, ignored)
+  self:ForEachEquipSetSlots(equipSetID, function(slotFlyout, slotBtn, ignored)
     if ignored and slotFlyout then callbackFn(slotFlyout, slotBtn) end
   end)
 end
