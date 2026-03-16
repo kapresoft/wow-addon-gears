@@ -2,7 +2,7 @@
 local ns = select(2, ...)
 local L = ns:GetLocale()
 local cfu = ns.O.CharacterFrameUtil
-local esf = ns.O.EquipmentSlotFactory
+local esf = ns.O.EquipmentSlotFlyoutManager
 
 --[[-------------------------------------------------------------------
 Alias
@@ -117,6 +117,8 @@ end
 
 --- @param enable boolean
 function o:EnableEquipmentSlots(enable)
+  if not ns.gears:HasSelection() then return end
+  
   if not self:__HasBlizzEquipManager() then
     esf:SetFlyoutState(enable); return
   end

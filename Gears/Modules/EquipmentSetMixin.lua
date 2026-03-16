@@ -27,11 +27,17 @@ local c_yellow1 = ns:colorFn('E6BF33')
 local c_yellow = ns:colorFn('FFE680')
 
 --[[-------------------------------------------------------------------
+Support Functions
+---------------------------------------------------------------------]]
+local function flyoutMgr() return ns.O.EquipmentSlotFlyoutManager end
+
+--[[-------------------------------------------------------------------
 Mixin
 ---------------------------------------------------------------------]]
 --- @alias EquipmentSetFrame EquipmentSetMixin|ButtonObjWithBackdrop
 
 --- @class EquipmentSetMixin : Button
+--- @field GetID fun(self:EquipmentSetMixin) : number @The EquipmentSet Identifier
 --- @field owner Gears_MainFrame
 --- @field info EquipmentSetInfo
 --- @field selected boolean
@@ -246,8 +252,14 @@ end
 
 function o:SaveGear()
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
-  t('SaveGear', 'EquipID=', self:GetID())
-  C_SaveEquipmentSet(self:GetID(), self.info.icon)
+  local id = self:GetID()
+  C_SaveEquipmentSet(id, self.info.icon)
+  flyoutMgr():ForEachEquipmentSetSlots(id, function(slotFlyout, slotBtn, ignored)
+    if ignored then
+      local slotText = ('%s(%s)'):format(self:__GetDebugName(), slotFlyout:__GetDebugName())
+      t('SaveGear', slotText, 'ignored=', ignored)
+    end
+  end)
 end
 
 ---@param info EquipmentSetInfo
@@ -285,15 +297,18 @@ function o:ShowAsSelectedBorder()
   self:SetBackdropBorderColor(1.0, 0.82, 0.0, 0.9)
 end
 
+--- The EquipmentSet ID
 --- @return Identifier, Name, IconIDOrPath
 function o:GetIdentity()
   local info = self.info
-  if not self.info then return nil end
-  return self.info.id, self.info.name, self.info.icon
+  if not info then return nil end
+  return info.id, info.name, info.icon
 end
 
 --- @return Name
 function o:GetEquipmentSetName()
-  local info = self.owner.info
-  return info and info.name
+  local info = self.info; return info and info.name
 end
+
+--- @return Name
+function o:__GetDebugName() return ('%s::%s'):format(self.info.name, self.info.id) end

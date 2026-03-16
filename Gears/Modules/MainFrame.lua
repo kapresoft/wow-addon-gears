@@ -27,14 +27,13 @@ Blizzard Vars
 local C_CreateEquipmentSet = C_EquipmentSet.CreateEquipmentSet
 local strtrim = strtrim
 
-local esf = ns.O.EquipmentSlotFactory
-
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
 local libName = 'MainFrame'
 local LibIconPickerUtil = ns.O.LibIconPickerUtil
 local p, pd, t, tf = ns:log(libName)
+local esfm = ns.O.EquipmentSlotFlyoutManager
 
 --[[-------------------------------------------------------------------
 Gears_AddButtonMixin
@@ -269,7 +268,7 @@ end
 function o:OnInit()
   self.__origHeight = self:GetHeight()
   self:InitEquipmentSet()
-  esf:CreateSlotFlyouts()
+  esfm:CreateSlotFlyouts()
   
   MainFrame_PaperDollFrameHooks(self)
   self:SendMessage(ns:msg('OnAfterInit'), self)
@@ -396,6 +395,7 @@ function o:SelectEquipmentSet(equipSet)
   equipSet:SetSelected(true)
   equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
     MainFrameMixin_UpdateActionsEnabledState(self, not isFullyEquipped)
+    self:SendMessage(ns:msg('EquipmentSetSelected'), equipSet.info)
   end)
   
   -- uncheck the rest
@@ -412,6 +412,15 @@ function o:WithSelectedEquipmentSet(callback)
     if eqs.selected and callback then return callback(eqs) end
   end
 end
+
+--- @return EquipmentSetFrame
+function o:GetSelected()
+  local selected
+  self:WithSelectedEquipmentSet(function(sel) selected = sel end)
+  return selected
+end
+--- @return boolean
+function o:HasSelection() return self:GetSelected() ~= nil end
 
 --- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/EquipButton
 --- @param button ButtonObj

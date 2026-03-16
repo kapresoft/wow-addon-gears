@@ -19,4 +19,6 @@
     @end-non-debug@-->
     <Include file='LibPrettyPrint.xml'/>
     <Script file="Libs\Kapresoft-LibUtil\Lib-2-0\AceLocaleUtil.lua"/>
+    <Script file='Libs\Kapresoft-LibUtil\Lib-2-0\String.lua'/>
+    <Script file='Libs\Kapresoft-LibUtil\Lib-2-0\Table.lua'/>
 </Ui>

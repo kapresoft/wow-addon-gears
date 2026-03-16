@@ -1,9 +1,11 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 
+    <Script file="IgnoreSlotActionButtonMixin.lua"/>
+    <Script file="PlaceInBagsSlotActionButtonMixin.lua"/>
     <Script file="EquipmentSlotFlyoutMixin.lua"/>
+    <Script file="EquipmentSlotFlyoutManager.lua"/>
 
-    <Button name="GearsEquipmentSlotActionButton" inherits="UIButtonTemplate"
-            virtual="true">
+    <Button name="GearsEquipmentSlotActionButtonTemplate" inherits="UIButtonTemplate" virtual="true">
         <Size x="38" y="38"/>
         <Anchors>
             <Anchor point="CENTER" x=".5" y=".5"/>
@@ -13,15 +15,24 @@
                 <Texture parentKey="Icon" setAllPoints="true"/>
             </Layer>
         </Layers>
-        <Scripts>
-            <OnClick>
-                print("xx Slot excluded")
-                self:GetParent():Hide()
-            </OnClick>
-        </Scripts>
         <NormalTexture file="Interface\AddOns\Gears\Assets\ui-button-empty"/>
         <PushedTexture file="Interface\AddOns\Gears\Assets\ui-button-empty" alpha="0.9" alphaMode="ADD"/>
         <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alpha="0.6" alphaMode="ADD"/>
+    </Button>
+
+    <Button name="Gears_PlaceInBagsSlotActionButtonTemplate" inherits="GearsEquipmentSlotActionButtonTemplate" virtual="true"
+            mixin="Gears_PlaceInBagsSlotActionButtonMixin">
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnClick method="OnClick"/>
+        </Scripts>
+    </Button>
+    <Button name="Gears_IgnoreSlotActionButtonTemplate" inherits="GearsEquipmentSlotActionButtonTemplate" virtual="true"
+            mixin="Gears_IgnoreSlotActionButtonMixin">
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnClick method="OnClick"/>
+        </Scripts>
     </Button>
 
     <!-- Flyout Arrow Button -->
