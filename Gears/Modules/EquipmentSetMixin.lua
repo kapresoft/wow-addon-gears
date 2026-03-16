@@ -250,16 +250,19 @@ function o:EquipGear()
   end
 end
 
+--- @param self EquipmentSetMixin|EquipmentSetFrame
+local function __Trace_SaveGear(self)
+  flyoutMgr():ForEachEquipSetIgnoredSlots(self:GetID(), function(slotFlyout, slotBtn)
+    local slotText = ('%s(%s)'):format(self:__GetDebugName(), slotFlyout:__GetDebugName())
+    t('SaveGear::Ignored', slotText)
+  end)
+end
+
 function o:SaveGear()
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
   local id = self:GetID()
   C_SaveEquipmentSet(id, self.info.icon)
-  flyoutMgr():ForEachEquipmentSetSlots(id, function(slotFlyout, slotBtn, ignored)
-    if ignored then
-      local slotText = ('%s(%s)'):format(self:__GetDebugName(), slotFlyout:__GetDebugName())
-      t('SaveGear', slotText, 'ignored=', ignored)
-    end
-  end)
+  --__Trace_SaveGear(self)
 end
 
 ---@param info EquipmentSetInfo

@@ -19,8 +19,8 @@ Module::EquipmentSlotActionButtonMixin
 --- @see NamespaceObjects
 local libName = 'IgnoreSlotActionButtonMixin'
 --- @class IgnoreSlotActionButtonMixin
+--- @field widget IgnoreSlotActionButtonWidget
 --- @field TemplateName string
---- @field widget ExcludeSlotActionButtonWidget
 --- @field Icon TextureObj
 --- @field GetParent fun(self:IgnoreSlotActionButtonMixin) : FlyoutFrame
 local S = {}; Gears_IgnoreSlotActionButtonMixin = S
@@ -30,20 +30,26 @@ S.TemplateName = 'Gears_IgnoreSlotActionButtonTemplate'
 --- @alias IgnoreSlotActionButton IgnoreSlotActionButtonMixin | ButtonObj
 --
 local p, pd, t, tf = ns:log(libName)
+
 --[[-------------------------------------------------------------------
-Widget Methods
+Mixin: IgnoreSlotActionButtonWidgetMixin
 ---------------------------------------------------------------------]]
----@param w ExcludeSlotActionButtonWidget
-local function WidgetMethods(w)
+--- @class IgnoreSlotActionButtonWidgetMixin
+local IgnoreSlotActionButtonWidgetMixin = {}
+--
+--- @alias IgnoreSlotActionButtonWidget IgnoreSlotActionButtonWidgetMixin
+--
+do
+  --- @type IgnoreSlotActionButtonWidgetMixin | IgnoreSlotActionButtonWidget
+  local w = IgnoreSlotActionButtonWidgetMixin
   
-  --- @return BlizzCharacterSlotItemButton
-  function w:GetCharItemSlot() return w.frame:GetCharItemSlot() end
-  --- @return SlotID
-  function w:GetSlotID() return self.frame:GetCharItemSlot():GetID() end
-  --- @return boolean
-  function w:IsIgnored() return w.slotFlyoutButton.widget:IsIgnored() end
-  --- @return TextureObj
-  function w:GetIgnoreOverlay() return self:GetCharItemSlot().ignoreSlotOverlay end
+  --- @param frame IgnoreSlotActionButton
+  --- @param slotFlyoutButton EquipmentSlotFlyout
+  function w:Init(frame, slotFlyoutButton)
+    self.frame = frame
+    self.slotFlyoutButton = slotFlyoutButton
+  end
+  
   --- @param ignored boolean
   function w:UpdateActionTexture(ignored)
     local tex = ignored and includeTex or ignoreTex
@@ -61,6 +67,22 @@ local function WidgetMethods(w)
     local fn = ignored and 'Show' or 'Hide'
     local overlay = self:GetIgnoreOverlay(); overlay[fn](overlay)
   end
+  
+  --- @return BlizzCharacterSlotItemButton
+  function w:GetCharItemSlot() return self.frame:GetCharItemSlot() end
+  --- @return SlotID
+  function w:GetSlotID() return self.frame:GetCharItemSlot():GetID() end
+  --- @return boolean
+  function w:IsIgnored() return self.slotFlyoutButton.widget:IsIgnored() end
+  --- @return TextureObj
+  function w:GetIgnoreOverlay() return self:GetCharItemSlot().ignoreSlotOverlay end
+  
+  --- @return EquipmentSlotFlyout
+  function w:GetFlyout() return self.frame:GetFlyout() end
+  --- @return BlizzCharacterSlotItemButton
+  function w:GetCharItemSlot() return self.slotFlyoutButton.widget.slotButton end
+  --- @return SlotID
+  function w:GetSlotID() return self.frame:GetCharItemSlot():GetID() end
 end
 
 --[[-----------------------------------------------------------------------------
@@ -70,7 +92,7 @@ Module::EquipmentSlotActionButtonMixin (Methods)
 local o = Gears_IgnoreSlotActionButtonMixin
 
 function o:OnLoad()
-  local slotFlyoutBtn = self:GetFlyout()
+  local slotFlyoutBtn = self:GetParent():GetParent()
   local charItemSlot = self:GetCharItemSlot()
   
   --- @type TextureObj
@@ -80,32 +102,10 @@ function o:OnLoad()
   overlay:SetAlpha(0.6)
   overlay:Hide()
   charItemSlot.ignoreSlotOverlay = overlay
-  
-  --- @class ExcludeSlotActionButtonWidget
-  --- @field frame IgnoreSlotActionButton
-  --- @field slotFlyoutButton EquipmentSlotFlyout
-  local widget = {
-    frame = self,
-    slotFlyoutButton = slotFlyoutBtn
-  }; WidgetMethods(widget); self.widget = widget
-  
+
+  self.widget = CreateAndInitFromMixin(IgnoreSlotActionButtonWidgetMixin, self, slotFlyoutBtn)
 end
 
---- @return boolean The new ignored-for-save state
-function o:ToggleState()
-  local equipSet = ns.gears:GetSelected()
-  local slotID = self:GetSlotID()
-  local ignoredForSave = C_IsSlotIgnoredForSave(slotID) -- ignored but not yet saved
-  local w = self.widget
-  local slotText = ('%s::%s'):format(equipSet:__GetDebugName(), w.slotFlyoutButton:__GetDebugName())
-  --t('OnClick::B4', slotText, 'IsSlotIgnoredForSave=', ignoredForSave)
-  if ignoredForSave then C_UnignoreSlotForSave(slotID)
-  else C_IgnoreSlotForSave(slotID) end
-  
-  return C_IsSlotIgnoredForSave(slotID)
-end
-
---- C_EquipmentSet.IgnoreSlotForSave(slotID)
 function o:OnClick()
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
   if not ns.gears:HasSelection() then return end
@@ -113,19 +113,38 @@ function o:OnClick()
   self.widget:UpdateActionTexture(ignored)
   ns.gears:GetSaveButton():SetEnabled(true)
   
-  Gears_MainFrame:WithSelectedEquipmentSet(function(sel)
-    local ignoredSlots = C_GetIgnoredSlots(sel.info.id)
-    for slotID, ignored in pairs(ignoredSlots) do
-      if C_IsSlotIgnoredForSave(slotID) then
-        t('OnClick::IgnoredForSave', sel:__GetDebugName(), 'slotID=', slotID)
+  local trace = false; if trace then
+    Gears_MainFrame:WithSelectedEquipmentSet(function(sel)
+      local ignoredSlots = C_GetIgnoredSlots(sel.info.id)
+      for slotID, ignored in pairs(ignoredSlots) do
+        if C_IsSlotIgnoredForSave(slotID) then
+          t('OnClick::IgnoredForSave', sel:__GetDebugName(), 'slotID=', slotID)
+        end
       end
-    end
-  end)
-  
+    end)
+  end
   
   self:GetParent():Hide()
 end
 
+--- @return boolean The new ignored-for-save state
+function o:ToggleState()
+  local slotID = self:GetSlotID()
+  local ignoredForSave = C_IsSlotIgnoredForSave(slotID) -- ignored but not yet saved
+  
+  --local equipSet = ns.gears:GetSelected()
+  --local w = self.widget
+  --local slotText = ('%s::%s'):format(equipSet:__GetDebugName(), w.slotFlyoutButton:__GetDebugName())
+  --t('OnClick::B4', slotText, 'IsSlotIgnoredForSave=', ignoredForSave)
+  
+  if ignoredForSave then C_UnignoreSlotForSave(slotID)
+  else C_IgnoreSlotForSave(slotID) end
+  
+  return C_IsSlotIgnoredForSave(slotID)
+end
+
+--- Hierarchy: IgnoreSlotActionButton/Flyout (Frame)/EquipmentSlotFlyout (Button)
+--- @see EquipmentSlotFlyoutMixin#CreateActionButtons()
 --- @return EquipmentSlotFlyout
 function o:GetFlyout() return self:GetParent():GetParent() end
 --- @return BlizzCharacterSlotItemButton

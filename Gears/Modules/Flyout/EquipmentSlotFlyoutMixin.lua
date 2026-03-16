@@ -49,6 +49,7 @@ Gears_EquipmentSlotFlyoutMixin = {}
 --
 
 local p, pd, t, tf = ns:log(libName)
+
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
@@ -72,20 +73,12 @@ local o = Gears_EquipmentSlotFlyoutMixin
 ---- get icon
 --local texture = GetInventoryItemTexture("player", slotID)
 --- /dump "Character"..select(1, GetInventorySlotInfo(3))
-function o:OnLoad()
-  self.Flyout:SetBackdropColor(0.25, 0.32, 0.50, 0.95)
-  self.Flyout:SetBackdropBorderColor(1.0, 0.84, 0.0, 0.95)
-  
-  self.Arrow:SetTexture(310765);
-  self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
-  
-  self:FlyoutHide()
-  self:Hide()
-end
 
+--[[-------------------------------------------------------------------
+Mixin: EquipmentSlotFlyoutWidgetMixin
+---------------------------------------------------------------------]]
 --- @class EquipmentSlotFlyoutWidgetMixin
 local EquipmentSlotFlyoutWidgetMixin = {}
-
 --
 --- @alias EquipmentSlotFlyoutWidget EquipmentSlotFlyoutWidgetMixin
 --
@@ -127,6 +120,37 @@ do
   function w:isb() return self:GetIgnoreSlotButton() end
 end
 
+--[[-------------------------------------------------------------------
+EquipmentSlotFlyout: Methods
+---------------------------------------------------------------------]]
+function o:OnLoad()
+  self.Flyout:SetBackdropColor(0.25, 0.32, 0.50, 0.95)
+  self.Flyout:SetBackdropBorderColor(1.0, 0.84, 0.0, 0.95)
+  
+  self.Arrow:SetTexture(310765);
+  self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
+  
+  self:FlyoutHide()
+  self:Hide()
+end
+
+--- @param self EquipmentSlotFlyout
+local function __Trace_OnClick(self)
+  local slotID = self:GetID()
+  local isIgnoredForSave = C_IsSlotIgnoredForSave(slotID)
+  ns.gears:WithSelectedEquipmentSet(function(sel)
+    t('OnClick', 'set=', sel.info.name, 'slot=', slotID,
+            'ignored-for-save=', isIgnoredForSave,
+            'currently-ignored=', self.widget:IsIgnored())
+  end)
+end
+
+function o:OnClick()
+  if self.Flyout:IsShown() then self:FlyoutHide(); return end
+  --__Trace_OnClick(self)
+  self:FlyoutShow()
+end
+
 -- Gears_EquipmentSlotFlyoutMixin
 --- /dump PaperDollFrame.HeadSlotFlyout
 --- @param slotInfo InventorySlotInfo
@@ -154,7 +178,7 @@ function o:CreateActionButtons()
   
   --- @type ButtonObj - Include Button
   local placeInBagsBtn = CreateFrame("Button", nil, flyout, Gears_PlaceInBagsSlotActionButtonMixin.TemplateName)
-  placeInBagsBtn:SetParentKey('PlaceInBagsButton')
+  placeInBagsBtn:SetParentKey('PlaceInBagsActionButton')
   placeInBagsBtn.Icon:SetTexture([[Interface\Icons\INV_Misc_Bag_09]])
   placeInBagsBtn:ClearAllPoints()
   placeInBagsBtn:SetPoint("LEFT", flyout, "LEFT", 8, 0)
@@ -162,16 +186,16 @@ function o:CreateActionButtons()
   table.insert(flyout.buttons, placeInBagsBtn)
   
   --- @type ButtonObj - Exclude Button
-  local excludeBtn = CreateFrame("Button", nil, flyout, Gears_IgnoreSlotActionButtonMixin.TemplateName)
-  excludeBtn:SetParentKey('ExcludeButton')
-  excludeBtn.Icon:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
-  excludeBtn:ClearAllPoints()
-  excludeBtn:SetPoint("LEFT", placeInBagsBtn, "RIGHT", 1, 0)
-  flyout.IgnoreSlotButton = excludeBtn
-  table.insert(flyout.buttons, excludeBtn)
+  local ignoreSlotBtn = CreateFrame("Button", nil, flyout, Gears_IgnoreSlotActionButtonMixin.TemplateName)
+  ignoreSlotBtn:SetParentKey('IgnoreSlotActionButton')
+  ignoreSlotBtn.Icon:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
+  ignoreSlotBtn:ClearAllPoints()
+  ignoreSlotBtn:SetPoint("LEFT", placeInBagsBtn, "RIGHT", 1, 0)
+  flyout.IgnoreSlotButton = ignoreSlotBtn
+  table.insert(flyout.buttons, ignoreSlotBtn)
   
   local widthPadding = 16
-  flyout:SetWidth(placeInBagsBtn:GetWidth() + excludeBtn:GetWidth() + widthPadding)
+  flyout:SetWidth(placeInBagsBtn:GetWidth() + ignoreSlotBtn:GetWidth() + widthPadding)
   flyout:SetHeight(flyout:GetHeight() + 4)
 end
 
@@ -186,19 +210,6 @@ function o:FlyoutShow()
   ns:PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
   self.Flyout:Show()
   self.Arrow:SetRotation(math.rad(90)) -- ◀ expanded
-end
-
-function o:OnClick()
-  if self.Flyout:IsShown() then self:FlyoutHide(); return end
-  local slotID = self:GetID()
-  local isIgnoredForSave = C_IsSlotIgnoredForSave(slotID)
-  ns.gears:WithSelectedEquipmentSet(function(sel)
-    t('OnClick', 'set=', sel.info.name, 'slot=', self:GetID(),
-            'ignored-for-save=', isIgnoredForSave,
-            'currently-ignored=', self.widget:IsIgnored())
-  end)
-  
-  self:FlyoutShow()
 end
 
 function o:OnEnter()
