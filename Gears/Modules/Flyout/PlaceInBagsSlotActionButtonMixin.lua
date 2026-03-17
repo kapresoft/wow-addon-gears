@@ -42,12 +42,27 @@ function o:OnLoad()
   }; self.widget = widget
 end
 
---- C_EquipmentSet.IgnoreSlotForSave(slotID)
+-- /dump PickupInventoryItem(2); PutItemInBackpack()
+-- /dump C_Container.GetContainerItemInfo(0, 1)
+-- /dump C_Container.PickupContainerItem(0, 1)
 function o:OnClick()
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
-  local w = self.widget
-  local charSlot = w.slotFlyoutButton.widget.slotButton
-  t('OnClick', 'slot=', charSlot:GetName(), 'id=', charSlot:GetID())
+  
+  local slotID = self:GetSlotID()
+  
+  -- nothing equipped
+  local itemLink = GetInventoryItemLink('player', slotID)
+  if not itemLink then self:GetParent():Hide(); return end
+  
+  local trace = true; if trace then
+    t('OnClick', 'Item=', fmt(GetItemInfo(itemLink)))
+  end
+  
+  -- move equipped item to bags
+  PickupInventoryItem(slotID)
+  PutItemInBackpack()
+  
+  -- close flyout
   self:GetParent():Hide()
 end
 

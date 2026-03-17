@@ -5,12 +5,31 @@ Blizzard Vars
 ---------------------------------------------------------------------]]
 local C_DeleteEquipmentSet = C_EquipmentSet.DeleteEquipmentSet
 local DELETE = DELETE
-local CONFIRM_DELETE_EQUIPMENT_SET = 'CONFIRM_DELETE_EQUIPMENT_SET'
+local GEARS_CONFIRM_DELETE_EQUIPMENT_SET = 'GEARS_CONFIRM_DELETE_EQUIPMENT_SET'
 
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
 local p = ns:log('EquipmentSetDeleteButtonMixin')
+
+--[[-------------------------------------------------------------------
+Support Functions
+---------------------------------------------------------------------]]
+-- todo: move outside
+StaticPopupDialogs[GEARS_CONFIRM_DELETE_EQUIPMENT_SET] = {
+  text = _G['CONFIRM_DELETE_EQUIPMENT_SET'],
+  button1 = YES,
+  button2 = NO,
+  OnAccept = function(self, data)
+    C_DeleteEquipmentSet(data);
+    ns.O.EquipmentSlotFlyoutManager:HideFlyouts()
+  end,
+  OnCancel = function(dialog, data) end,
+  hideOnEscape = 1,
+  timeout = 0,
+  exclusive = 1,
+  whileDead = 1,
+}
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -36,7 +55,7 @@ function o:OnLoad()
   self.Icon:SetAlpha(0.4)
   self.onClickHandler = function()
     local id, name = self.owner:GetIdentity()
-    StaticPopup_Show(CONFIRM_DELETE_EQUIPMENT_SET, name, nil, id)
+    StaticPopup_Show(GEARS_CONFIRM_DELETE_EQUIPMENT_SET, name, nil, id)
   end
 end
 
