@@ -8,17 +8,9 @@ local ns = select(2, ...)
 Blizzard Vars
 ---------------------------------------------------------------------]]
 local C_IsSlotIgnoredForSave = C_EquipmentSet and C_EquipmentSet.IsSlotIgnoredForSave
-local C_IgnoreSlotForSave = C_EquipmentSet and C_EquipmentSet.IgnoreSlotForSave
-local C_UnignoreSlotForSave = C_EquipmentSet and C_EquipmentSet.UnignoreSlotForSave
 local C_GetIgnoredSlots = C_EquipmentSet and C_EquipmentSet.GetIgnoredSlots
-
---[[-------------------------------------------------------------------
-Slot Mapping
----------------------------------------------------------------------]]
-
--- /dump CharacterFinger0Slot:IconOverlay:SetAlpha(0.4)
--- /dump CharacterFinger0Slot:GetName()
--- /dump CharacterFinger0Slot:LockHighlight()
+local C_PickupContainerItem = C_Container and C_Container.PickupContainerItem
+local EquipCursorItem = EquipCursorItem
 
 --[[-------------------------------------------------------------------
 Types
@@ -26,53 +18,52 @@ Types
 --- @class FlyoutFrame__ : Frame Flyout Container
 --- @field PlaceInBagsButton PlaceInBagsSlotActionButton
 --- @field IgnoreSlotButton IgnoreSlotActionButton
+--- @field anim AnimationGroup
 --- @field buttons ButtonObj[]
 --- @field GetParent fun(self:FlyoutFrame__) : EquipmentSlotFlyout
-
---
 --
 --- @alias FlyoutFrame FlyoutFrame__ | FrameObjWithBackdrop
-
+--
 --[[-----------------------------------------------------------------------------
 Module::EquipmentSlotFlyoutMixin
 -------------------------------------------------------------------------------]]
 local libName = 'EquipmentSlotFlyoutMixin'
 --- @class EquipmentSlotFlyoutMixin : Button
+--- @field TemplateName string
 --- @field GetID fun(self:EquipmentSlotFlyoutMixin) : number @The equipment slot identifier
 --- @field widget EquipmentSlotFlyoutWidget
 --- @field Flyout FlyoutFrame Flyout Container
 --- @field Arrow TextureObj
 --- @see EquipmentSlotFlyoutManager#Create(slotInfo, slotButton
-Gears_EquipmentSlotFlyoutMixin = {}
+Gears_EquipmentSlotFlyoutMixin = ns:AceEvent()
 --
---- @alias EquipmentSlotFlyout EquipmentSlotFlyoutMixin|ButtonObj
+--- @alias EquipmentSlotFlyout EquipmentSlotFlyoutMixin|ButtonObj|AceEvent_3_0
 --
-
 local p, pd, t, tf = ns:log(libName)
 
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
---- @return EquipmentSlotFlyoutManager
-local function flyoutMgr() return ns.O.EquipmentSlotFlyoutManager end
+local function inventorUtil() return ns.O.InventoryUtil end
+
+--- @param self EquipmentSlotFlyout
+local function __Trace_OnClick(self)
+  local slotID = self:GetID()
+  local isIgnoredForSave = C_IsSlotIgnoredForSave(slotID)
+  ns.gears:WithSelectedEquipmentSet(function(sel)
+    t('OnClick', 'set=', sel.info.name, 'slot=', slotID,
+            'ignored-for-save=', isIgnoredForSave,
+            'currently-ignored=', self.widget:IsIgnored())
+  end)
+end
 
 --[[-----------------------------------------------------------------------------
 Module::EquipmentSlotFlyoutMixin (Methods)
 -------------------------------------------------------------------------------]]
---- @type EquipmentSlotFlyoutMixin | ButtonObj
+--- @type EquipmentSlotFlyoutMixin | EquipmentSlotFlyout
 local o = Gears_EquipmentSlotFlyoutMixin
-
---local slotID = INVSLOT_SHOULDER
---
----- ignore slot for equipment set
---C_EquipmentSet.IgnoreSlotForSave(slotID)
---
----- get item currently equipped
---local link = GetInventoryItemLink("player", slotID)
---
----- get icon
---local texture = GetInventoryItemTexture("player", slotID)
---- /dump "Character"..select(1, GetInventorySlotInfo(3))
+--- @see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate
+o.TemplateName = 'GearsEquipmentSlotFlyoutTemplate'
 
 --[[-------------------------------------------------------------------
 Mixin: EquipmentSlotFlyoutWidgetMixin
@@ -93,14 +84,17 @@ do
     self.frame = slotFlyout
     self.flyoutFrame = slotFlyout.Flyout
     self.info = slotInfo
-    self.slotButton = slotButton
+    self.charSlotButton = slotButton
   end
-  
   --- @return SlotID
   function w:GetSlotID() return self.frame:GetID() end
   --- @return boolean
   function w:IsCharacterSlotShown()
-    return self.slotButton and self.slotButton:IsShown()
+    return self.charSlotButton and self.charSlotButton:IsShown()
+  end
+  --- @return boolean
+  function w:ShouldShowSlotGroup()
+    return ns.gears:HasSelection() and ns.gears:IsShown()
   end
   --- @param ignored boolean
   function w:SyncIgnoredState(ignored)
@@ -110,14 +104,28 @@ do
   function w:IsIgnored()
     local ignored = false
     ns.gears:WithSelectedEquipmentSet(function(sel)
-      local slotID = self.frame.widget:GetSlotID()
+      local slotID = self:GetSlotID()
       local ignoredSlots = C_GetIgnoredSlots(sel:GetIdentity())
       ignored = ignoredSlots and ignoredSlots[slotID]
     end)
     return ignored
   end
+
   function w:GetIgnoreSlotButton() return self.flyoutFrame.IgnoreSlotButton end
   function w:isb() return self:GetIgnoreSlotButton() end
+  
+  --- Some equipment slots (e.g. CharacterAmmoSlot) are not
+  --- applicable to the player's class and should be hidden.
+  function w:ShowSlotGroup()
+    if not self:ShouldShowSlotGroup() then self:HideSlotGroup() return end
+    self.frame:Show()
+    self.frame:ClosePopup()
+  end
+  
+  function w:HideSlotGroup()
+    self.frame:Hide()
+    self.frame:ClosePopup()
+  end
 end
 
 --[[-------------------------------------------------------------------
@@ -130,44 +138,131 @@ function o:OnLoad()
   self.Arrow:SetTexture(310765);
   self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
   
-  self:FlyoutHide()
   self:Hide()
-end
-
---- @param self EquipmentSlotFlyout
-local function __Trace_OnClick(self)
-  local slotID = self:GetID()
-  local isIgnoredForSave = C_IsSlotIgnoredForSave(slotID)
-  ns.gears:WithSelectedEquipmentSet(function(sel)
-    t('OnClick', 'set=', sel.info.name, 'slot=', slotID,
-            'ignored-for-save=', isIgnoredForSave,
-            'currently-ignored=', self.widget:IsIgnored())
-  end)
+  self:ClosePopup()
 end
 
 function o:OnClick()
-  if self.Flyout:IsShown() then self:FlyoutHide(); return end
+  if self.Flyout:IsShown() then
+    ns:PlaySound(SOUNDKIT.IG_ABILITY_ICON_DROP)
+    self:ClosePopup()
+    return
+  end
   --__Trace_OnClick(self)
-  self:FlyoutShow()
+  ns:PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
+  self:CreateSlotItems()
+  self:OpenPopup()
+  self:SendMessage(ns:msg('SlotOpened'), self:GetID())
+end
+
+function o:OnSlotOpened(evt, slotID)
+  if self:GetID() == slotID then return end
+  -- close the popups of non-active slots
+  if self.Flyout:IsShown() then self:ClosePopup(); return end
+end
+
+function o:OnShowPaperDollFrame() self.widget:ShowSlotGroup() end
+function o:OnEquipmentSetSelected() self.widget:ShowSlotGroup() end
+
+--- Creates buttons for each candidate items
+--- using template GearsEquipmentSlotActionButtonTemplate
+function o:CreateSlotItems()
+  local flyout = self.Flyout
+  local slotID = self:GetID()
+  
+  -- 1. Clear existing dynamic buttons (keep first 2: Place + Ignore)
+  if flyout.buttons then
+    for i = #flyout.buttons, 3, -1 do
+      local btn = flyout.buttons[i]
+      btn:Hide()
+      btn:SetParent(nil) -- allow GC (simple approach)
+      flyout.buttons[i] = nil
+    end
+  else
+    flyout.buttons = {}
+  end
+  
+  local prev = flyout.IgnoreSlotButton
+  local spacing = 2
+  local totalWidth = 0
+  
+  -- include base buttons width
+  if flyout.PlaceInBagsButton then
+    totalWidth = totalWidth + flyout.PlaceInBagsButton:GetWidth()
+  end
+  if flyout.IgnoreSlotButton then
+    totalWidth = totalWidth + flyout.IgnoreSlotButton:GetWidth()
+  end
+  
+  -- 2. Create item buttons
+  inventorUtil():ForEachBagItemMatchingSlot(slotID, function(info, item)
+    --- @type ButtonObj
+    local btn = CreateFrame("Button", nil, flyout, "GearsEquipmentSlotActionButtonTemplate")
+    btn:SetParentKey(("ItemButton%d"):format(#flyout.buttons + 1))
+    if info.iconFileID then btn.Icon:SetTexture(info.iconFileID) end
+    btn:ClearAllPoints()
+    btn:SetPoint("LEFT", prev, "RIGHT", spacing, 0)
+    
+    table.insert(flyout.buttons, btn)
+    
+    prev = btn
+    totalWidth = totalWidth + btn:GetWidth() + spacing
+    
+    local selfParent = self
+    btn:SetScript('OnClick', function(self)
+      local slotFlyout = self:GetParent():GetParent()
+      local slotID = slotFlyout:GetID()
+      
+      -- pick up item from bag
+      if info.bagID and info.slotIndex then
+        C_PickupContainerItem(info.bagID, info.slotIndex)
+        
+        -- equip into the target slot
+        EquipCursorItem(slotID)
+        selfParent:ClosePopup()
+      end
+    end)
+    
+    btn:SetScript('OnEnter', function(self)
+      GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
+      GameTooltip:SetInventoryItemByID(info.itemID)
+      GameTooltip:Show()
+    end)
+    
+    btn:SetScript('OnLeave', function()
+      GameTooltip:Hide()
+    end)
+  end)
+  
+  -- 3. Resize flyout (horizontal growth)
+  local padding = 16
+  flyout:SetWidth(totalWidth + padding)
+end
+
+function o:CreateEquipmentSlotItems()
+
 end
 
 -- Gears_EquipmentSlotFlyoutMixin
 --- /dump PaperDollFrame.HeadSlotFlyout
 --- @param slotInfo InventorySlotInfo
---- @param slotButton BlizzCharacterSlotItemButton
+--- @param characterSlotButton BlizzCharacterSlotItemButton
 --- @return EquipmentSlotFlyout
-function o:Create(slotInfo, slotButton)
+function o:Create(slotInfo, characterSlotButton)
   --- @type EquipmentSlotFlyout
-  local slotFlyout = CreateFrame('Button', nil, PaperDollFrame, 'GearsEquipmentSlotFlyoutTemplate', slotInfo.id)
+  local slotFlyout = CreateFrame('Button', nil, PaperDollFrame, self.TemplateName, slotInfo.id)
   local name = slotInfo.name .. 'Flyout'
   slotFlyout:SetParentKey(name)
-  slotFlyout.widget = CreateAndInitFromMixin(EquipmentSlotFlyoutWidgetMixin, slotFlyout, slotInfo, slotButton)
+  slotFlyout.widget = CreateAndInitFromMixin(EquipmentSlotFlyoutWidgetMixin, slotFlyout, slotInfo, characterSlotButton)
   slotFlyout:CreateActionButtons()
   
   slotFlyout:ClearAllPoints()
   local ofsx, ofsy = -2, 0
   --if ns:HasBlizzEquipmentManager() then ofsx = -10 end
-  slotFlyout:SetPoint('LEFT', slotFlyout.widget.slotButton, 'RIGHT', ofsx, ofsy)
+  slotFlyout:SetPoint('LEFT', slotFlyout.widget.charSlotButton, 'RIGHT', ofsx, ofsy)
+  slotFlyout:RegisterMessage(ns:msg('SlotOpened'), 'OnSlotOpened')
+  slotFlyout:RegisterMessage(ns:msg('ShowPaperDollFrame'), 'OnShowPaperDollFrame')
+  slotFlyout:RegisterMessage(ns:msg('EquipmentSetSelected'), 'OnEquipmentSetSelected')
   
   return slotFlyout
 end
@@ -199,17 +294,17 @@ function o:CreateActionButtons()
   flyout:SetHeight(flyout:GetHeight() + 4)
 end
 
-function o:FlyoutHide()
-  -- /run PlaySound(SOUNDKIT.IG_ABILITY_ICON_DROP)
-  ns:PlaySound(SOUNDKIT.IG_ABILITY_ICON_DROP)
-  self.Arrow:SetRotation(math.rad(-90)) -- ▶ collapsed
-  self.Flyout:Hide()
+function o:OpenPopup()
+  self.Flyout.anim:Play()
+  self:__ExpandedArrow()
 end
 
-function o:FlyoutShow()
-  ns:PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
-  self.Flyout:Show()
-  self.Arrow:SetRotation(math.rad(90)) -- ◀ expanded
+--- Hides the flyout popup frame
+--- (not the top-most(parent) flyout button)
+function o:ClosePopup()
+  if not self.Flyout:IsShown() then return end
+  self:__CollapsedArrow()
+  self.Flyout:Hide()
 end
 
 function o:OnEnter()
@@ -221,6 +316,11 @@ function o:OnLeave()
   self.Arrow:SetVertexColor(1, 1, 1, 1)
   self.Arrow:SetBlendMode("BLEND")
 end
+
+-- ▶ collapsed
+function o:__CollapsedArrow() self.Arrow:SetRotation(math.rad(-90)) end
+-- ◀ expanded
+function o:__ExpandedArrow() self.Arrow:SetRotation(math.rad(90)) end
 
 function o:__GetDebugName()
   local info = self.widget.info

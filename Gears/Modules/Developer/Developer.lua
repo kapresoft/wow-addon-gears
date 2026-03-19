@@ -12,6 +12,13 @@ C_Timer.After(0.7, function()
     p('Is-Dev:', ns:IsDev())
 end)
 
+-- /dump gdev:item()
+function o:item()
+  local link = select(2, C_Item.GetItemInfo('ley staff'))
+  --return C_Item.GetItemInfo(link)
+  return ns.O.ItemUtil:GetItem(link)
+end
+
 function o:PickIcon()
   --- @type LibIconPicker_Options
   local opt = {

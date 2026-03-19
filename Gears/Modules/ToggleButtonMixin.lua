@@ -75,7 +75,7 @@ function o:OnLoad()
   self.Icon = icon
   
   self:RegisterMessage(ns:msg('OnAfterInit'), 'OnAfterInit')
-  self:RegisterMessage(ns:msg('OnShowPaperDollFrame'), 'OnShowPaperDollFrame_Message')
+  self:RegisterMessage(ns:msg('ShowPaperDollFrame'), 'OnShowPaperDollFrame')
   
   self:Show()
 end
@@ -85,7 +85,6 @@ end
 --- @param gearsMainFrame Gears_MainFrameMixin
 function o:OnAfterInit(evt, gearsMainFrame)
   self.__ecsFrame, self.__ecsButton = ECS_StatsFrame, ECS_ToggleButton
-  t('OnAfterInit', ('ecsFrame=%s, ecsBtn=%s'):format(tostring(self.__ecsFrame), tostring(self.__ecsButton)))
   
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   
@@ -104,10 +103,9 @@ end
 --- @param evt Name
 --- @param gearsMainFrame Gears_MainFrameMixin
 --- @param pdf PaperDollFrame|FrameObj
-function o:OnShowPaperDollFrame_Message(evt, gearsMainFrame, pdf)
+function o:OnShowPaperDollFrame(evt, gearsMainFrame, pdf)
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   ToggleButtonMixin_ECS_ToggleButton_Hook(self)
-  esf:UpdateVisibility()
 end
 
 --- If Gears is shown, hide it

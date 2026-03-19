@@ -66,6 +66,25 @@
                 <Anchors>
                     <Anchor point="LEFT" relativePoint="RIGHT" x="-3" y="0"/>
                 </Anchors>
+                <Animations>
+                    <AnimationGroup parentKey="anim">
+                        <Alpha order="1" fromAlpha="0" toAlpha="1" duration="0.08"/>
+                        <Translation order="1" offsetX="-6" offsetY="0"
+                                     duration="0.025" startDelay="0.06" smoothing="OUT"/>
+
+                        <Scripts>
+                            <OnPlay>
+                                self:GetParent():SetAlpha(0)
+                                self:GetParent():Show()
+                            </OnPlay>
+
+                            <OnFinished>
+                                self:GetParent():SetAlpha(1)
+                            </OnFinished>
+                        </Scripts>
+
+                    </AnimationGroup>
+                </Animations>
             </Frame>
         </Frames>
     </Button>

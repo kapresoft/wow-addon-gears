@@ -84,7 +84,7 @@ end
 local function MainFrame_PaperDollFrameHooks(self)
   PaperDollFrame:HookScript("OnShow", function(pdf)
     self:OnShow_PaperDollFrame()
-    self:SendMessage(ns:msg('OnShowPaperDollFrame'), self, pdf)
+    self:SendMessage(ns:msg('ShowPaperDollFrame'), self, pdf)
   end)
 end
 
@@ -210,7 +210,8 @@ local function MainFrameMixin_OnEquipmentSetsChanged(self) self:RefreshEquipment
 Methods: Gears_MainFrameMixin
 ---------------------------------------------------------------------]]
 function o:OnLoad()
-  ns.gears = self
+  ns:RegisterMainFrame(self)
+  
   BackdropTemplateMixin.OnBackdropLoaded(self)
   self:SetBackdrop(BACKDROP_TOAST_12_12)
   

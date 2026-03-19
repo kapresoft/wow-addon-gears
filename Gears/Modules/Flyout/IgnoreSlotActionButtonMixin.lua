@@ -19,8 +19,8 @@ Module::EquipmentSlotActionButtonMixin
 --- @see NamespaceObjects
 local libName = 'IgnoreSlotActionButtonMixin'
 --- @class IgnoreSlotActionButtonMixin
---- @field widget IgnoreSlotActionButtonWidget
 --- @field TemplateName string
+--- @field widget IgnoreSlotActionButtonWidget
 --- @field Icon TextureObj
 --- @field GetParent fun(self:IgnoreSlotActionButtonMixin) : FlyoutFrame
 local S = {}; Gears_IgnoreSlotActionButtonMixin = S
@@ -35,6 +35,8 @@ local p, pd, t, tf = ns:log(libName)
 Mixin: IgnoreSlotActionButtonWidgetMixin
 ---------------------------------------------------------------------]]
 --- @class IgnoreSlotActionButtonWidgetMixin
+--- @field frame IgnoreSlotActionButton
+--- @field slotFlyoutButton EquipmentSlotFlyout
 local IgnoreSlotActionButtonWidgetMixin = {}
 --
 --- @alias IgnoreSlotActionButtonWidget IgnoreSlotActionButtonWidgetMixin
@@ -80,7 +82,7 @@ do
   --- @return EquipmentSlotFlyout
   function w:GetFlyout() return self.frame:GetFlyout() end
   --- @return BlizzCharacterSlotItemButton
-  function w:GetCharItemSlot() return self.slotFlyoutButton.widget.slotButton end
+  function w:GetCharItemSlot() return self.slotFlyoutButton.widget.charSlotButton end
   --- @return SlotID
   function w:GetSlotID() return self.frame:GetCharItemSlot():GetID() end
 end
@@ -148,6 +150,6 @@ end
 --- @return EquipmentSlotFlyout
 function o:GetFlyout() return self:GetParent():GetParent() end
 --- @return BlizzCharacterSlotItemButton
-function o:GetCharItemSlot() return self:GetFlyout().widget.slotButton end
+function o:GetCharItemSlot() return self:GetFlyout().widget.charSlotButton end
 --- @return SlotID
 function o:GetSlotID() return self:GetCharItemSlot():GetID() end
