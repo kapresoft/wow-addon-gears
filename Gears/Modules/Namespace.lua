@@ -21,6 +21,8 @@ Type: NamespaceObjects
 --- @field LibIconPickerUtil LibIconPickerUtil
 --- @field CharacterFrameUtil CharacterFrameUtil
 --- @field EquipmentSlotFlyoutManager EquipmentSlotFlyoutManager
+--- @field InventoryUtil InventoryUtil
+--- @field ItemUtil ItemUtil
 --- @field AceEvent AceEvent_3_0
 --- @field AceBucket AceBucket_3_0
 --- @field AceLocale AceLocale_3_0
@@ -217,6 +219,9 @@ do
     O[name] = obj
     return obj
   end
+  
+  --- @param mainFrame Gears_MainFrame
+  function ns:RegisterMainFrame(mainFrame) ns.gears = mainFrame end
   
   --- @param rgbHex RGBHex|nil    @Optional
   --- @return fun(key:string) : string The color formatted key

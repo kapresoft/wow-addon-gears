@@ -24,3 +24,8 @@ L['Open Gears Panel']           = 'Open Gears Panel'
 L['Create a new equipment set'] = 'Create a new equipment set'
 L['New Equipment Set']          = 'New Equipment Set'
 L['LibIconPicker Missing']      = 'This feature requires LibIconPicker.|nPlease make sure LibIconPicker is installed and enabled, then reload the UI.'
+
+--[[-------------------------------------------------------------------
+New Locale Items Below (Needs translation)
+---------------------------------------------------------------------]]
+L['Select a set to enable slot actions'] = 'Select a set to enable slot actions'

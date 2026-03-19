@@ -62,14 +62,11 @@ function o:ShowFlyouts()
 end
 
 function o:HideFlyouts()
-  self:ForEachFlyouts(function(flyout) flyout:Hide() end)
-end
-
--- Some character equipment slots may be hidden (class/spec dependent).
--- Hide the flyout when its corresponding slot is not visible.
-function o:UpdateVisibility()
-  self:ForEachFlyouts(function(flyout) flyout:Hide() end,
-          function(f) return not f.widget:IsCharacterSlotShown() end)
+  if ns.gears:HasSelection() and ns.gears:IsShown() then return end
+  self:ForEachFlyouts(function(flyout)
+    flyout:Hide()
+    flyout:ClosePopup()
+  end)
 end
 
 --- This method doesn't care about equipment set IDs
@@ -95,7 +92,7 @@ function o:ForEachEquipSetSlots(equipSetID, callbackFn)
   for _, slotFlyout in ipairs(flyoutsMap) do
     local slotID = slotFlyout:GetID()
     local ignored = ignoredSlots and ignoredSlots[slotID]
-    callbackFn(slotFlyout, slotFlyout.widget.slotButton, ignored)
+    callbackFn(slotFlyout, slotFlyout.widget.charSlotButton, ignored)
   end
 end
 

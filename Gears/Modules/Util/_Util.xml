@@ -3,6 +3,8 @@
 ..\FrameXML\UI.xsd">
 
     <Script file="EventTracePrinter.lua"/>
+    <Script file="InventoryUtil.lua"/>
+    <Script file="ItemUtil.lua"/>
     <Script file="GameVersionMixin.lua"/>
     <Script file="CharacterFrameUtil.lua"/>
     <Script file="LibIconPickerUtil.lua"/>

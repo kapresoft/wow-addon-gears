@@ -118,7 +118,7 @@ local function EquipmentSet_ShowTooltip(self)
     local leftClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Left-click']), c_white(L['Select']))
     local doubleClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Double-click']),  c_white(L['Equip']))
     local drag = (bulletFmt):format(c_white(BULLET), c_yellow(L['Drag']), c_white(L['Drag to an action bar']))
-    
+    local bottomText = c_white(L['Select a set to enable slot actions'])
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     local eqID = self:GetID()
     GameTooltip:SetEquipmentSet(eqID)
@@ -128,6 +128,10 @@ local function EquipmentSet_ShowTooltip(self)
     GameTooltip:AddLine(leftClick)
     GameTooltip:AddLine(doubleClick)
     GameTooltip:AddLine(drag)
+    if not ns.gears:HasSelection() then
+      GameTooltip:AddLine(' ')
+      GameTooltip:AddLine(bottomText)
+    end
     GameTooltip:Show()
   end)
 end
@@ -272,7 +276,8 @@ function o:SetInfo(info)
   self:SetID(info.id)
 end
 
---- This is not the same as 'equipped' state
+--- Select the equipment set.
+--- This is not the same as 'equipped' state.
 --- @param selected boolean
 function o:SetSelected(selected)
   assert(type(selected) == 'boolean', 'Expected SetSelected(selected:boolean)')
