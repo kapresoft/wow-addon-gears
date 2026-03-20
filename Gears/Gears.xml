@@ -5,6 +5,7 @@
     <Script file="Modules\Namespace.lua"/>
     <!--@do-not-package@-->
     <Script file="Modules\Developer\DeveloperSetup.lua" />
+    <Script file="Modules\Developer\Interface\Gears-Interface.lua" />
     <!--@end-do-not-package@-->
     <Include file="Modules\Locales\_Locales.xml"/>
     <Include file="Modules\Util\_Util.xml"/>

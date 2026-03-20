@@ -185,14 +185,6 @@ local function MainFrameMixin_AlignCharacterLevelText()
   c:SetPoint("BOTTOM", PaperDollInnerBorderTop, 'TOP', 0, 0)
 end
 
-function o:OnShow_PaperDollFrame()
-  if self:IsShown() then
-    MainFrameMixin_AnchorToPaperDoll(self)
-    MainFrameMixin_EngravingFrameHook(self)
-  end
-  MainFrameMixin_AlignCharacterLevelText()
-end
-
 --- In Retail (as of 12.x), CharStats/Titles/EquipmentSet is
 --- always expanded.
 --- @param self Gears_MainFrameMixin|Gears_MainFrame
@@ -265,6 +257,25 @@ function o:OnLoad()
   self:RegisterMessage(ns:msg('OnInit'), 'OnInit')
 end
 
+function o:OnShow_PaperDollFrame()
+  if self:IsShown() then
+    MainFrameMixin_AnchorToPaperDoll(self)
+    MainFrameMixin_EngravingFrameHook(self)
+  end
+  MainFrameMixin_AlignCharacterLevelText()
+  
+  self:ClearSelection()
+end
+
+function o:ClearSelection()
+  self:ForEachEquipmentFrame(function(eqs)
+    eqs:SetSelected(false)
+    eqs:HideActionButtons()
+  end)
+  -- disable actions
+  MainFrameMixin_UpdateActionsEnabledState(self, false)
+end
+
 --- Only called once
 function o:OnInit()
   self.__origHeight = self:GetHeight()
@@ -291,6 +302,11 @@ function o:InitEquipmentSet()
   -- bucket because [PLAYER_EQUIPMENT_CHANGED] fires a few times
   self:RegisterBucketEvent('PLAYER_EQUIPMENT_CHANGED', 0.01, fn(MainFrameMixin_OnEquipmentChanged, self))
   self:RegisterEvent('EQUIPMENT_SETS_CHANGED', fn(MainFrameMixin_OnEquipmentSetsChanged, self))
+end
+
+function o:HideGears()
+  self:ClearSelection()
+  self:Hide()
 end
 
 function o:RefreshEquipmentSet()

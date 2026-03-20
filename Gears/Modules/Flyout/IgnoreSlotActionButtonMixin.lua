@@ -3,8 +3,11 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
+local L = ns:GetLocale()
+
 local includeTex = [[Interface\PaperDollInfoFrame\Character-Plus]]
 local ignoreTex = [[Interface\Buttons\UI-GroupLoot-Pass-Up]]
+
 --[[-------------------------------------------------------------------
 Blizzard Vars
 ---------------------------------------------------------------------]]
@@ -41,50 +44,66 @@ local IgnoreSlotActionButtonWidgetMixin = {}
 --
 --- @alias IgnoreSlotActionButtonWidget IgnoreSlotActionButtonWidgetMixin
 --
-do
-  --- @type IgnoreSlotActionButtonWidgetMixin | IgnoreSlotActionButtonWidget
-  local w = IgnoreSlotActionButtonWidgetMixin
+--[[-------------------------------------------------------------------
+Methods: IgnoreSlotActionButtonWidgetMixin
+---------------------------------------------------------------------]]
+--- @type IgnoreSlotActionButtonWidgetMixin | IgnoreSlotActionButtonWidget
+local w = IgnoreSlotActionButtonWidgetMixin
+
+--- @param frame IgnoreSlotActionButton
+--- @param slotFlyoutButton EquipmentSlotFlyout
+function w:Init(frame, slotFlyoutButton)
+  self.frame = frame
+  self.slotFlyoutButton = slotFlyoutButton
+  self:SetupTooltip()
+end
+
+--- @param ignored boolean
+function w:UpdateActionTexture(ignored)
+  local tex = ignored and includeTex or ignoreTex
+  self.frame.Icon:SetTexture(tex)
+  self:UpdateCharItemSlotIgnoredOverlay(ignored)
+end
+--- @param ignored boolean
+function w:SyncIgnoredState(ignored)
+  local fnc = ignored and C_IgnoreSlotForSave or C_UnignoreSlotForSave
+  fnc(self:GetSlotID())
+  self:UpdateActionTexture(ignored)
+end
+--- @param ignored boolean
+function w:UpdateCharItemSlotIgnoredOverlay(ignored)
+  local fn = ignored and 'Show' or 'Hide'
+  local overlay = self:GetIgnoreOverlay(); overlay[fn](overlay)
+end
+
+--- @return BlizzCharacterSlotItemButton
+function w:GetCharItemSlot() return self.frame:GetCharItemSlot() end
+--- @return SlotID
+function w:GetSlotID() return self.slotFlyoutButton:GetSlotID() end
+--- @return boolean
+function w:IsIgnored() return self.slotFlyoutButton.widget:IsIgnored() end
+--- @return boolean
+function w:IsIgnoredForSave() return C_IsSlotIgnoredForSave(self:GetSlotID()) end
+--- @return TextureObj
+function w:GetIgnoreOverlay() return self:GetCharItemSlot().ignoreSlotOverlay end
+--- @return EquipmentSlotFlyout
+function w:GetFlyout() return self.frame:GetFlyout() end
+--- @return BlizzCharacterSlotItemButton
+function w:GetCharItemSlot() return self.slotFlyoutButton.widget.charSlotButton end
+--- @return SlotID
+function w:GetSlotID() return self.frame:GetCharItemSlot():GetID() end
+function w:SetupTooltip()
+  local c_white = ns:colorFn('afafaf')
   
-  --- @param frame IgnoreSlotActionButton
-  --- @param slotFlyoutButton EquipmentSlotFlyout
-  function w:Init(frame, slotFlyoutButton)
-    self.frame = frame
-    self.slotFlyoutButton = slotFlyoutButton
-  end
-  
-  --- @param ignored boolean
-  function w:UpdateActionTexture(ignored)
-    local tex = ignored and includeTex or ignoreTex
-    self.frame.Icon:SetTexture(tex)
-    self:UpdateCharItemSlotIgnoredOverlay(ignored)
-  end
-  --- @param ignored boolean
-  function w:SyncIgnoredState(ignored)
-    local fnc = ignored and C_IgnoreSlotForSave or C_UnignoreSlotForSave
-    fnc(self:GetSlotID())
-    self:UpdateActionTexture(ignored)
-  end
-  --- @param ignored boolean
-  function w:UpdateCharItemSlotIgnoredOverlay(ignored)
-    local fn = ignored and 'Show' or 'Hide'
-    local overlay = self:GetIgnoreOverlay(); overlay[fn](overlay)
-  end
-  
-  --- @return BlizzCharacterSlotItemButton
-  function w:GetCharItemSlot() return self.frame:GetCharItemSlot() end
-  --- @return SlotID
-  function w:GetSlotID() return self.frame:GetCharItemSlot():GetID() end
-  --- @return boolean
-  function w:IsIgnored() return self.slotFlyoutButton.widget:IsIgnored() end
-  --- @return TextureObj
-  function w:GetIgnoreOverlay() return self:GetCharItemSlot().ignoreSlotOverlay end
-  
-  --- @return EquipmentSlotFlyout
-  function w:GetFlyout() return self.frame:GetFlyout() end
-  --- @return BlizzCharacterSlotItemButton
-  function w:GetCharItemSlot() return self.slotFlyoutButton.widget.charSlotButton end
-  --- @return SlotID
-  function w:GetSlotID() return self.frame:GetCharItemSlot():GetID() end
+  self.frame:SetScript('OnEnter', function(btn)
+    GameTooltip:SetOwner(btn, 'ANCHOR_RIGHT')
+    local ignored = self:IsIgnoredForSave()
+    local localeText = ignored and 'Include Slot' or 'Ignore Slot'
+    GameTooltip:SetText(L[localeText])
+    GameTooltip:AddLine(c_white(L[localeText .. '::DESC']))
+    GameTooltip:Show()
+  end)
+  self.frame:SetScript('OnLeave', function() GameTooltip:Hide() end)
 end
 
 --[[-----------------------------------------------------------------------------
@@ -131,14 +150,9 @@ end
 
 --- @return boolean The new ignored-for-save state
 function o:ToggleState()
+  
   local slotID = self:GetSlotID()
   local ignoredForSave = C_IsSlotIgnoredForSave(slotID) -- ignored but not yet saved
-  
-  --local equipSet = ns.gears:GetSelected()
-  --local w = self.widget
-  --local slotText = ('%s::%s'):format(equipSet:__GetDebugName(), w.slotFlyoutButton:__GetDebugName())
-  --t('OnClick::B4', slotText, 'IsSlotIgnoredForSave=', ignoredForSave)
-  
   if ignoredForSave then C_UnignoreSlotForSave(slotID)
   else C_IgnoreSlotForSave(slotID) end
   

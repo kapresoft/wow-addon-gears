@@ -39,7 +39,7 @@ local function GetSlotInfo(slotItemButton)
 end
 
 --- See Also:: PaperDollFrame.xml # Frame/PaperDollItemsFrame
---- @param callbackFn fun(info:InventorySlotInfo, btn:ButtonObj, po:ButtonObj) | "function(info, btn, po) end"
+--- @param callbackFn fun(info:InventorySlotInfo, btn:BlizzCharacterSlotItemButton, po:ButtonObj) | "function(info, btn, po) end"
 function o:ForEachEquipmentSlot(callbackFn)
   local pdif = PaperDollItemsFrame
   if not (pdif and GetInventorySlotInfo) then return end

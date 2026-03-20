@@ -14,6 +14,8 @@ Library
 --- @class __MainController
 local S = {}; ns:AceEvent(S); ns:AceBucket(S)
 
+-- todo next: Hide Flyouts when in combat
+
 --- @alias MainController __MainController | AceEvent | AceBucket
 
 --[[-----------------------------------------------------------------------------

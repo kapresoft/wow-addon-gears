@@ -3,6 +3,7 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
+local L = ns:GetLocale()
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -30,7 +31,7 @@ S.TemplateName = 'Gears_PlaceInBagsSlotActionButtonTemplate'
 --
 local p, pd, t, tf = ns:log(libName)
 --[[-------------------------------------------------------------------
-Mixin:
+Mixin: PlaceInBagsActionButtonWidgetMixin
 ---------------------------------------------------------------------]]
 --- @class PlaceInBagsActionButtonWidgetMixin
 --- @field frame PlaceInBagsSlotActionButton
@@ -39,16 +40,32 @@ local PlaceInBagsActionButtonWidgetMixin = {}
 --
 --- @alias PlaceInBagsActionButtonWidget PlaceInBagsActionButtonWidgetMixin
 --
-do
-  --- @type PlaceInBagsActionButtonWidgetMixin | PlaceInBagsActionButtonWidget
-  local w = PlaceInBagsActionButtonWidgetMixin
+--[[-------------------------------------------------------------------
+Methods: PlaceInBagsActionButtonWidgetMixin
+---------------------------------------------------------------------]]
+--- @type PlaceInBagsActionButtonWidgetMixin | PlaceInBagsActionButtonWidget
+local w = PlaceInBagsActionButtonWidgetMixin
+
+--- @param frame PlaceInBagsSlotActionButton
+--- @param slotFlyoutButton EquipmentSlotFlyout
+function w:Init(frame, slotFlyoutButton)
+  self.frame = frame
+  self.slotFlyoutButton = slotFlyoutButton
+  self:SetupTooltip()
+end
+
+function w:SetupTooltip()
+  local c_white = ns:colorFn('afafaf')
   
-  --- @param frame PlaceInBagsSlotActionButton
-  --- @param slotFlyoutButton EquipmentSlotFlyout
-  function w:Init(frame, slotFlyoutButton)
-    self.frame = frame
-    self.slotFlyoutButton = slotFlyoutButton
-  end
+  self.frame:SetScript('OnEnter', function(btn)
+    GameTooltip:SetOwner(btn, 'ANCHOR_RIGHT')
+    GameTooltip:SetText(L['Place item in bags'])
+    GameTooltip:AddLine(c_white(L['Place item in bags::DESC']))
+    GameTooltip:Show()
+  end)
+  self.frame:SetScript('OnLeave', function()
+    GameTooltip:Hide()
+  end)
 end
 
 --[[-----------------------------------------------------------------------------
