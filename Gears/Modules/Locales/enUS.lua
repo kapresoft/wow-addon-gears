@@ -29,3 +29,10 @@ L['LibIconPicker Missing']      = 'This feature requires LibIconPicker.|nPlease 
 New Locale Items Below (Needs translation)
 ---------------------------------------------------------------------]]
 L['Select a set to enable slot actions'] = 'Select a set to enable slot actions'
+L['Include Slot']             = 'Include Slot'
+L['Include Slot::DESC']       = 'Include this slot when saving the equipment set'
+L['Ignore Slot']              = 'Ignore Slot'
+L['Ignore Slot::DESC']        = 'Exclude this slot when saving the equipment set'
+L['Place item in bags']       = 'Place item in bags'
+L['Place item in bags::DESC'] = 'Moves equipped item to first available bag slot'
+

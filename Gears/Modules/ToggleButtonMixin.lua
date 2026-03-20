@@ -113,38 +113,37 @@ function o:OnClick_ECS_ToggleButton()
   if self:IsChecked() then self:Click() end
 end
 
+-- todo next: call SetFlyoutState() directly?
 --- @param enable boolean
 function o:EnableEquipmentSlots(enable)
-  if not ns.gears:HasSelection() then return end
-  
-  if not self:__HasBlizzEquipManager() then
-    esf:SetFlyoutState(enable); return
-  end
-  
-  local fn = enable and "Show" or "Hide"
+  esf:SetFlyoutState(enable); return
+end
+
+function o:HideBlizzEquipSetSlots()
+  if not self:__HasBlizzEquipManager() then return end
   cfu:ForEachEquipmentSlot(function(s, btn, blizzFlyout)
-    if blizzFlyout then blizzFlyout[fn](blizzFlyout) end
+    blizzFlyout:Hide()
+  end)
+end
+
+-- todo next: revisit ShowBlizzEquipSetSlots
+function o:ShowBlizzEquipSetSlots()
+  if not self:__HasBlizzEquipManager() then return end
+  cfu:ForEachEquipmentSlot(function(s, btn, blizzFlyout)
+    t('ShowBlizzEquipSetSlots', 'called...')
+    --- @type EquipmentSlotFlyout
+    local flyout = PaperDollFrame[s.name .. 'Flyout']
+    if btn.ignoreSlotOverlay then
+      t('name=', s.name, 'flyout=', flyout, 'overlay=', btn.ignoreSlotOverlay)
+      btn.ignoreSlotOverlay:Hide() end
+    blizzFlyout:Show()
   end)
 end
 
 -- Clicks are always sticky
 function o:OnClick()
-
   GameTooltip:Hide()
-  if self:IsChecked() then
-    self:__ShowGears()
-    -- in MoPs, there is an existing EquipmentManager,
-    -- We will show character stats when this is the case
-    -- so the player is not confused.
-    -- todo next: Prompt the user to use Gears as main equipment manager?
-    --    • then, replace EquipmentManager with Gears icon, click logic, etc.
-    if self:__BlizzEquipManagerIsShown() then
-      PaperDollSidebarTab1:Click()
-      self:EnableEquipmentSlots(true)
-    end
-    return
-  end
-  
+  if self:IsChecked() then self:__ShowGears(); return end
   self:__HideGears()
 end
 
@@ -168,12 +167,25 @@ function o:__ShowGears()
   ns.gears:Show()
   self:EnableEquipmentSlots(true)
   self:__HideECS()
+  
+  self:__HideBlizzESManager()
 end
+
+-- todo next: revisit __HideBlizzESManager
+function o:__HideBlizzESManager()
+  if not self:__BlizzEquipManagerIsShown() then return end
+  t('__HideBlizzESManager', 'clicked...')
+  PaperDollSidebarTab1:Click()
+end
+
+function o:__ShowBlizzESManager() end
 
 function o:__HideGears()
   ns:PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
-  ns.gears:Hide()
+  ns.gears:HideGears()
   self:EnableEquipmentSlots(false)
+  
+  self:__ShowBlizzESManager()
 end
 
 function o:__HideECS() return self.__ecsFrame and self.__ecsFrame:Hide() end
@@ -181,11 +193,8 @@ function o:__HideECS() return self.__ecsFrame and self.__ecsFrame:Hide() end
 --- Hide 'Gears' panel if Blizz EquipmentSet Panel is shown
 function o:OnClick_BlizzEquipmentPanel()
   if not self:IsChecked() then return end
-  
-  ns:PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
-  ns.gears:Hide()
+  self:__HideGears()
   self:SetChecked(false)
-  self:EnableEquipmentSlots(true)
 end
 
 function o:AnchorToPaperDoll()

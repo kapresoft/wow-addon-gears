@@ -56,16 +56,14 @@ end
 
 function o:ShowFlyouts()
   self:ForEachFlyouts(function(flyout)
-    local method = flyout.widget:IsCharacterSlotShown() and 'Show' or 'Hide'
-    flyout[method](flyout)
+    flyout.widget:ShowSlotGroup()
   end)
 end
 
 function o:HideFlyouts()
   if ns.gears:HasSelection() and ns.gears:IsShown() then return end
   self:ForEachFlyouts(function(flyout)
-    flyout:Hide()
-    flyout:ClosePopup()
+    flyout.widget:HideSlotGroup()
   end)
 end
 

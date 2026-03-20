@@ -47,10 +47,6 @@ luac.out
 .release/
 .ext/
 
-# Interface (non-deployed) files are placed here
-_Interface/
-Interface/
-
 # External Lib Dir
 Gears/ThirdParty/Libs
 
