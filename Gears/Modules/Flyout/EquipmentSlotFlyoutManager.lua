@@ -33,7 +33,7 @@ local o = S
 --- @param msg string
 --- @param equipSetInfo EquipmentSetInfo
 function o:OnEquipmentSetSelected(msg, equipSetInfo)
-  ns.toggleButton:EnableEquipmentSlots(true)
+  self:EnableEquipmentSlots(true)
   C_ClearIgnoredSlotsForSave()
   self:ForEachEquipSetSlots(equipSetInfo.id, function(flyout, slotBtn, ignored)
     flyout.widget:SyncIgnoredState(ignored)
@@ -49,7 +49,7 @@ function o:CreateSlotFlyouts()
 end
 
 --- @param enable boolean
-function o:SetFlyoutState(enable)
+function o:EnableEquipmentSlots(enable)
   if enable then return self:ShowFlyouts() end
   self:HideFlyouts()
 end
