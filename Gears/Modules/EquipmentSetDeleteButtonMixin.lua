@@ -15,7 +15,6 @@ local p = ns:log('EquipmentSetDeleteButtonMixin')
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
--- todo: move outside
 StaticPopupDialogs[GEARS_CONFIRM_DELETE_EQUIPMENT_SET] = {
   text = _G['CONFIRM_DELETE_EQUIPMENT_SET'],
   button1 = YES,

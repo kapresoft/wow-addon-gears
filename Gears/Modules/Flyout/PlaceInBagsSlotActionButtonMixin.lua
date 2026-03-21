@@ -75,15 +75,17 @@ Module::PlaceInBagsSlotActionButtonMixin (Methods)
 local o = Gears_PlaceInBagsSlotActionButtonMixin
 
 function o:OnLoad()
+  self:SetParentKey('PlaceInBagsActionButton')
+  self.Icon:SetTexture([[Interface\Icons\INV_Misc_Bag_09]])
+  
   --- @type EquipmentSlotFlyout
   local slotFlyoutBtn = self:GetParent():GetParent()
   self.widget = CreateAndInitFromMixin(PlaceInBagsActionButtonWidgetMixin, self, slotFlyoutBtn)
 end
 
--- /dump PickupInventoryItem(2); PutItemInBackpack()
--- /dump C_Container.GetContainerItemInfo(0, 1)
--- /dump C_Container.PickupContainerItem(0, 1)
 function o:OnClick()
+  if InCombatLockdown() then return end
+  
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
   
   local slotID = self:GetSlotID()

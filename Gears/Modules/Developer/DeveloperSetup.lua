@@ -7,4 +7,4 @@ local sformat, upper, date = string.format, string.upper, date
 local ns = select(2, ...)
 local s = ns.settings
 s.developer = true
-s.enableTraceUI = true
+--s.enableTraceUI = true

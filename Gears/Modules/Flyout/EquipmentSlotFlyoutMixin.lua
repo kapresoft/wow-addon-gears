@@ -221,6 +221,7 @@ function o:CreateSlotItems()
     
     local slotFlyout = self
     btn:SetScript('OnClick', function(self)
+      if InCombatLockdown() then return end
       if not (info.bagID and info.slotIndex) then return end
       C_PickupContainerItem(info.bagID, info.slotIndex)
       EquipCursorItem(slotFlyout:GetSlotID())
@@ -258,7 +259,7 @@ function o:Create(slotInfo, characterSlotButton)
   slotFlyout:SetParentKey(name)
   slotFlyout.widget = CreateAndInitFromMixin(EquipmentSlotFlyoutWidgetMixin, slotFlyout, slotInfo, characterSlotButton)
   slotFlyout:CreateActionButtons()
-  
+  slotFlyout:SetHeight(24)
   slotFlyout:ClearAllPoints()
   local ofsx, ofsy = -7, 0
   --if ns:HasBlizzEquipmentManager() then ofsx = -10 end
@@ -276,8 +277,6 @@ function o:CreateActionButtons()
   
   --- @type ButtonObj - Include Button
   local placeInBagsBtn = CreateFrame("Button", nil, flyout, Gears_PlaceInBagsSlotActionButtonMixin.TemplateName)
-  placeInBagsBtn:SetParentKey('PlaceInBagsActionButton')
-  placeInBagsBtn.Icon:SetTexture([[Interface\Icons\INV_Misc_Bag_09]])
   placeInBagsBtn:ClearAllPoints()
   placeInBagsBtn:SetPoint("LEFT", flyout, "LEFT", 8, 0)
   flyout.PlaceInBagsButton = placeInBagsBtn
@@ -285,8 +284,6 @@ function o:CreateActionButtons()
   
   --- @type IgnoreSlotActionButton
   local ignoreSlotBtn = CreateFrame("Button", nil, flyout, Gears_IgnoreSlotActionButtonMixin.TemplateName)
-  ignoreSlotBtn:SetParentKey('IgnoreSlotActionButton')
-  ignoreSlotBtn.Icon:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
   ignoreSlotBtn:ClearAllPoints()
   ignoreSlotBtn:SetPoint("LEFT", placeInBagsBtn, "RIGHT", 1, 0)
   flyout.IgnoreSlotButton = ignoreSlotBtn
@@ -330,6 +327,6 @@ function o:__ExpandedArrow() self.Arrow:SetRotation(math.rad(90)) end
 
 function o:__GetDebugName()
   local info = self.widget.info
-  return ('%s::%s'):format(info.name, info.id, self.widget.slotButton:GetName())
+  return ('%s::%s'):format(info.name, info.id, self.widget.charSlotButton:GetName())
 end
 
