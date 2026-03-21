@@ -2,7 +2,7 @@
 local ns = select(2, ...)
 local L = ns:GetLocale()
 local cfu = ns.O.CharacterFrameUtil
-local esf = ns.O.EquipmentSlotFlyoutManager
+local mgr = ns.O.EquipmentSlotFlyoutManager
 
 --[[-------------------------------------------------------------------
 Alias
@@ -113,12 +113,6 @@ function o:OnClick_ECS_ToggleButton()
   if self:IsChecked() then self:Click() end
 end
 
--- todo next: call SetFlyoutState() directly?
---- @param enable boolean
-function o:EnableEquipmentSlots(enable)
-  esf:SetFlyoutState(enable); return
-end
-
 function o:HideBlizzEquipSetSlots()
   if not self:__HasBlizzEquipManager() then return end
   cfu:ForEachEquipmentSlot(function(s, btn, blizzFlyout)
@@ -165,7 +159,7 @@ function o:IsChecked() return self:GetChecked() end
 function o:__ShowGears()
   ns:PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
   ns.gears:Show()
-  self:EnableEquipmentSlots(true)
+  mgr:EnableEquipmentSlots(true)
   self:__HideECS()
   
   self:__HideBlizzESManager()
@@ -183,7 +177,7 @@ function o:__ShowBlizzESManager() end
 function o:__HideGears()
   ns:PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:HideGears()
-  self:EnableEquipmentSlots(false)
+  mgr:EnableEquipmentSlots(false)
   
   self:__ShowBlizzESManager()
 end
