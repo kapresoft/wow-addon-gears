@@ -3,6 +3,19 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
+--[[-------------------------------------------------------------------
+Backdrop
+@see Modules/Flyout/EquipmentSlotFlyout.xml#Flyout
+---------------------------------------------------------------------]]
+GEARS_BACKDROP_TOAST_12_12 = {
+  bgFile = "Interface\\Buttons\\WHITE8X8",
+  edgeFile = "Interface\\FriendsFrame\\UI-Toast-Border",
+  tile = true,
+  tileEdge = true,
+  tileSize = 12,
+  edgeSize = 12,
+  insets = { left = 3, right = 3, top = 3, bottom = 3 },
+};
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -143,8 +156,8 @@ end; EquipmentSlotFlyoutWidgetMixin_Methods()
 EquipmentSlotFlyout: Methods
 ---------------------------------------------------------------------]]
 function o:OnLoad()
-  self.Flyout:SetBackdropColor(0.25, 0.32, 0.50, 0.95)
-  self.Flyout:SetBackdropBorderColor(1.0, 0.84, 0.0, 0.95)
+  self.Flyout:SetBackdropColor(0.34, 0.21, 0.13, 0.96)
+  self.Flyout:SetBackdropBorderColor(0.55, 0.65, 0.25, 1)
   
   self.Arrow:SetTexture(310765);
   self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
