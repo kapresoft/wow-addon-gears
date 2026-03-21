@@ -113,27 +113,6 @@ function o:OnClick_ECS_ToggleButton()
   if self:IsChecked() then self:Click() end
 end
 
-function o:HideBlizzEquipSetSlots()
-  if not self:__HasBlizzEquipManager() then return end
-  cfu:ForEachEquipmentSlot(function(s, btn, blizzFlyout)
-    blizzFlyout:Hide()
-  end)
-end
-
--- todo next: revisit ShowBlizzEquipSetSlots
-function o:ShowBlizzEquipSetSlots()
-  if not self:__HasBlizzEquipManager() then return end
-  cfu:ForEachEquipmentSlot(function(s, btn, blizzFlyout)
-    t('ShowBlizzEquipSetSlots', 'called...')
-    --- @type EquipmentSlotFlyout
-    local flyout = PaperDollFrame[s.name .. 'Flyout']
-    if btn.ignoreSlotOverlay then
-      t('name=', s.name, 'flyout=', flyout, 'overlay=', btn.ignoreSlotOverlay)
-      btn.ignoreSlotOverlay:Hide() end
-    blizzFlyout:Show()
-  end)
-end
-
 -- Clicks are always sticky
 function o:OnClick()
   GameTooltip:Hide()
@@ -165,10 +144,10 @@ function o:__ShowGears()
   self:__HideBlizzESManager()
 end
 
--- todo next: revisit __HideBlizzESManager
+--- Hides the Blizzard Equipment Manager UI by switching away from its sidebar tab.
+--- This effectively hides the EquipmentSetManager slots when they are currently visible.
 function o:__HideBlizzESManager()
   if not self:__BlizzEquipManagerIsShown() then return end
-  t('__HideBlizzESManager', 'clicked...')
   PaperDollSidebarTab1:Click()
 end
 
