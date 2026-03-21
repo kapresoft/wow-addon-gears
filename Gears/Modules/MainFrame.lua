@@ -82,7 +82,6 @@ local function fn(targetFn, ...)
   return function(...) targetFn(unpack(boundArgs), ...) end
 end
 
--- todo next: move to MainController?
 --- @param self Gears_MainFrameMixin|Gears_MainFrame
 local function MainFrame_PaperDollFrameHooks(self)
   PaperDollFrame:HookScript("OnShow", function(pdf)
