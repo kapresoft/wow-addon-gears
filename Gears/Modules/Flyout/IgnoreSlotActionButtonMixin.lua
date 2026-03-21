@@ -5,13 +5,6 @@ Local Vars
 local ns = select(2, ...)
 local L = ns:GetLocale()
 
--- todo next: remove commented
---local overlayTex = [[Interface\Buttons\UI-GroupLoot-Pass-Up]]
---local overlayTex = [[Interface\Buttons\UI-StopButton]]
---local overlayTex = [[interface\addons\gears\assets\ignore-v1.tga]]
---local overlayTex = [[Interface\RaidFrame\ReadyCheck-NotReady]]
---local includeTex = [[Interface\Buttons\UI-CheckBox-Check]]
---local ignoreTex = [[Interface\Buttons\UI-GroupLoot-Pass-Up]]
 local overlayTex = [[interface\addons\gears\assets\ignored-state-v1]]
 local includeTex = [[interface\addons\gears\assets\include-v1.tga]]
 local ignoreTex = [[interface\addons\gears\assets\ignore-v1.tga]]
@@ -154,7 +147,7 @@ function o:OnClick()
   local trace = false; if trace then
     Gears_MainFrame:WithSelectedEquipmentSet(function(sel)
       local ignoredSlots = C_GetIgnoredSlots(sel.info.id)
-      for slotID, ignored in pairs(ignoredSlots) do
+      for slotID, ignoredSlot in pairs(ignoredSlots) do
         if C_IsSlotIgnoredForSave(slotID) then
           t('OnClick::IgnoredForSave', sel:__GetDebugName(), 'slotID=', slotID)
         end
