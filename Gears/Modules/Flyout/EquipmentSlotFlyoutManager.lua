@@ -87,7 +87,7 @@ function o:ForEachEquipSetSlots(equipSetID, callbackFn)
   
   local ignoredSlots = C_GetIgnoredSlots(equipSetID)
   
-  for _, slotFlyout in ipairs(flyoutsMap) do
+  for _, slotFlyout in pairs(flyoutsMap) do
     local slotID = slotFlyout:GetID()
     local ignored = ignoredSlots and ignoredSlots[slotID]
     callbackFn(slotFlyout, slotFlyout.widget.charSlotButton, ignored)
@@ -104,7 +104,15 @@ function o:ForEachEquipSetIgnoredSlots(equipSetID, callbackFn)
 end
 
 --[[-------------------------------------------------------------------
-RegisterMessage
+Event Handlers
 ---------------------------------------------------------------------]]
-o:RegisterMessage(ns:msg('EquipmentSetSelected'), 'OnEquipmentSetSelected')
+function o:OnEnterCombat()
+  local btn = Gears_ToggleButton
+  if btn:IsChecked() then btn:Click() end
+end
 
+--[[-------------------------------------------------------------------
+Callbacks
+---------------------------------------------------------------------]]
+o:RegisterEvent('PLAYER_REGEN_DISABLED', 'OnEnterCombat')
+o:RegisterMessage(ns:msg('EquipmentSetSelected'), 'OnEquipmentSetSelected')

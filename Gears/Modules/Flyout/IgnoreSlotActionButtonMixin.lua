@@ -5,8 +5,16 @@ Local Vars
 local ns = select(2, ...)
 local L = ns:GetLocale()
 
-local includeTex = [[Interface\PaperDollInfoFrame\Character-Plus]]
-local ignoreTex = [[Interface\Buttons\UI-GroupLoot-Pass-Up]]
+-- todo next: remove commented
+--local overlayTex = [[Interface\Buttons\UI-GroupLoot-Pass-Up]]
+--local overlayTex = [[Interface\Buttons\UI-StopButton]]
+--local overlayTex = [[interface\addons\gears\assets\ignore-v1.tga]]
+--local overlayTex = [[Interface\RaidFrame\ReadyCheck-NotReady]]
+--local includeTex = [[Interface\Buttons\UI-CheckBox-Check]]
+--local ignoreTex = [[Interface\Buttons\UI-GroupLoot-Pass-Up]]
+local overlayTex = [[interface\addons\gears\assets\ignored-state-v1]]
+local includeTex = [[interface\addons\gears\assets\include-v1.tga]]
+local ignoreTex = [[interface\addons\gears\assets\ignore-v1.tga]]
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -116,11 +124,18 @@ function o:OnLoad()
   local slotFlyoutBtn = self:GetParent():GetParent()
   local charItemSlot = self:GetCharItemSlot()
   
+  self:SetParentKey('IgnoreSlotActionButton')
+  self.Icon:SetTexture(ignoreTex)
+  
   --- @type TextureObj
   local overlay = charItemSlot:CreateTexture(nil, "OVERLAY", nil, 7)
-  overlay:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
-  overlay:SetAllPoints(charItemSlot.icon or charItemSlot.IconTexture)
-  overlay:SetAlpha(0.6)
+  overlay:SetTexture(overlayTex)
+  
+  local icon = charItemSlot.icon or charItemSlot.IconTexture
+  overlay:SetScale(0.5)
+  overlay:SetPoint("CENTER", icon, "CENTER", 0, -3)
+  
+  overlay:SetAlpha(0.75)
   overlay:Hide()
   charItemSlot.ignoreSlotOverlay = overlay
 
@@ -128,6 +143,8 @@ function o:OnLoad()
 end
 
 function o:OnClick()
+  if InCombatLockdown() then return end
+  
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
   if not ns.gears:HasSelection() then return end
   local ignored = self:ToggleState()

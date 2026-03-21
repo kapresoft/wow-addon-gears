@@ -24,7 +24,10 @@ Types and Alias
 --[[-------------------------------------------------------------------
 Blizzard Vars
 ---------------------------------------------------------------------]]
-local C_CreateEquipmentSet = C_EquipmentSet.CreateEquipmentSet
+local es = C_EquipmentSet
+local C_CreateEquipmentSet = es.CreateEquipmentSet
+local C_GetEquipmentSetIDs = es and es.GetEquipmentSetIDs
+local C_SaveEquipmentSet = es and es.SaveEquipmentSet
 local strtrim = strtrim
 
 --[[-------------------------------------------------------------------
@@ -122,13 +125,6 @@ local function MainFrameMixin_OnLoadButtons(self)
 end
 
 --- @param self Gears_MainFrameMixin
---- @param isEnabledState boolean
-local function MainFrameMixin_UpdateActionsEnabledState(self, isEnabledState)
-  self:GetEquipButton():SetEnabled(isEnabledState)
-  self:GetSaveButton():SetEnabled(isEnabledState)
-end
-
---- @param self Gears_MainFrameMixin
 --- @param index number The equipment set frame index
 --- @return EquipmentSetFrame
 local function MainFrameMixin_EquipmentSet(self, index) return self.framePool[index] end
@@ -157,7 +153,7 @@ local function MainFrameMixin_OnEquipmentChanged(self)
     
     equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
       if equipSet.selected then
-        MainFrameMixin_UpdateActionsEnabledState(self, not isFullyEquipped)
+        self:UpdateActionsEnabledState(not isFullyEquipped)
       end
     end)
     
@@ -272,8 +268,7 @@ function o:ClearSelection()
     eqs:SetSelected(false)
     eqs:HideActionButtons()
   end)
-  -- disable actions
-  MainFrameMixin_UpdateActionsEnabledState(self, false)
+  self:UpdateActionsEnabledState(false)
 end
 
 --- Only called once
@@ -297,7 +292,7 @@ end
 --- @private
 function o:InitEquipmentSet()
   self:RefreshEquipmentSet()
-  MainFrameMixin_UpdateActionsEnabledState(self, false)
+  self:UpdateActionsEnabledState(false)
   
   -- bucket because [PLAYER_EQUIPMENT_CHANGED] fires a few times
   self:RegisterBucketEvent('PLAYER_EQUIPMENT_CHANGED', 0.01, fn(MainFrameMixin_OnEquipmentChanged, self))
@@ -411,7 +406,7 @@ function o:SelectEquipmentSet(equipSet)
   
   equipSet:SetSelected(true)
   equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
-    MainFrameMixin_UpdateActionsEnabledState(self, not isFullyEquipped)
+    self:UpdateActionsEnabledState(not isFullyEquipped)
     self:SendMessage(ns:msg('EquipmentSetSelected'), equipSet.info)
   end)
   
@@ -468,8 +463,26 @@ function o:OnClick_AddButton(button)
       C_CreateEquipmentSet(esName, sel.icon)
       ns:PlaySound(SOUNDKIT.IG_MAINMENU_QUIT)
       self.__lastIcon = sel.icon
+      
+      -- After creating a new equipment set, the ignore-for-save state is NOT automatically
+      -- applied to it. Blizzard stores ignored slots in a temporary “save buffer”.
+      -- Calling SaveEquipmentSet(newSetID) commits the current buffer (including ignored slots)
+      -- into the newly created set. We defer with C_Timer.After(0) to ensure the set exists
+      -- and its ID is available.
+      C_Timer.After(0, function()
+        local ids = C_GetEquipmentSetIDs()
+        local newSetID = ids[#ids]
+        if not newSetID then return end
+        C_SaveEquipmentSet(newSetID)
+      end)
     end, opt)
   end)
+end
+
+--- @param isEnabledState boolean
+function o:UpdateActionsEnabledState(isEnabledState)
+  self:GetEquipButton():SetEnabled(isEnabledState)
+  self:GetSaveButton():SetEnabled(isEnabledState)
 end
 
 function o:GetEquipButton()

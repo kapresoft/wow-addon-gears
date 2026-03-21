@@ -267,6 +267,9 @@ function o:SaveGear()
   local id = self:GetID()
   C_SaveEquipmentSet(id, self.info.icon)
   --__Trace_SaveGear(self)
+  ns.gears:WithSelectedEquipmentSet(function(sel)
+    if sel:GetID() == id then ns.gears:UpdateActionsEnabledState(false) end
+  end)
 end
 
 ---@param info EquipmentSetInfo
