@@ -108,7 +108,11 @@ Event Handlers
 ---------------------------------------------------------------------]]
 function o:OnEnterCombat()
   local btn = Gears_ToggleButton
-  if btn:IsChecked() then btn:Click() end
+  
+  if not ns.gears:IsPaperDollFrameVisible() then return end
+  if not btn:IsChecked() then return end
+  
+  btn:Click()
 end
 
 --[[-------------------------------------------------------------------

@@ -493,3 +493,6 @@ end
 function o:GetAddButton()
   return self.ButtonsContainerFrame.AddButton
 end
+
+--- @return boolean
+function o:IsPaperDollFrameVisible() return PaperDollFrame:IsVisible() end

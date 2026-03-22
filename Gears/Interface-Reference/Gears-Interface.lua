@@ -7,6 +7,9 @@ Gears_ToggleButton = {}
 --- @type Gears_MainFrame
 Gears_MainFrame = {}
 
+--- @type FrameObj
+PaperDollFrame = {}
+
 --[[-------------------------------------------------------------------
 InventorySlotInfo
 ---------------------------------------------------------------------]]
