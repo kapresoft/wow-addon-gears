@@ -4,7 +4,8 @@ local ns= select(2, ...)
 --[[-------------------------------------------------------------------
 Types
 ---------------------------------------------------------------------]]
---- @class SlotItemButton
+--- @class SlotItemButton : Button Examples: CharacterNeckSlot, CharacterChestSlot, etc...
+--- @field GetID fun() : Identifier The slot ID
 --- @field popoutButton|nil ButtonObj Only on versions with Blizz Equipment Managers
 
 --[[-------------------------------------------------------------------
@@ -48,11 +49,14 @@ function o:ForEachEquipmentSlot(callbackFn)
   local children = { pdif:GetChildren() }
   
   for _, slotItemButton in ipairs(children) do
-    local parentName = slotItemButton:GetParent():GetName()
-    if parentName == 'PaperDollItemsFrame' then
-      local slotInfo = GetSlotInfo(slotItemButton)
-      -- slotItemButton has a popoutButton
-      if slotInfo then callbackFn(slotInfo, slotItemButton, slotItemButton.popoutButton) end
+    local slotID = slotItemButton:GetID()
+    if slotID ~= 0 then -- CharacterAmmoSlot can't be ignored
+      local parentName = slotItemButton:GetParent():GetName()
+      if parentName == 'PaperDollItemsFrame' then
+        local slotInfo = GetSlotInfo(slotItemButton)
+        -- slotItemButton has a popoutButton
+        if slotInfo then callbackFn(slotInfo, slotItemButton, slotItemButton.popoutButton) end
+      end
     end
   end
 end

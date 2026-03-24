@@ -186,7 +186,6 @@ function o:OnSlotOpened(evt, slotID)
 end
 
 function o:OnShowPaperDollFrame() self.widget:ShowSlotGroup() end
-function o:OnEquipmentSetSelected() self.widget:ShowSlotGroup() end
 
 --- Creates buttons for each candidate items
 --- using template GearsEquipmentSlotActionButtonTemplate
@@ -279,7 +278,6 @@ function o:Create(slotInfo, characterSlotButton)
   slotFlyout:SetPoint('LEFT', slotFlyout.widget.charSlotButton, 'RIGHT', ofsx, ofsy)
   slotFlyout:RegisterMessage(ns:msg('SlotOpened'), 'OnSlotOpened')
   slotFlyout:RegisterMessage(ns:msg('ShowPaperDollFrame'), 'OnShowPaperDollFrame')
-  slotFlyout:RegisterMessage(ns:msg('EquipmentSetSelected'), 'OnEquipmentSetSelected')
   
   return slotFlyout
 end
