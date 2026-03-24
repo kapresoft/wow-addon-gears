@@ -94,10 +94,6 @@ function o:OnClick()
   local itemLink = GetInventoryItemLink('player', slotID)
   if not itemLink then self:GetParent():Hide(); return end
   
-  local trace = true; if trace then
-    t('OnClick', 'Item=', fmt(GetItemInfo(itemLink)))
-  end
-  
   -- move equipped item to bags
   PickupInventoryItem(slotID)
   self:PlaceInBag()

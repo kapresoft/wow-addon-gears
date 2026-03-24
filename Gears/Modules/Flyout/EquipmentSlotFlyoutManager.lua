@@ -69,7 +69,7 @@ end
 
 --- This method doesn't care about equipment set IDs
 --- @param callbackFn fun(flyout:EquipmentSlotFlyout, slotBtn:BlizzCharacterSlotItemButton, ignored:boolean) : void | "'function(slotFlyout, slotBtn, ignored) end'"
---- @param filterFn fun(flyout:EquipmentSlotFlyout) : boolean | "function(flyout) return true end"
+--- @param filterFn fun(flyout:EquipmentSlotFlyout) : boolean | "'function(flyout) return true end'"
 function o:ForEachFlyouts(callbackFn, filterFn)
   if Tbl_IsEmpty(flyoutsMap) or not callbackFn then return end
   
