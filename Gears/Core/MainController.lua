@@ -14,7 +14,7 @@ Library
 --- @class __MainController
 local S = {}; ns:AceEvent(S); ns:AceBucket(S)
 
---- @alias MainController __MainController | AceEvent | AceBucket
+--- @alias MainController __MainController | AceEvent_3_0 | AceBucket_3_0
 
 --[[-----------------------------------------------------------------------------
 Library: Methods

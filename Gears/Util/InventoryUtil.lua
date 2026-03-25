@@ -73,11 +73,11 @@ local o = S
 --- @param callbackFn fun(info:ContainerItemInfo, item:ItemInfoDetails) : void | "'function(info, item) end'"
 --- @return table<number, ItemInfoDetails> Item Data
 function o:ForEachBagItemMatchingSlot(slotID, callbackFn)
-  local itemUtil = itemUtil()
+  local it = itemUtil()
   self:ForEachBagItem(function(info)
     local link = info.hyperlink
     if IsEquippableItem(link) then
-      local itemData = itemUtil:GetItem(link)
+      local itemData = it:GetItem(link)
       if itemData and SlotMatches(slotID, itemData) then callbackFn(info, itemData) end
     end
   end)
