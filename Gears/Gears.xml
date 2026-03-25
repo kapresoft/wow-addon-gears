@@ -13,6 +13,7 @@
     <!--@do-not-package@-->
     <Script file="Modules\Developer\Developer.lua" />
     <!--@end-do-not-package@-->
+    <Script file="Modules\DatabaseSchema.lua" />
     <Include file="Modules\MainFrame.xml"/>
     <Script file="Gears.lua"/>
 </Ui>

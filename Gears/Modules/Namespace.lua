@@ -2,7 +2,7 @@
 Type: Namespace
 -------------------------------------------------------------------------------]]
 --- @class NamespaceImpl
---- @field xml table
+--- @field __db DatabaseObj
 --- @field O NamespaceObjects
 --- @field gameVersion GameVersion
 --- @field EvenTracePrinter EventTracePrinter
@@ -20,6 +20,7 @@ Type: NamespaceObjects
 --- @field GameVersion GameVersion
 --- @field LibIconPickerUtil LibIconPickerUtil
 --- @field CharacterFrameUtil CharacterFrameUtil
+--- @field DatabaseSchema DatabaseSchema
 --- @field EquipmentSlotFlyoutManager EquipmentSlotFlyoutManager
 --- @field InventoryUtil InventoryUtil
 --- @field ItemUtil ItemUtil
@@ -54,9 +55,8 @@ local ns
 addon, ns = ...; ns.addon = addon; GEARS_NS = ns
 ns.O = ns.O or {}
 
---- Used in XML files to hook frame events: OnLoad and OnEvent
---- Example: <OnLoad>GEARS_XML:[TypeName]_OnLoad(self)</OnLoad>
-ns.xml = {}; GEARS_XML = ns.xml
+--- Matches *.toc SavedVariables definition
+local DB_NAME = 'GEARS_DB'
 
 --- @type NamespaceObjects
 local O = ns.O or {}; ns.O = O
@@ -180,7 +180,8 @@ end
 --[[-----------------------------------------------------------------------------
 Namespace: Methods
 -------------------------------------------------------------------------------]]
-do
+local function Namespace_Methods()
+  
   --- @type Kapresoft_AceLocaleUtil_2_0
   local AceLocaleUtil = LibStub('Kapresoft-AceLocaleUtil-2-0')
   
@@ -270,7 +271,19 @@ do
             and PaperDollFrame.EquipmentManagerPane
   end
   
-end
+  --[[--------------------------------------------------------
+  Database
+  ------------------------------------------------------------]]
+  function ns:InitDatabase() self.__db = ns.O.AceDB:New(DB_NAME, ns.O.DatabaseSchema:GetDefaultDatabase()) end
+  --- @return DatabaseObj
+  function ns:db() return self.__db end
+  --- @return GlobalConfig
+  function ns:g() return self:db().global end
+  --- @return ProfileConfig
+  function ns:p() return self:db().profile end
+
+end; Namespace_Methods()
+
 
 --[[-------------------------------------------------------------------
 Init Tracer

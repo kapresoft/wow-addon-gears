@@ -161,9 +161,12 @@ end
 
 --- @param self Gears_MainFrameMixin
 local function MainFrameMixin_EngravingFrameHook(self)
-  if not EngravingFrame then return end
+  if self.__engravingFrameHook or not EngravingFrame then return end
+  
   hooksecurefunc(EngravingFrame, "Show", function() MainFrameMixin_AnchorToPaperDoll(self) end)
   hooksecurefunc(EngravingFrame, "Hide", function() MainFrameMixin_AnchorToPaperDoll(self) end)
+  
+  self.__engravingFrameHook = true
 end
 
 --- When the Blizzard EquipmentSet UI is visible and the
@@ -253,10 +256,9 @@ function o:OnLoad()
 end
 
 function o:OnShow_PaperDollFrame()
-  if self:IsShown() then
-    MainFrameMixin_AnchorToPaperDoll(self)
-    MainFrameMixin_EngravingFrameHook(self)
-  end
+  MainFrameMixin_AnchorToPaperDoll(self)
+  MainFrameMixin_EngravingFrameHook(self)
+
   MainFrameMixin_AlignCharacterLevelText()
   
   self:ClearSelection()
