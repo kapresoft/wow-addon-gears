@@ -2,18 +2,25 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 
-    <Script file="Modules\Namespace.lua"/>
-    <!--@do-not-package@-->
-    <Script file="Modules\Developer\DeveloperSetup.lua" />
-
-    <!--@end-do-not-package@-->
-    <Include file="Modules\Locales\_Locales.xml"/>
-    <Include file="Modules\Util\_Util.xml"/>
+    <Script file="Core\Namespace.lua"/>
+    <Script file="Core\MainController.lua"/>
+    <Script file="Database\DatabaseSchema.lua" />
+    <Include file="Locales\_Locales.xml"/>
 
     <!--@do-not-package@-->
-    <Script file="Modules\Developer\Developer.lua" />
+    <Script file="Developer\DeveloperSetup.lua" />
+
     <!--@end-do-not-package@-->
-    <Script file="Modules\DatabaseSchema.lua" />
-    <Include file="Modules\MainFrame.xml"/>
+    <Script file="Util\EventTracePrinter.lua"/>
+    <Script file="Util\InventoryUtil.lua"/>
+    <Script file="Util\ItemUtil.lua"/>
+    <Script file="Util\GameVersionMixin.lua"/>
+    <Script file="Util\CharacterFrameUtil.lua"/>
+    <Script file="Util\LibIconPickerUtil.lua"/>
+
+    <!--@do-not-package@-->
+    <Script file="Developer\Developer.lua" />
+    <!--@end-do-not-package@-->
+    <Include file="Frames\EquipmentSet\EquipmentSetUI.xml"/>
     <Script file="Gears.lua"/>
 </Ui>
