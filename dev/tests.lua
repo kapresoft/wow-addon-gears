@@ -1,5 +1,12 @@
 x = {
   
+  --- initializes the 'show once' field
+  function()
+    local db = GEARS_NS:db()
+    db.global.isInitialShowComplete = false
+    return { global=db.global }
+  end,
+  
   function()
     local s = C_EquipmentSet
     s.CreateEquipmentSet('DPS', 132093 + 1)

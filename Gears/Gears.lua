@@ -22,7 +22,7 @@ local a = A
 --[[-------------------------------------------------------------------
 Lifecycle Methods
 ---------------------------------------------------------------------]]
-function a:OnInitialize() end
+function a:OnInitialize() ns:InitDatabase() end
 function a:OnEnable() end
 function a:OnDisable() end
 

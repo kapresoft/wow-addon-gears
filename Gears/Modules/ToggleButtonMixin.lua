@@ -7,7 +7,7 @@ local mgr = ns.O.EquipmentSlotFlyoutManager
 --[[-------------------------------------------------------------------
 Alias
 ---------------------------------------------------------------------]]
---- @alias ToggleButton ToggleButtonMixin | CheckButtonObj| AceEvent
+--- @alias ToggleButton ToggleButtonMixin | CheckButtonObj| AceEvent_3_0
 
 --[[-------------------------------------------------------------------
 Local Vars
@@ -88,7 +88,7 @@ function o:OnAfterInit(evt, gearsMainFrame)
   
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   
-  self:Click()
+  self:UpdateVisibilityState(false)
 end
 
 --- @param self ToggleButtonMixin|ToggleButton
@@ -106,6 +106,13 @@ end
 function o:OnShowPaperDollFrame(evt, gearsMainFrame, pdf)
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   ToggleButtonMixin_ECS_ToggleButton_Hook(self)
+  
+  local global = ns:g()
+  local isFirstTime = not global.isInitialShowComplete
+  
+  self:UpdateVisibilityState(isFirstTime)
+  
+  if isFirstTime then global.isInitialShowComplete = true end
 end
 
 --- If Gears is shown, hide it
@@ -113,8 +120,15 @@ function o:OnClick_ECS_ToggleButton()
   if self:IsChecked() then self:Click() end
 end
 
--- Clicks are always sticky
-function o:OnClick()
+function o:OnClick() self:UpdateVisibility() end
+
+--- @param visible boolean
+function o:UpdateVisibilityState(visible)
+  self:SetChecked(visible)
+  self:UpdateVisibility()
+end
+
+function o:UpdateVisibility()
   GameTooltip:Hide()
   if self:IsChecked() then self:__ShowGears(); return end
   self:__HideGears()
