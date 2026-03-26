@@ -14,27 +14,31 @@ local C_GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo
 Data Bags
 ---------------------------------------------------------------------]]
 local EQUIP_LOC_TO_SLOT_MAP = {
-  INVTYPE_HEAD     = { INVSLOT_HEAD },
-  INVTYPE_NECK     = { INVSLOT_NECK },
-  INVTYPE_SHOULDER = { INVSLOT_SHOULDER },
-  INVTYPE_CLOAK    = { INVSLOT_BACK },
-  INVTYPE_CHEST    = { INVSLOT_CHEST },
-  INVTYPE_ROBE     = { INVSLOT_CHEST },
-  INVTYPE_WRIST    = { INVSLOT_WRIST },
-  INVTYPE_HAND     = { INVSLOT_HAND },
-  INVTYPE_WAIST    = { INVSLOT_WAIST },
-  INVTYPE_LEGS     = { INVSLOT_LEGS },
-  INVTYPE_FEET     = { INVSLOT_FEET },
-  
-  INVTYPE_FINGER   = { INVSLOT_FINGER1, INVSLOT_FINGER2 },
-  INVTYPE_TRINKET  = { INVSLOT_TRINKET1, INVSLOT_TRINKET2 },
-  
-  INVTYPE_WEAPON        = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },
-  INVTYPE_WEAPONMAINHAND= { INVSLOT_MAINHAND },
-  INVTYPE_WEAPONOFFHAND = { INVSLOT_OFFHAND },
-  INVTYPE_2HWEAPON      = { INVSLOT_MAINHAND },
-  INVTYPE_SHIELD        = { INVSLOT_OFFHAND },
-  INVTYPE_HOLDABLE      = { INVSLOT_OFFHAND },
+  INVTYPE_HEAD     = { INVSLOT_HEAD },                            -- 1
+  INVTYPE_NECK     = { INVSLOT_NECK },                            -- 2
+  INVTYPE_SHOULDER = { INVSLOT_SHOULDER },                        -- 3
+  INVTYPE_BODY     = { INVSLOT_BODY },                            -- 4
+  INVTYPE_CHEST    = { INVSLOT_CHEST },                           -- 5
+  INVTYPE_ROBE     = { INVSLOT_CHEST },                           -- 5
+  INVTYPE_WAIST    = { INVSLOT_WAIST },                           -- 6
+  INVTYPE_LEGS     = { INVSLOT_LEGS },                            -- 7
+  INVTYPE_FEET     = { INVSLOT_FEET },                            -- 8
+  INVTYPE_WRIST    = { INVSLOT_WRIST },                           -- 9
+  INVTYPE_HAND     = { INVSLOT_HAND },                            -- 10
+  INVTYPE_FINGER   = { INVSLOT_FINGER1, INVSLOT_FINGER2 },        -- 11, 12
+  INVTYPE_TRINKET  = { INVSLOT_TRINKET1, INVSLOT_TRINKET2 },      -- 13, 14
+  INVTYPE_CLOAK    = { INVSLOT_BACK },                            -- 15
+  INVTYPE_WEAPONMAINHAND= { INVSLOT_MAINHAND },                   -- 16
+  INVTYPE_2HWEAPON      = { INVSLOT_MAINHAND },                   -- 16
+  INVTYPE_WEAPON        = { INVSLOT_MAINHAND, INVSLOT_OFFHAND },  -- 16, 17
+  INVTYPE_WEAPONOFFHAND = { INVSLOT_OFFHAND },                    -- 17
+  INVTYPE_SHIELD        = { INVSLOT_OFFHAND },                    -- 17
+  INVTYPE_HOLDABLE      = { INVSLOT_OFFHAND },                    -- 17
+  INVTYPE_RANGED        = { INVSLOT_RANGED },                     -- 18
+  INVTYPE_RANGEDRIGHT   = { INVSLOT_RANGED },                     -- 18
+  INVTYPE_THROWN        = { INVSLOT_RANGED },                     -- 18
+  INVTYPE_RELIC         = { INVSLOT_RANGED },                     -- 18
+  INVTYPE_TABARD        = { INVSLOT_TABARD },                     -- 19
 }
 
 --[[-----------------------------------------------------------------------------
