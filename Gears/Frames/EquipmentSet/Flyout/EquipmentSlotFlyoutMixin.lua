@@ -78,6 +78,7 @@ local EquipmentSlotFlyoutWidgetMixin = {}
 --- @alias EquipmentSlotFlyoutWidget EquipmentSlotFlyoutWidgetMixin
 --
 local function EquipmentSlotFlyoutWidgetMixin_Methods()
+  
   --- @type EquipmentSlotFlyoutWidgetMixin | EquipmentSlotFlyoutWidget
   local w = EquipmentSlotFlyoutWidgetMixin
   
@@ -91,12 +92,11 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
     self.charSlotButton = slotButton
     self.__interactionMode = nil
   end
+  
   --- @return SlotID
   function w:GetSlotID() return self.frame:GetSlotID() end
   --- @return boolean
-  function w:IsCharacterSlotShown()
-    return self.charSlotButton and self.charSlotButton:IsShown()
-  end
+  function w:IsCharacterSlotShown() return self.charSlotButton and self.charSlotButton:IsShown() end
   --- @return boolean
   function w:IsGearsShown() return ns.gears:IsShown() end
   --- @param mode boolean
@@ -127,14 +127,13 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   
   --- @return boolean
   function w:IsIgnoredForSave() return C_IsSlotIgnoredForSave(self:GetSlotID()) end
-
   function w:GetIgnoreSlotButton() return self.flyoutFrame.IgnoreSlotButton end
   function w:isb() return self:GetIgnoreSlotButton() end
   function w:CreateSlotItems() self.frame:CreateSlotItems() end
   
   -- Shows and opens this slot's flyout for direct interaction
   function w:OpenPopup()
-    self:__OpenPopupSound()
+    self:OpenPopupSound()
     self:ShowSlotGroup()
     self:ShowFlyoutActions()
   end
@@ -143,13 +142,13 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   --- (not the top-most(parent) flyout button)
   ---@param resetSlot boolean Resets the slot group; default is false
   function w:ClosePopup(resetSlot, closeSound)
-    self:__ClosePopupSound(closeSound)
+    self:ClosePopupSound(closeSound)
     self:HideFlyoutActions()
-    self:__ShowExpandArrow()
+    self:ShowExpandArrow()
     
     if not self:IsGearsShown() then self:HidePopup() end
     
-    if resetSlot then self:__ResetSlot() end
+    if resetSlot then self:ResetSlot() end
     
     self:ClearInteractionMode()
   end
@@ -157,14 +156,17 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   function w:ShowFlyoutActions()
     self:CreateSlotItems()
     self.frame.Flyout:PlayAnimation()
-    self:__ShowCollapseArrow()
+    self:ShowCollapseArrow()
     self:NotifyOpened()
   end
+  
   function w:HideFlyoutActions() return self.frame.Flyout:Hide() end
+  
   function w:HidePopup()
     self.flyoutFrame:StopAnimation()
     self.frame:Hide()
   end
+  
   function w:NotifyOpened() self.frame:SendMessage(ns:msg('SlotOpened'), self:GetSlotID()) end
   
   --- Some equipment slots (e.g. CharacterAmmoSlot) are not
@@ -173,40 +175,56 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   
   --- @return boolean
   function w:IsExpanded() return self.flyoutFrame:IsShown() end
+  
   --- @return boolean
   function w:IsCollapsed() return not self:IsExpanded() end
+  
+  --- @return boolean
+  function w:IsDownExpand()
+    local slotID = self:GetSlotID()
+    return slotID == INVSLOT_MAINHAND
+            or slotID == INVSLOT_OFFHAND
+            or slotID == INVSLOT_RANGED
+  end
+  
+  --- Example return value: 'LEFT', relativeTo, 'RIGHT', ofsx, ofsy
+  --- @return AnchorPoint, FrameObj|Name, AnchorPoint, number, number
+  function w:GetSlotAnchor()
+    local ofsx, ofsy = -7, 0
+    local relativeTo = self.charSlotButton
+    if self:IsDownExpand() then
+      return 'TOP', relativeTo, 'BOTTOM', 0, 10
+    end
+    return 'LEFT', relativeTo, 'RIGHT', ofsx, ofsy
+  end
   
   --- ###############################################
   --- Private Methods
   --- ###############################################
   
-  function w:__ResetSlot()
-    -- hide ignore overlay if present (reset visual state)
+  -- hide ignore overlay if present (reset visual state)
+  function w:ResetSlot()
     local slot = self.charSlotButton
     if slot and slot.ignoreSlotOverlay then
       slot.ignoreSlotOverlay:Hide()
     end
   end
-
-  -- todo next: rename functions with underscore
-  -- Show Arrow ▶
-  function w:__ShowExpandArrow()
-    if self.frame:IsDownExpand() then
+  function w:ShowExpandArrow() -- ▶
+    if self:IsDownExpand() then
       self.frame.Arrow:SetRotation(math.rad(180))
       return
     end
     self.frame.Arrow:SetRotation(math.rad(-90))
   end
-  -- Show Arrow ◀
-  function w:__ShowCollapseArrow()
-    if self.frame:IsDownExpand() then
+  function w:ShowCollapseArrow() -- ◀
+    if self:IsDownExpand() then
       self.frame.Arrow:SetRotation(math.rad(0))
       return
     end
     self.frame.Arrow:SetRotation(math.rad(90))
   end
   
-  function w:__OpenPopupSound()
+  function w:OpenPopupSound()
     if self:IsInteractionMode() then return end
     --t('__OpenPopupSound', 'intmode=', self:IsInteractionMode())
     ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
@@ -215,7 +233,7 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   --- We want to play sound only when clicking
   --- an opened slot and not in interactive mode.
   --- @param alwaysPlay boolean
-  function w:__ClosePopupSound(alwaysPlay)
+  function w:ClosePopupSound(alwaysPlay)
     if alwaysPlay == false or self:IsInteractionMode() then return end
     ns:PlaySound(SOUNDKIT.IG_ABILITY_ICON_DROP)
   end
@@ -266,50 +284,17 @@ end
 --[[-------------------------------------------------------------------
 EquipmentSlotFlyout: Methods
 ---------------------------------------------------------------------]]
+--- @see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate/Scripts/OnLoad
 function o:OnLoad()
   FlyoutFrameMixin_Methods(self.Flyout, self)
   self.Flyout:OnLoad()
   
   self.Arrow:SetTexture(310765);
   self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
-  if not self:IsDownExpand() then return end
-  
-  self.Flyout:AnchorForDownExpansion()
 end
 
-function o:ApplyInitialState()
-  self:Hide()
-  self.widget:__ShowExpandArrow()
-  self.widget:HideFlyoutActions()
-end
-
-function o:OnClick()
-  if self.widget:IsExpanded() then
-    return self.widget:ClosePopup(false, true)
-  end
-  self.widget:OpenPopup()
-end
-
-function o:OnSlotOpened(evt, slotID)
-  if self:GetSlotID() == slotID then return end
-  -- close the other expanded flyouts
-  if self.widget:IsExpanded() then self.widget:ClosePopup(false, false); return end
-end
-
-function o:OnSlotEnter(evt, slotID)
-  if self:GetSlotID() == slotID then return end
-  if not self.widget:IsExpanded() then return end
-  self.widget:ClosePopup(false, false)
-end
-
-function o:OnEquipmentSetSelected(evt, slotID)
-  if not self.widget:IsExpanded() then return end
-  self.widget:ClosePopup(false, false)
-end
-
-function o:OnShowPaperDollFrame()
-  if not self.widget:ShouldShowSlotGroup() then self.widget:ClosePopup() return end
-  self.widget:ShowSlotGroup() end
+--- @return SlotID
+function o:GetSlotID() return self:GetID() end
 
 --- Creates buttons for each candidate items
 --- using template GearsEquipmentSlotActionButtonTemplate
@@ -418,7 +403,7 @@ function o:Create(slotInfo, characterSlotButton)
   slotFlyout:CreateActionButtons()
   slotFlyout:SetHeight(24)
   slotFlyout:ClearAllPoints()
-  slotFlyout:SetPoint(slotFlyout:GetSlotAnchor())
+  slotFlyout:SetPoint(slotFlyout.widget:GetSlotAnchor())
   
   slotFlyout:RegisterMessage(ns:msg('SlotOpened'), 'OnSlotOpened')
   slotFlyout:RegisterMessage(ns:msg('ShowPaperDollFrame'), 'OnShowPaperDollFrame')
@@ -426,6 +411,15 @@ function o:Create(slotInfo, characterSlotButton)
   slotFlyout:RegisterMessage(ns:msg('EquipmentSetSelected'), 'OnEquipmentSetSelected')
   
   return slotFlyout
+end
+
+function o:ApplyInitialState()
+  if not self.widget:IsDownExpand() then return end
+  self.Flyout:AnchorForDownExpansion()
+  
+  self:Hide()
+  self.widget:ShowExpandArrow()
+  self.widget:HideFlyoutActions()
 end
 
 function o:CreateActionButtons()
@@ -451,33 +445,52 @@ function o:CreateActionButtons()
   flyout:SetHeight(flyout:GetHeight() + 4)
 end
 
+--[[-------------------------------------------------------------------
+Script Methods
+@see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate
+---------------------------------------------------------------------]]
+
+--- @see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate/Scripts/OnEnter
+function o:OnClick()
+  if self.widget:IsExpanded() then
+    return self.widget:ClosePopup(false, true)
+  end
+  self.widget:OpenPopup()
+end
+
+--- @see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate/Scripts/OnEnter
 function o:OnEnter()
   self.Arrow:SetVertexColor(0.4, 0.95, 0.4, 1)
   self.Arrow:SetBlendMode("BLEND")
 end
 
+--- @see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate/Scripts/OnLeave
 function o:OnLeave()
   self.Arrow:SetVertexColor(1, 1, 1, 1)
   self.Arrow:SetBlendMode("BLEND")
 end
 
---- @return SlotID
-function o:GetSlotID() return self:GetID() end
-
-function o:IsDownExpand()
-  local slotID = self:GetSlotID()
-  return slotID == INVSLOT_MAINHAND
-          or slotID == INVSLOT_OFFHAND
-          or slotID == INVSLOT_RANGED
+--[[-------------------------------------------------------------------
+Event/Message Handlers
+---------------------------------------------------------------------]]
+function o:OnSlotOpened(evt, slotID)
+  if self:GetSlotID() == slotID then return end
+  -- close the other expanded flyouts
+  if self.widget:IsExpanded() then self.widget:ClosePopup(false, false); return end
 end
 
-function o:GetSlotAnchor()
-  local ofsx, ofsy = -7, 0
-  local relativeTo = self.widget.charSlotButton
-  if self:IsDownExpand() then
-    return 'TOP', relativeTo, 'BOTTOM', 0, 10
-  end
-  return 'LEFT', relativeTo, 'RIGHT', ofsx, ofsy
+function o:OnSlotEnter(evt, slotID)
+  if self:GetSlotID() == slotID then return end
+  if not self.widget:IsExpanded() then return end
+  self.widget:ClosePopup(false, false)
 end
 
+function o:OnEquipmentSetSelected(evt, slotID)
+  if not self.widget:IsExpanded() then return end
+  self.widget:ClosePopup(false, false)
+end
 
+function o:OnShowPaperDollFrame()
+  if not self.widget:ShouldShowSlotGroup() then self.widget:ClosePopup() return end
+  self.widget:ShowSlotGroup()
+end
