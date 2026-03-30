@@ -26,6 +26,7 @@ Type: NamespaceObjects
 --- @field ItemUtil ItemUtil
 --- @field AceEvent AceEvent_3_0
 --- @field AceBucket AceBucket_3_0
+--- @field AceHook AceHook_3_0
 --- @field AceLocale AceLocale_3_0
 --- @field AceAddon AceAddon_3_0
 --- @field AceDB AceDB_3_0
@@ -142,15 +143,17 @@ NamespaceObjects: Ace-3.0
 do
   local obj = ns.O
   --- @type AceEvent_3_0
-  obj.AceEvent = LibStub("AceEvent-3.0")
+  obj.AceEvent = LibStub('AceEvent-3.0')
   --- @type AceBucket_3_0
-  obj.AceBucket = LibStub("AceBucket-3.0")
+  obj.AceBucket = LibStub('AceBucket-3.0')
+  --- @type AceHook_3_0
+  obj.AceHook = LibStub('AceHook-3.0')
   --- @type AceLocale_3_0
-  obj.AceLocale = LibStub("AceLocale-3.0")
+  obj.AceLocale = LibStub('AceLocale-3.0')
   --- @type AceAddon_3_0
-  obj.AceAddon = LibStub("AceAddon-3.0")
+  obj.AceAddon = LibStub('AceAddon-3.0')
   --- @type AceDB_3_0
-  obj.AceDB = LibStub("AceDB-3.0")
+  obj.AceDB = LibStub('AceDB-3.0')
   
   --- @generic T
   --- @param targetObj T|nil An optional targetObj for embedding
@@ -270,6 +273,9 @@ local function Namespace_Methods()
     return PaperDollFrame and PaperDollSidebarTab1
             and PaperDollFrame.EquipmentManagerPane
   end
+  
+  --- @return EquipmentSlotFlyoutManager
+  function ns:esfm() return ns.O.EquipmentSlotFlyoutManager end
   
   --[[--------------------------------------------------------
   Database

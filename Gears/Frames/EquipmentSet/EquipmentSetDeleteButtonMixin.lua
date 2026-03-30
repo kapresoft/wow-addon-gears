@@ -12,22 +12,22 @@ Local Vars
 ---------------------------------------------------------------------]]
 local p = ns:log('EquipmentSetDeleteButtonMixin')
 
+--- @param dlg FrameObj The static popup frame
+--- @param equipmentSetID Identifier
+local function Delete_OnAccept(dlg, equipmentSetID)
+  C_DeleteEquipmentSet(equipmentSetID);
+  ns:esfm():HideFlyouts()
+end
+
 --[[-------------------------------------------------------------------
 Support Functions
 ---------------------------------------------------------------------]]
 StaticPopupDialogs[GEARS_CONFIRM_DELETE_EQUIPMENT_SET] = {
   text = _G['CONFIRM_DELETE_EQUIPMENT_SET'],
-  button1 = YES,
-  button2 = NO,
-  OnAccept = function(self, data)
-    C_DeleteEquipmentSet(data);
-    ns.O.EquipmentSlotFlyoutManager:HideFlyouts()
-  end,
-  OnCancel = function(dialog, data) end,
-  hideOnEscape = 1,
-  timeout = 0,
-  exclusive = 1,
-  whileDead = 1,
+  button1 = YES, button2 = NO,
+  hideOnEscape = 1, timeout = 0, exclusive = 1, whileDead = 1,
+  OnAccept = Delete_OnAccept,
+  OnCancel = function(dlg, data) end,
 }
 
 --[[-------------------------------------------------------------------

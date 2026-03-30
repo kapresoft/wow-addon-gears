@@ -17,17 +17,20 @@ Module::EquipmentSlotFlyoutManager
 -------------------------------------------------------------------------------]]
 --- @see NamespaceObjects
 local libName = 'EquipmentSlotFlyoutManager'
---- @class EquipmentSlotFlyoutManager : AceEvent_3_0
+--- @class EquipmentSlotFlyoutManager__
 local S = ns:AceEvent(); ns.O.EquipmentSlotFlyoutManager = S
+S = ns.O.AceHook:Embed(S)
 local p, pd, t, tf = ns:log(libName)
-
+--
+--- @alias EquipmentSlotFlyoutManager EquipmentSlotFlyoutManager__ | AceEvent_3_0 | AceHook_3_0
+--
 --- @type table<SlotID, EquipmentSlotFlyout>
 local flyoutsMap = {}
 
 --[[-----------------------------------------------------------------------------
 Module::EquipmentSlotFactory (Methods)
 -------------------------------------------------------------------------------]]
---- @type EquipmentSlotFlyoutManager
+--- @type EquipmentSlotFlyoutManager__ | EquipmentSlotFlyoutManager
 local o = S
 
 --- @param msg string
@@ -40,11 +43,54 @@ function o:OnEquipmentSetSelected(msg, equipSetInfo)
   end)
 end
 
+--- @param slotBtn BlizzCharacterSlotItemButton
+function o:OnSlotEnter(slotBtn)
+  if InCombatLockdown() then return end
+  local slotID = slotBtn:GetID()
+  self.__hoverSlotID = slotID
+  local flyout = flyoutsMap[slotID]; if not flyout then return end
+  if not IsAltKeyDown() then return end
+  
+  if flyout.widget:IsExpanded() then return end
+  
+  flyout.widget:SetInteractionMode(true)
+  flyout.widget:OpenPopup()
+end
+
+--- @param slotBtn BlizzCharacterSlotItemButton
+function o:OnSlotLeave(slotBtn)
+  if InCombatLockdown() then return end
+  local slotID = slotBtn:GetID()
+  local flyout = flyoutsMap[slotID]
+  if not (IsAltKeyDown() and flyout) then return end
+  
+  C_Timer.After(0.081, function()
+    if self.__hoverSlotID ~= slotID then return end
+    if not slotBtn:IsMouseOver()
+            and not flyout:IsMouseOver()
+            and not flyout.Flyout:IsMouseOver() then
+      if ns.gears:IsShown() then return end
+      flyout.widget:ClosePopup(false, false)
+    end
+  end)
+end
+
 function o:CreateSlotFlyouts()
   local esfm = Gears_EquipmentSlotFlyoutMixin
+  
+  if not self.__tooltipHooked then
+    self.__tooltipHooked = true
+    GameTooltip:HookScript("OnTooltipSetItem", function(tt)
+      local owner = tt:GetOwner(); if not owner then return end
+      if IsAltKeyDown() and owner.__Gears_flyout then tt:Hide() end
+    end)
+  end
+
   cfu:ForEachEquipmentSlot(function(s, btn, po)
     local flyout = esfm:Create(s, btn)
     flyoutsMap[flyout:GetID()] = flyout
+    self:HookScript(btn, 'OnEnter', 'OnSlotEnter')
+    self:HookScript(btn, 'OnLeave', 'OnSlotLeave')
   end)
 end
 
@@ -63,7 +109,7 @@ end
 function o:HideFlyouts()
   if ns.gears:HasSelection() and ns.gears:IsShown() then return end
   self:ForEachFlyouts(function(flyout)
-    flyout.widget:HideSlotGroup()
+    flyout.widget:ClosePopup(true)
   end)
 end
 
@@ -108,10 +154,8 @@ Event Handlers
 ---------------------------------------------------------------------]]
 function o:OnEnterCombat()
   local btn = Gears_ToggleButton
-  
   if not ns.gears:IsPaperDollFrameVisible() then return end
-  if not btn:IsChecked() then return end
-  
+  if not btn:IsChecked() then self:HideFlyouts(); return end
   btn:Click()
 end
 

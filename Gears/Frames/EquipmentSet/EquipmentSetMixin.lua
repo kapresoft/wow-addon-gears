@@ -27,11 +27,6 @@ local c_yellow1 = ns:colorFn('E6BF33')
 local c_yellow = ns:colorFn('FFE680')
 
 --[[-------------------------------------------------------------------
-Support Functions
----------------------------------------------------------------------]]
-local function flyoutMgr() return ns.O.EquipmentSlotFlyoutManager end
-
---[[-------------------------------------------------------------------
 Mixin
 ---------------------------------------------------------------------]]
 --- @alias EquipmentSetFrame EquipmentSetMixin|ButtonObjWithBackdrop
@@ -252,14 +247,6 @@ function o:EquipGear()
   else
     C_UseEquipmentSet(self:GetID())
   end
-end
-
---- @param self EquipmentSetMixin|EquipmentSetFrame
-local function __Trace_SaveGear(self)
-  flyoutMgr():ForEachEquipSetIgnoredSlots(self:GetID(), function(slotFlyout, slotBtn)
-    local slotText = ('%s(%s)'):format(self:__GetDebugName(), slotFlyout:__GetDebugName())
-    t('SaveGear::Ignored', slotText)
-  end)
 end
 
 function o:SaveGear()

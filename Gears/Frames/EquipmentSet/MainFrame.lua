@@ -36,7 +36,6 @@ Local Vars
 local libName = 'MainFrame'
 local LibIconPickerUtil = ns.O.LibIconPickerUtil
 local p, pd, t, tf = ns:log(libName)
-local esfm = ns.O.EquipmentSlotFlyoutManager
 
 --[[-------------------------------------------------------------------
 Gears_AddButtonMixin
@@ -276,7 +275,7 @@ end
 function o:OnInit()
   self.__origHeight = self:GetHeight()
   self:InitEquipmentSet()
-  esfm:CreateSlotFlyouts()
+  ns:esfm():CreateSlotFlyouts()
   
   MainFrame_PaperDollFrameHooks(self)
   self:SendMessage(ns:msg('OnAfterInit'), self)
