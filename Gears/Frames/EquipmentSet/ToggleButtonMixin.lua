@@ -135,6 +135,7 @@ function o:UpdateVisibility()
 end
 
 function o:OnEnter()
+  self:SendMessage(ns:msg('SlotEnter'))
   if self:GetChecked() then return end
   
   C_Timer.After(TOOLTIP_DELAY, function()
@@ -152,7 +153,7 @@ function o:IsChecked() return self:GetChecked() end
 function o:__ShowGears()
   ns:PlaySound(SOUNDKIT.IG_MINIMAP_OPEN)
   ns.gears:Show()
-  mgr:EnableEquipmentSlots(true)
+  ns:esfm():EnableEquipmentSlots(true)
   self:__HideECS()
   
   self:__HideBlizzESManager()
@@ -170,7 +171,7 @@ function o:__ShowBlizzESManager() end
 function o:__HideGears()
   ns:PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:HideGears()
-  mgr:EnableEquipmentSlots(false)
+  ns:esfm():EnableEquipmentSlots(false)
   
   self:__ShowBlizzESManager()
 end

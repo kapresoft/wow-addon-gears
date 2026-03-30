@@ -68,6 +68,29 @@ function w:SetupTooltip()
   end)
 end
 
+function w:SetEnabledState(enabled)
+  if enabled then
+    self.frame:Enable()
+    self:ApplyEnabledStyle()
+  else
+    self.frame:Disable()
+    self:ApplyDisabledStyle()
+  end
+end
+
+--- @param alpha AlphaLevel
+function w:SetIconAlpha(alpha) self.frame.Icon:SetAlpha(alpha) end
+--- @param state boolean
+function w:SetIconDesaturated(state) self.frame.Icon:SetDesaturated(state) end
+function w:ApplyEnabledStyle()
+  self:SetIconDesaturated(false)
+  self:SetIconAlpha(1)
+end
+function w:ApplyDisabledStyle()
+  self:SetIconDesaturated(true)
+  self:SetIconAlpha(0.4)
+end
+
 --[[-----------------------------------------------------------------------------
 Module::PlaceInBagsSlotActionButtonMixin (Methods)
 -------------------------------------------------------------------------------]]
