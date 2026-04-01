@@ -3,6 +3,7 @@
 ..\FrameXML\UI.xsd">
 
     <Script file="Core\Namespace.lua"/>
+    <Script file="Core\GameVersionMixin.lua"/>
     <Script file="Core\MainController.lua"/>
     <Script file="Database\DatabaseSchema.lua" />
     <Include file="Locales\_Locales.xml"/>
@@ -14,7 +15,6 @@
     <Script file="Util\EventTracePrinter.lua"/>
     <Script file="Util\InventoryUtil.lua"/>
     <Script file="Util\ItemUtil.lua"/>
-    <Script file="Util\GameVersionMixin.lua"/>
     <Script file="Util\CharacterFrameUtil.lua"/>
     <Script file="Util\LibIconPickerUtil.lua"/>
 

@@ -22,6 +22,8 @@ InventorySlotInfo
 --
 --- @class BlizzCharacterSlotItemButton__ : Button
 --- @field ignoreSlotOverlay TextureObj
+--- @field popoutButton ButtonObj
+--- @field gears Gears_BlizzCharacterSlotItemButton
 --
 --- @alias BlizzCharacterSlotItemButton BlizzCharacterSlotItemButton__ | ButtonObj
 --
