@@ -99,8 +99,7 @@ local o = Gears_PlaceInBagsSlotActionButtonMixin
 
 function o:OnLoad()
   self:SetParentKey('PlaceInBagsActionButton')
-  self.Icon:SetTexture([[Interface\Icons\INV_Misc_Bag_09]])
-  
+  self.Icon:SetTexture(255351)
   --- @type EquipmentSlotFlyout
   local slotFlyoutBtn = self:GetParent():GetParent()
   self.widget = CreateAndInitFromMixin(PlaceInBagsActionButtonWidgetMixin, self, slotFlyoutBtn)
@@ -156,10 +155,10 @@ function o:TryPlaceInBag(bag)
   return false
 end
 
-
+-- todo next: move GetCharItemSlot() and GetSlotID() to widget
 --- @return EquipmentSlotFlyout
 function o:GetFlyout() return self:GetParent():GetParent() end
 --- @return BlizzCharacterSlotItemButton
-function o:GetCharItemSlot() return self:GetFlyout().widget.charSlotButton end
+function o:GetCharItemSlot() return self:GetFlyout():Slot() end
 --- @return SlotID
 function o:GetSlotID() return self:GetCharItemSlot():GetID() end

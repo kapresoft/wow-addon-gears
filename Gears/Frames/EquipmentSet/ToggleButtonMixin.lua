@@ -205,6 +205,3 @@ end
 function o:__BlizzEquipManagerIsShown()
   local em = self:__GetBlizzEquipManager(); return em and em:IsShown()
 end
-
---- @boolean
-function o:__HasBlizzEquipManager() return self:__GetBlizzEquipManager() ~= nil end

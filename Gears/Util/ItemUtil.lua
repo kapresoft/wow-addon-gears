@@ -46,3 +46,20 @@ function o:GetItem(itemIdentifier)
   return itemInfo
 end
 
+--- @param itemLink ItemLink
+--- @return ItemID
+function o:GetItemIDByLink(itemLink)
+  local itemID = C_GetItemInfoInstant(itemLink)
+  return itemID
+end
+
+--- @param slotID SlotID
+--- @return ItemID, ItemLink
+function o:GetItemBySlotID(slotID)
+  local itemLink, itemID
+  itemLink = GetInventoryItemLink('player', slotID)
+  if itemLink then
+    itemID = self:GetItemIDByLink(itemLink)
+  end
+  return itemID, itemLink
+end
