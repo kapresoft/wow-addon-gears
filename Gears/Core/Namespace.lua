@@ -69,7 +69,7 @@ Override in DeveloperSetup to enable
 --- @class Gears_Settings
 --- @field developer boolean if true: enables developer mode
 --- @field enableTraceUI boolean if true: shows Blizz EventTrace UI on load
-local settings = { developer = false, enableTraceUI = false, traceKeyword='gears' }; ns.settings = settings
+local settings = { developer = false, enableTraceUI = false }; ns.settings = settings
 
 
 --- @return boolean

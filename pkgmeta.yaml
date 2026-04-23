@@ -52,6 +52,23 @@ ignore:
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/External
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/_Lib.xml
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.toc
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.sh
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.yaml
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AceConfigUtil.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AceLib.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AddonInfoUtil.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AddonUtil.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/ColorFormatter.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/ConsoleHelperMixin.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/DebugChatFrameMixin.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/GameVersionMixin.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/LuaEvaluator.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/ModuleUtil.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/SequenceMixin.lua
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/TimeUtil.lua
   - Gears-OptionsUI
 ### Ignore Gears-OptionsUI for now
 
