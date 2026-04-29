@@ -53,3 +53,4 @@ Gears/ThirdParty/Libs
 # Ignore Saved Variables folder with symlinks
 _SV/
 .emmyrc.json
+deployer-config.lua
