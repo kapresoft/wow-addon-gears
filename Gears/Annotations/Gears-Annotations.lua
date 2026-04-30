@@ -7,7 +7,7 @@ Gears_ToggleButton = {}
 --- @type Gears_MainFrame
 Gears_MainFrame = {}
 
---- @type FrameObj
+--- @type Frame
 PaperDollFrame = {}
 
 --[[-------------------------------------------------------------------
@@ -18,15 +18,12 @@ InventorySlotInfo
 --- @field id number @See [InventorySlotID](https://warcraft.wiki.gg/wiki/InventorySlotID)
 --- @field iconID IconIDOrPath
 --- @field checkRelic boolean
---
---
---- @class BlizzCharacterSlotItemButton__ : Button
---- @field ignoreSlotOverlay TextureObj
---- @field popoutButton ButtonObj
+
+
+--- @class BlizzCharacterSlotItemButton : Button
+--- @field ignoreSlotOverlay Texture
+--- @field popoutButton Button
 --- @field gears Gears_BlizzCharacterSlotItemButton
---
---- @alias BlizzCharacterSlotItemButton BlizzCharacterSlotItemButton__ | ButtonObj
---
 
 --[[-------------------------------------------------------------------
 Aliases

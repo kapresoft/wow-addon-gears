@@ -3,7 +3,6 @@
 ..\FrameXML\UI.xsd">
 
     <Script file="Core\Namespace.lua"/>
-    <Script file="Core\GameVersionMixin.lua"/>
     <Script file="Core\MainController.lua"/>
     <Script file="Database\DatabaseSchema.lua" />
     <Include file="Locales\_Locales.xml"/>

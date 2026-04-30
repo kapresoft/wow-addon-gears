@@ -9,6 +9,9 @@ Blizzard Vars
 ---------------------------------------------------------------------]]
 local C_GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots
 local C_GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo
+local C_IsSpellKnown = C_SpellBook and C_SpellBook.IsSpellKnown or IsSpellKnown
+local C_IsEquippableItem = C_Item and C_Item.IsEquippableItem or IsEquippableItem
+
 local DUAL_WIELD_SPID = 674
 --[[-------------------------------------------------------------------
 Data Bags
@@ -44,13 +47,14 @@ local EQUIP_LOC_TO_SLOT_MAP = {
 --[[-----------------------------------------------------------------------------
 Module::InventoryUtil
 -------------------------------------------------------------------------------]]
+
 --- @see NamespaceObjects
 local libName = 'InventoryUtil'
+
 --- @class InventoryUtil
-local S = {}; ns.O.InventoryUtil = S
+local o = {}; ns.O.InventoryUtil = o
+
 local p, pd, t, tf = ns:log(libName)
-local C_IsSpellKnown = C_SpellBook and C_SpellBook.IsSpellKnown or IsSpellKnown
-local C_IsEquippableItem = C_Item and C_Item.IsEquippableItem or IsEquippableItem
 
 --[[-------------------------------------------------------------------
 Support Functions
@@ -134,24 +138,21 @@ end
 --[[-----------------------------------------------------------------------------
 Module::InventoryUtil (Methods)
 -------------------------------------------------------------------------------]]
---- @type InventoryUtil
-local o = S
 
 --- @param slotID SlotID
---- @param callbackFn fun(info:ContainerItemInfo, item:ItemInfoDetails) : void | "'function(info, item) end'"
+--- @param callbackFn fun(info:ContainerItemInfo, item:ItemInfoDetails) : void
 function o:ForEachSlotItemCandidate(slotID, callbackFn)
   self:ForEachBagItemMatchingSlot(slotID, callbackFn)
   self:ForEachEquippedItem(slotID, callbackFn)
 end
 
 --- @param slotID SlotID
---- @param callbackFn fun(info:ContainerItemInfo, item:ItemInfoDetails) : void | "'function(info, item) end'"
---- @return table<number, ItemInfoDetails> Item Data
+--- @param callbackFn fun(info:ContainerItemInfo, item:ItemInfoDetails) : void
 function o:ForEachBagItemMatchingSlot(slotID, callbackFn)
   local it = itemUtil()
   self:ForEachBagItem(function(info)
     local link = info.hyperlink
-    if IsEquippableItem(link) then
+    if C_IsEquippableItem(link) then
       local item = it:GetItem(link)
       if item and SlotMatches(slotID, item) then
         callbackFn(info, item) end
@@ -159,7 +160,7 @@ function o:ForEachBagItemMatchingSlot(slotID, callbackFn)
   end)
 end
 
---- @param slotID SlotID The target slot ID
+--- @param slotID SlotID @The target slot ID
 --- @param callback fun(info:ContainerItemInfo, item:ItemInfoDetails)
 function o:ForEachEquippedItem(slotID, callback)
   local it = itemUtil()
@@ -185,7 +186,7 @@ end
 
 
 --- @param slotID SlotID
---- @return ItemInfoDetails[] Available items that matches the slot
+--- @return ItemInfoDetails[] Available @items that matches the slot
 function o:GetAvailableSlotItems(slotID)
   local items = {}
   self:ForEachSlotItemCandidate(slotID, function(info, item)

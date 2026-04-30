@@ -11,15 +11,12 @@ local t = ns:traceFnWithFormatting(libName)
 --[[-----------------------------------------------------------------------------
 Library
 -------------------------------------------------------------------------------]]
---- @class __MainController
-local S = {}; ns:AceEvent(S); ns:AceBucket(S)
-
---- @alias MainController __MainController | AceEvent_3_0 | AceBucket_3_0
+--- @class MainController : AceEvent-3.0, AceBucket-3.0
+local S = ns:AceEmbed({}, 'AceEvent-3.0', 'AceBucket-3.0');
 
 --[[-----------------------------------------------------------------------------
 Library: Methods
 -------------------------------------------------------------------------------]]
---- @type __MainController | MainController
 local o = S
 
 function o:OnPlayerLogin()

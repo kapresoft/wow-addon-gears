@@ -12,7 +12,7 @@ Local Vars
 ---------------------------------------------------------------------]]
 local p = ns:log('EquipmentSetDeleteButtonMixin')
 
---- @param dlg FrameObj The static popup frame
+--- @param dlg Frame @The static popup frame
 --- @param equipmentSetID Identifier
 local function Delete_OnAccept(dlg, equipmentSetID)
   C_DeleteEquipmentSet(equipmentSetID);
@@ -33,20 +33,23 @@ StaticPopupDialogs[GEARS_CONFIRM_DELETE_EQUIPMENT_SET] = {
 --[[-------------------------------------------------------------------
 Mixin
 ---------------------------------------------------------------------]]
---- @alias EquipmentSetDeleteButton EquipmentSetDeleteButtonMixin|ButtonObj
+
+--
+--- @class EquipmentSetDeleteButton : EquipmentSetDeleteButtonMixin
+--
 
 --- @class EquipmentSetDeleteButtonMixin : Button
 --- @field owner EquipmentSetFrame
 --- @field DeleteButton boolean
 Gears_EquipmentSetDeleteButtonMixin = {}
 
---- @type EquipmentSetDeleteButtonMixin | EquipmentSetDeleteButton
-local o  = Gears_EquipmentSetDeleteButtonMixin
-o.DeleteButton = true
-
 --[[-------------------------------------------------------------------
 Methods
 ---------------------------------------------------------------------]]
+
+local o  = Gears_EquipmentSetDeleteButtonMixin
+o.DeleteButton = true
+
 function o:OnLoad()
   IconButtonMixin.OnLoad(self)
   self.tooltipText = DELETE
