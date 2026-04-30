@@ -15,20 +15,19 @@ Module::ItemUtil
 -------------------------------------------------------------------------------]]
 --- @see NamespaceObjects
 local libName = 'ItemUtil'
+
 --- @class ItemUtil
-local S = {}; ns.O.ItemUtil = S
+local o = {}; ns.O.ItemUtil = o
 local p, pd, t, tf = ns:log(libName)
 
 --[[-----------------------------------------------------------------------------
 Module::ItemUtil (Methods)
 -------------------------------------------------------------------------------]]
---- @type ItemUtil
-local o = S
-
 --- @param itemIdentifier ItemIdentifier
 --- @return ItemInfoDetails
 function o:GetItem(itemIdentifier)
-  assert(itemIdentifier, 'GetItem(itemIdentifier):: ItemIdentifier must be a name, id or link')
+  assert(type(itemIdentifier) == 'string' or type(itemIdentifier) == 'number',
+    'GetItem(itemIdentifier):: {itemIdentifier} should be a name, id or link')
   
   local itemName, itemLink,
   itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
@@ -54,7 +53,7 @@ function o:GetItemIDByLink(itemLink)
 end
 
 --- @param slotID SlotID
---- @return ItemID, ItemLink
+--- @return ItemID?, ItemLink?
 function o:GetItemBySlotID(slotID)
   local itemLink, itemID
   itemLink = GetInventoryItemLink('player', slotID)

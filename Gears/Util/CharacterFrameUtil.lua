@@ -4,9 +4,9 @@ local ns= select(2, ...)
 --[[-------------------------------------------------------------------
 Types
 ---------------------------------------------------------------------]]
---- @class SlotItemButton : Button Examples: CharacterNeckSlot, CharacterChestSlot, etc...
---- @field GetID fun() : Identifier The slot ID
---- @field popoutButton|nil ButtonObj Only on versions with Blizz Equipment Managers
+--- @class SlotItemButton : Button  @Slot items - Examples: CharacterNeckSlot, CharacterChestSlot, etc...
+--- @field GetID fun():Identifier   @The slot ID
+--- @field popoutButton? Button     @Only on versions with Blizz Equipment Managers
 
 --[[-------------------------------------------------------------------
 Local Vars
@@ -14,18 +14,12 @@ Local Vars
 local strsub, pcall = strsub, pcall
 local PaperDollItemsFrame, GetInventorySlotInfo = PaperDollItemsFrame, GetInventorySlotInfo
 
---[[-------------------------------------------------------------------
-New Library
----------------------------------------------------------------------]]
---- @class CharacterFrameUtil
-local S = {}; ns.O.CharacterFrameUtil = S
-local p, pd, t, tf = ns:log('CharacterFrameUtil')
+--[[-----------------------------------------------------------------------------
+Support Functions
+-------------------------------------------------------------------------------]]
 
---- @type CharacterFrameUtil
-local o = S;
-
---- @param slotItemButton ButtonObj
---- @return InventorySlotInfo
+--- @param slotItemButton Button
+--- @return InventorySlotInfo?
 local function GetSlotInfo(slotItemButton)
   local slotName = strsub(slotItemButton:GetName(), 10)
   --- @type InventorySlotInfo
@@ -35,9 +29,16 @@ local function GetSlotInfo(slotItemButton)
     return { name = slotName, id = slot, iconID = icon, checkRelic = checkRelic }
   end)
   if not ok then return nil end
-  
+
   return result
 end
+
+--[[-------------------------------------------------------------------
+New Library
+---------------------------------------------------------------------]]
+--- @class CharacterFrameUtil
+local o = {}; ns.O.CharacterFrameUtil = o
+local p, pd, t, tf = ns:log('CharacterFrameUtil')
 
 --- See Also:: PaperDollFrame.xml # Frame/PaperDollItemsFrame
 --- @param callbackFn fun(info:InventorySlotInfo, btn:BlizzCharacterSlotItemButton, po:ButtonObj) | "function(info, btn, po) end"

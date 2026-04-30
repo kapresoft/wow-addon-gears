@@ -7,7 +7,7 @@ local mgr = ns.O.EquipmentSlotFlyoutManager
 --[[-------------------------------------------------------------------
 Alias
 ---------------------------------------------------------------------]]
---- @alias ToggleButton ToggleButtonMixin | CheckButtonObj| AceEvent_3_0
+--- @alias ToggleButton ToggleButtonMixin | CheckButtonObj| AceEvent-3.0
 
 --[[-------------------------------------------------------------------
 Local Vars
@@ -16,7 +16,7 @@ local TOGGLE_BUTTON_ICON = [[Interface\AddOns\Gears\Assets\gears-button-2b]]
 local TOOLTIP_DELAY = 0.01
 
 --- The equipment manager tab on advanced versions of wow like MoP, Retail, etc.
---- @type FrameObj
+--- @type Frame
 local PaperDollSidebarTab3 = PaperDollSidebarTab3
 
 local libName = 'ToggleButton'
@@ -28,17 +28,16 @@ local p, pd, t, tf = ns:log(libName)
 ToggleButtonMixin
 ---------------------------------------------------------------------]]
 --- @class ToggleButtonMixin : CheckButton
---- @field Icon TextureObj
+--- @field Icon Texture
 --- @field owner PaperDollFrame
---- @field private __ecsFrame FrameObj The ECS_StatsFrame (Extended Character Stats addon)
---- @field private __ecsButton ButtonObj The ECS_ToggleButton (Extended Character Stats addon)
+--- @field private __ecsFrame Frame The ECS_StatsFrame (Extended Character Stats addon)
+--- @field private __ecsButton Button The ECS_ToggleButton (Extended Character Stats addon)
 --- @field private __blizzEquipHooked boolean
 --- @field private __ecsOnClickHooked boolean
 --- @field private __ecsToggleButtonHooked boolean
-Gears_ToggleButtonMixin = {};
+Gears_ToggleButtonMixin = ns:NewAceEvent();
 
---- @type ToggleButtonMixin | ToggleButton
-local o  = Gears_ToggleButtonMixin; ns:AceEvent(o)
+local o  = Gears_ToggleButtonMixin
 
 --- Handles Clicks on the Original Blizz Equipment Gear tab
 --- @param self ToggleButton
@@ -55,7 +54,6 @@ function o:OnLoad()
   self.owner = PaperDollFrame
   
   -- green highlight
-  --- @type TextureObj
   local hl  = self:GetHighlightTexture()
   hl:SetColorTexture(0.2, 1.0, 0.4, 0.25)
   hl:ClearAllPoints()
@@ -66,7 +64,6 @@ function o:OnLoad()
   local checked = self:GetCheckedTexture()
   checked:SetVertexColor(0.2, 1.0, 0.4, 1.0)
   
-  --- @type TextureObj
   local icon = self:CreateTexture(nil, 'OVERLAY')
   icon:SetSize(28, 28)
   icon:SetPoint('CENTER', self)
@@ -102,7 +99,7 @@ end
 
 --- @param evt Name
 --- @param gearsMainFrame Gears_MainFrameMixin
---- @param pdf PaperDollFrame|FrameObj
+--- @param pdf PaperDollFrame
 function o:OnShowPaperDollFrame(evt, gearsMainFrame, pdf)
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   ToggleButtonMixin_ECS_ToggleButton_Hook(self)
@@ -188,15 +185,15 @@ end
 function o:AnchorToPaperDoll()
   if not (EngravingFrame and RuneFrameControlButton) then return end
   
-  --- @type CheckButtonObj
+  --- @type CheckButton
   local anch = RuneFrameControlButton
-  --- @type CheckButtonObj
+  --- @type CheckButton
   local btn  = Gears_ToggleButton
   btn:ClearAllPoints()
   btn:SetPoint('TOPRIGHT', anch, 'TOPLEFT', -2, 1)
 end
 
---- @return FrameObj Container
+--- @return Frame Container
 function o:__GetBlizzEquipManager()
   return PaperDollFrame and PaperDollSidebarTab1 and PaperDollFrame.EquipmentManagerPane
 end

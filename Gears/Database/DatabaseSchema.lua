@@ -10,12 +10,12 @@ local tbl_DeepCopy = Table.DeepCopy
 Type Definitions
 ---------------------------------------------------------------------]]
 --  ================================================
---- @class DatabaseObj : AceDBObject_3_0
+--- @class DatabaseObj : AceDBObject-3.0
 --- @field global GlobalConfig
 --- @field profile ProfileConfig
---- @field char table|nil
---- @field realm table|nil
---- @field factionrealm table|nil
+--- @field char table?
+--- @field realm table?
+--- @field factionrealm table?
 
 --  ================================================
 --- @class GlobalConfig
@@ -28,10 +28,12 @@ Type Definitions
 --[[-----------------------------------------------------------------------------
 Module::DatabaseSchema
 -------------------------------------------------------------------------------]]
+
 --- @see NamespaceObjects
 local libName = 'DatabaseSchema'
+
 --- @class DatabaseSchema
-local S = {}; ns.O.DatabaseSchema = S
+local o = {}; ns.O.DatabaseSchema = o
 local p, pd, t, tf = ns:log(libName)
 --[[-------------------------------------------------------------------
 Default Database
@@ -48,8 +50,6 @@ local DEFAULT_DB = {
 --[[-----------------------------------------------------------------------------
 Module::DatabaseSchema (Methods)
 -------------------------------------------------------------------------------]]
---- @type DatabaseSchema
-local o = S
 
 --- @return DatabaseObj
 function o:GetDefaultDatabase()

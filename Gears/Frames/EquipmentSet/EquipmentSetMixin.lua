@@ -29,23 +29,22 @@ local c_yellow = ns:colorFn('FFE680')
 --[[-------------------------------------------------------------------
 Mixin
 ---------------------------------------------------------------------]]
---- @alias EquipmentSetFrame EquipmentSetMixin|ButtonObjWithBackdrop
 
---- @class EquipmentSetMixin : Button
+--
+--- @class EquipmentSetFrame : EquipmentSetMixin
+--
+
+--- @class EquipmentSetMixin : Button, BackdropTemplate
 --- @field GetID fun(self:EquipmentSetMixin) : number @The EquipmentSet Identifier
 --- @field owner Gears_MainFrame
 --- @field info EquipmentSetInfo
 --- @field selected boolean
---- @field CheckMark TextureObj
---- @field DeleteButton ButtonObj
---- @field ChangeButton ButtonObj
---- @field private __used boolean|nil
+--- @field CheckMark Texture
+--- @field DeleteButton Button
+--- @field ChangeButton Button
+--- @field private __used boolean?
 Gears_EquipmentSetMixin = {}
 local p, pd, t, tf = ns:log('EquipmentSetMixin')
-
---- @type EquipmentSetMixin | EquipmentSetFrame
-local o = Gears_EquipmentSetMixin
-o.EquipmentSet = true
 
 local BACKDROP_WITH_BG = {
   bgFile   = "Interface\\Buttons\\WHITE8X8",
@@ -64,9 +63,9 @@ local function ShowError(msg)
 end
 
 --- @param id Identifier The equipmentSet ID
---- @return EquipmentSetDetails
+--- @return EquipmentSetDetails?
 local function GetEquipmentSet(id)
-  assert(id, "GetEquipmentSet:: The param id is required.")
+  assert(type(id) == 'number', "GetEquipmentSet(id): {id} is missing")
   
   local name, iconFileID, setID, isEquipped,
   numItems, numEquipped, numInInventory,
@@ -89,10 +88,10 @@ local function GetEquipmentSet(id)
   return eq
 end
 
---- @param id Identifier The equipmentSet ID
+--- @param id Identifier @The equipmentSet ID
 --- @return boolean
 local function IsFullyEquipped(id)
-  local eqs = GetEquipmentSet(id); return eqs and eqs.isEquipped
+  local eqs = GetEquipmentSet(id); return eqs ~= nil and eqs.isEquipped
 end
 
 --- @param tt GameTooltip
@@ -134,6 +133,10 @@ end
 --[[-------------------------------------------------------------------
 Methods
 ---------------------------------------------------------------------]]
+
+local o = Gears_EquipmentSetMixin
+o.EquipmentSet = true
+
 function o:OnLoad()
   BackdropTemplateMixin.OnBackdropLoaded(self)
   
@@ -145,13 +148,9 @@ function o:OnLoad()
 end
 
 function o:__OnLoadCreateDeleteButton()
-  --- @type ButtonObj
-  local btn = CreateFrame(
-          "Button",
-          "$parentDeleteButton",
-          self,
-          "Gears_DeleteButtonTemplate"
-  )
+  --- @class DeleteButton : Button, IconButton
+  local btn = CreateFrame("Button", "$parentDeleteButton",
+    self, "Gears_DeleteButtonTemplate" --[[@as Template]])
   btn.owner = self
   btn:SetFrameLevel(self:GetFrameLevel() + 2)
   btn:ClearAllPoints()
@@ -160,13 +159,9 @@ function o:__OnLoadCreateDeleteButton()
 end
 
 function o:__OnLoadCreateChangeButton()
-  --- @type ButtonObj
-  local btn = CreateFrame(
-          "Button",
-          "$parentChangeButton",
-          self,
-          "Gears_ChangeButtonTemplate"
-  )
+  --- @class ChangeButton : Button, IconButton
+  local btn = CreateFrame( "Button", "$parentChangeButton",
+          self, "Gears_ChangeButtonTemplate" --[[@as Template]])
   btn.owner = self
   btn:SetFrameLevel(self:GetFrameLevel() + 2)
   btn:ClearAllPoints()
@@ -261,7 +256,7 @@ end
 
 ---@param info EquipmentSetInfo
 function o:SetInfo(info)
-  assert(info, "SetInfo(info): The parameter info is required.")
+  assert(type(info) == 'table', "SetInfo(info): {info} is missing")
   self.info = info
   self:SetID(info.id)
 end
@@ -296,7 +291,7 @@ function o:ShowAsSelectedBorder()
 end
 
 --- The EquipmentSet ID
---- @return Identifier, Name, IconIDOrPath
+--- @return Identifier?, Name?, IconIDOrPath?
 function o:GetIdentity()
   local info = self.info
   if not info then return nil end

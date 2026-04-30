@@ -17,13 +17,13 @@ Module::EquipmentSlotFlyoutManager
 -------------------------------------------------------------------------------]]
 --- @see NamespaceObjects
 local libName = 'EquipmentSlotFlyoutManager'
---- @class EquipmentSlotFlyoutManager__
-local S = ns:AceEvent(); ns.O.EquipmentSlotFlyoutManager = S
-S = ns.O.AceHook:Embed(S)
+
+--- @class EquipmentSlotFlyoutManager : AceEvent-3.0, AceHook-3.0
+local o = ns:AceEmbed({}, 'AceEvent-3.0', 'AceHook-3.0')
+ns:register(libName, o)
+
 local p, pd, t, tf = ns:log(libName)
---
---- @alias EquipmentSlotFlyoutManager EquipmentSlotFlyoutManager__ | AceEvent_3_0 | AceHook_3_0
---
+
 --- @type table<SlotID, EquipmentSlotFlyout>
 local flyoutsMap = {}
 
@@ -55,8 +55,6 @@ end
 --[[-----------------------------------------------------------------------------
 Module::EquipmentSlotFlyoutManager (Methods)
 -------------------------------------------------------------------------------]]
---- @type EquipmentSlotFlyoutManager__ | EquipmentSlotFlyoutManager
-local o = S
 
 --- @param msg string
 --- @param equipSetInfo EquipmentSetInfo
@@ -187,7 +185,7 @@ function o:HideFlyouts()
   end)
 end
 
---- This method doesn't care about equipment set IDs
+--- This method does not care about equipment set IDs
 --- @param callbackFn fun(flyout:EquipmentSlotFlyout, slotBtn:BlizzCharacterSlotItemButton, ignored:boolean) : void | "'function(slotFlyout, slotBtn, ignored) end'"
 --- @param filterFn fun(flyout:EquipmentSlotFlyout) : boolean | "'function(flyout) return true end'"
 function o:ForEachFlyouts(callbackFn, filterFn)

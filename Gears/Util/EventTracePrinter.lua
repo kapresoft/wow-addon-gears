@@ -11,19 +11,18 @@ local ns = select(2, ...)
 --[[-----------------------------------------------------------------------------
 Library
 -------------------------------------------------------------------------------]]
+
 --- @class EventTracePrinter
-local S = {}; ns.EvenTracePrinter = S
-S.__index = S
-S.__type = 'EventTracePrinter'
+local o = {}; ns.EvenTracePrinter = o
+o.__index = o
+o.__type = 'EventTracePrinter'
 
 --- @param self EventTracePrinter
-S.__call = function(self, ...) self:t(...) end
+o.__call = function(self, ...) self:t(...) end
 
 --[[-----------------------------------------------------------------------------
 Library: Methods
 -------------------------------------------------------------------------------]]
---- @type EventTracePrinter
-local o = S
 
 --- @class EventTracerObj : EventTracePrinter
 
@@ -44,7 +43,7 @@ local c_base = ns:colorFn('88ff88')
 --- @param addon Name
 --- @param predicateFn PredicateFn|nil  | "function() return true end"
 function o:__Init(addon, predicateFn)
-  assert(addon, "The param addon is required.")
+  assert(type(addon) == 'string', "__Init(addon, predicateFn): {addon} should be a string")
 
   self.logName     = addon
   self.eventBase   = upperc(c_base(addon))
@@ -87,15 +86,15 @@ function o:tf(prefix, ...)
 end
 
 --- @private
---- @return EventTraceInstance
+--- @return EventTrace?
 function o:LoadEventTrace()
   local addOnName = EVENT_TRACE_ADDON
   if IsAddOnLoaded(addOnName) then return EventTrace end
 
   local success, reason = LoadAddOn(addOnName)
   if not success then
-    return print(('%s:: Failed to load [%s], reason=%s'):format(
-            self.logName, addOnName, reason))
+    print(('%s:: Failed to load [%s], reason=%s'):format( self.logName, addOnName, reason))
+    return nil
   end
   assert(EventTrace, ('%s:: Failed to load [%s].'):format(self.logName, addOnName))
   return EventTrace

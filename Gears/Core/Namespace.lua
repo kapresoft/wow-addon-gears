@@ -1,18 +1,3 @@
---[[-----------------------------------------------------------------------------
-Type: Namespace
--------------------------------------------------------------------------------]]
---- @class NamespaceImpl
---- @field __db DatabaseObj
---- @field O NamespaceObjects
---- @field gameVersion GameVersion
---- @field EvenTracePrinter EventTracePrinter
---- @field tracer EventTracerObj
---- @field private printer LibPrettyPrint_Printer
---- @field private logBuilder Gears_LogBuilderFn
---- @field p LibPrettyPrint_Printer The base printer
---- @field gears Gears_MainFrame
---- @field toggleButton ToggleButton
-
 --[[-------------------------------------------------------------------
 Type: NamespaceObjects
 ---------------------------------------------------------------------]]
@@ -24,19 +9,18 @@ Type: NamespaceObjects
 --- @field EquipmentSlotFlyoutManager EquipmentSlotFlyoutManager
 --- @field InventoryUtil InventoryUtil
 --- @field ItemUtil ItemUtil
---- @field AceEvent AceEvent_3_0
---- @field AceBucket AceBucket_3_0
---- @field AceHook AceHook_3_0
---- @field AceLocale AceLocale_3_0
---- @field AceAddon AceAddon_3_0
---- @field AceDB AceDB_3_0
---- @field Table Kapresoft_Table_2_0
---- @field String Kapresoft_String_2_0
+--- @field AceEvent AceEvent-3.0
+--- @field AceBucket AceBucket-3.0
+--- @field AceHook AceHook-3.0
+--- @field AceLocale AceLocale-3.0
+--- @field AceAddon AceAddon-3.0
+--- @field AceDB AceDB-3.0
+--- @field Table Kapresoft-Table-2-0
+--- @field String Kapresoft-String-2-0
 
 --[[-------------------------------------------------------------------
 Aliases
 ---------------------------------------------------------------------]]
---- @alias Namespace NamespaceImpl | GameVersionMixin
 --- @alias Gears_TraceFn fun(...: any) : void @Printer function that outputs plain values to Blizzard Trace UI (like print)
 --- @alias Gears_TraceFnFormatted fun(...: any) : void @Printer function that outputs formatted values to Blizzard Trace UI (like print)
 --- @alias Gears_LogBuilderFn fun(moduleName:string) : LibPrettyPrint_PrintFn, LibPrettyPrint_PrintFn, Gears_TraceFn, Gears_TraceFnFormatted
@@ -49,11 +33,28 @@ local strtrim = strtrim
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
+local GameVersionMixin = LibStub('Kapresoft-GameVersionMixin-2-0')
+local AceLib = LibStub('Kapresoft-AceLib-2-0')
+
 --- @type string
 local addon
---- @type NamespaceImpl | Namespace
+
+--- @class Namespace : Kapresoft-GameVersionMixin-2-0, Kapresoft-AceLib-2-0
+--- @field __db DatabaseObj
+--- @field O NamespaceObjects
+--- @field gameVersion GameVersion
+--- @field EvenTracePrinter EventTracePrinter
+--- @field tracer EventTracerObj
+--- @field private printer LibPrettyPrint_Printer
+--- @field private logBuilder Gears_LogBuilderFn
+--- @field p LibPrettyPrint_Printer The base printer
+--- @field gears Gears_MainFrame
+--- @field toggleButton ToggleButton
 local ns
-addon, ns = ...; ns.addon = addon; GEARS_NS = ns
+
+addon, ns = ...
+
+Mixin(ns, GameVersionMixin, AceLib); ns.addon = addon; GEARS_NS = ns
 ns.O = ns.O or {}
 
 --- Matches *.toc SavedVariables definition
@@ -97,13 +98,6 @@ do
     formatter = ns.fmt
   }, predicateFn)
 
-  --- @param tracer EventTracePrinter
-  --function ns:RegisterTracer(tracer)
-  --  self.tracer = tracer:New(ns.addon, predicateFn)
-  --  if not (ns:IsDev() and settings.enableTraceUI) then
-  --    self.tracer.evt:Hide()
-  --  end
-  --end
   function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
   
   --- @param moduleName Name
@@ -117,7 +111,7 @@ do
   --- @param printer LibPrettyPrint_Printer
   --- @return Gears_LogBuilderFn
   function ns:__CreateLogBuilder(printer)
-    assert(printer, 'Printer is required.')
+    assert(type(printer) == 'table', '__CreateLogBuilder(printer): {printer} is missing')
     
     --- @param moduleName Name
     local function builderFn(moduleName)
@@ -142,35 +136,15 @@ NamespaceObjects: Ace-3.0
 -------------------------------------------------------------------------------]]
 do
   local obj = ns.O
-  --- @type AceEvent_3_0
   obj.AceEvent = LibStub('AceEvent-3.0')
-  --- @type AceBucket_3_0
   obj.AceBucket = LibStub('AceBucket-3.0')
-  --- @type AceHook_3_0
   obj.AceHook = LibStub('AceHook-3.0')
-  --- @type AceLocale_3_0
   obj.AceLocale = LibStub('AceLocale-3.0')
-  --- @type AceAddon_3_0
   obj.AceAddon = LibStub('AceAddon-3.0')
-  --- @type AceDB_3_0
   obj.AceDB = LibStub('AceDB-3.0')
-  
-  --- @generic T
-  --- @param targetObj T|nil An optional targetObj for embedding
-  --- @return T
-  function ns:AceEvent(targetObj)
-    if targetObj then return self.O.AceEvent:Embed(targetObj) end
-    return self.O.AceEvent:Embed({})
-  end
-  --- @generic T
-  --- @param targetObj T|nil An optional targetObj for embedding
-  --- @return T
-  function ns:AceBucket(targetObj)
-    if targetObj then return self.O.AceBucket:Embed(targetObj) end
-    return self.O.AceBucket:Embed({})
-  end
-  --- @return AceLocale_3_0
-  function ns:AceLocale() return self.O.AceLocale end end
+
+end
+
 --[[-------------------------------------------------------------------
 Kapresoft Modules
 ---------------------------------------------------------------------]]
@@ -185,7 +159,6 @@ Namespace: Methods
 -------------------------------------------------------------------------------]]
 local function Namespace_Methods()
   
-  --- @type Kapresoft_AceLocaleUtil_2_0
   local AceLocaleUtil = LibStub('Kapresoft-AceLocaleUtil-2-0')
   
   local function IsNilOrBlank(v) return v == nil or strtrim(v) == "" end
@@ -218,12 +191,23 @@ local function Namespace_Methods()
   --- @param name Name The module name; see NamespaceObjects
   --- @param obj any The namespace object
   function ns:register(name, obj)
-    assert(name, 'Module name required')
-    assert(obj, ('Module instance is invalid. val=%s'):format(tostring(obj)))
+    assert(type(name) == 'string', 'ns:register(name, obj): {name} should be a string')
+    assertsafe(type(obj) == 'table', 'ns:register(name, obj): {obj} should be a obj/table but was: %s', type(obj))
     O[name] = obj
     return obj
   end
-  
+
+  --- ### Usage:
+  --- ```
+  --- -- automatic casting provied there is an
+  --- -- object with @class EquipmentSlotFlyoutManager
+  --- local ESM = ns:obj('EquipmentSlotFlyoutManager')
+  --- ```
+  --- @generic T
+  --- @param lib `T`
+  --- @return table|T library
+  function ns:obj(lib) return ns.O[lib] end
+
   --- @param mainFrame Gears_MainFrame
   function ns:RegisterMainFrame(mainFrame) ns.gears = mainFrame end
   
@@ -232,7 +216,7 @@ local function Namespace_Methods()
   function ns:colorFn(rgbHex)
     return function(text)
       local c = CreateColorFromRGBHexString(rgbHex)
-      assert(c, ('Invalid RGBHex color: %s'):format(rgbHex))
+      assertsafe(type(c) == 'table', 'colorFn(rgbHex): Could not creat color from {rgbHex}: %s', tostring(rgbHex))
       return c:WrapTextInColorCode(text)
     end
   end
@@ -243,10 +227,8 @@ local function Namespace_Methods()
   end
   
   --- @return table<string, string>
-  function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, ns:IsDev()) end
+  function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, ns:IsDev()) or {} end
   
-  --- @param name Name
-  --- @param predicateFn fun():boolean @Optional - The predicate function
   --- @return EventTracerObj
   function ns:NewTracer() return self.EvenTracePrinter:New(self.addon, predicateFn) end
   
@@ -259,10 +241,10 @@ local function Namespace_Methods()
   --- local willPlay, soundHandle = PlaySound(...)
   --- ```
   --- @param soundKitID number
-  --- @param channel SoundChannel|Optional The default is 'Effects' or 'SFX' (both are same)
-  --- @param forceNoDuplicates boolean|Optional
-  --- @param runFinishCallback boolean|Optional
-  --- @return boolean, number
+  --- @param channel SoundChannel?        @The default is 'Effects' or 'SFX' (both are same)
+  --- @param forceNoDuplicates boolean?
+  --- @param runFinishCallback boolean?
+  --- @return boolean?, number?
   function ns:PlaySound(soundKitID, channel, forceNoDuplicates, runFinishCallback)
     if not soundKitID then return end
     return PlaySound(soundKitID, channel, forceNoDuplicates, runFinishCallback)

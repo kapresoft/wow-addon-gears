@@ -13,11 +13,11 @@ local OKAY = OKAY
 --[[-------------------------------------------------------------------
 New Library
 ---------------------------------------------------------------------]]
+local libName = 'LibIconPickerUtil'
+local p = ns:log(libName)
+
 --- @class LibIconPickerUtil
-local S = {}; ns.O.LibIconPickerUtil = S
-local p = ns:log('LibIconPickerUtil')
---- @type LibIconPickerUtil
-local o = S;
+local o = {}; ns.O.LibIconPickerUtil = o
 
 StaticPopupDialogs["LibIconPicker_Missing"] = {
   text = L['LibIconPicker Missing'],
@@ -29,7 +29,6 @@ Methods
 --- Get LibIconPicker instance
 --- The global var `LibIconPicker` is available if the addon is already loaded.
 --- @param callbackFn fun(lip:LibIconPicker) | "function(lip) end"
---- @return LibIconPicker
 function o:Get(callbackFn)
   -- if embedded
   local lip = LibIconPicker

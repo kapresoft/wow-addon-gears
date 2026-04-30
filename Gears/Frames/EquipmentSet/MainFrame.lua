@@ -5,21 +5,16 @@ local L = ns:GetLocale()
 --[[-------------------------------------------------------------------
 Types and Alias
 ---------------------------------------------------------------------]]
---- @class __ButtonsContainerFrame
---- @field EquipButton ButtonObj
---- @field SaveButton ButtonObj
---- @field AddButton ButtonObj
+--- @class ButtonsContainerFrame : Frame
+--- @field EquipButton Button
+--- @field SaveButton Button
+--- @field AddButton Button
 
 --- @class EquipmentSetInfo
 --- @field id Identifier The equipment set ID
 --- @field index Index
 --- @field name Name
 --- @field icon IconIDOrPath
-
--- Aliases -------------
---- @alias ButtonsContainerFrame __ButtonsContainerFrame|FrameObj
---- @alias Gears_MainFrame Gears_MainFrameMixin | FrameObj | AceEvent_3_0 | AceBucket_3_0
---- @alias Gears_AddButton ButtonObj|IconButtonMixin
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -40,35 +35,38 @@ local p, pd, t, tf = ns:log(libName)
 --[[-------------------------------------------------------------------
 Gears_AddButtonMixin
 ---------------------------------------------------------------------]]
---- @class Gears_AddButtonMixin : Button
+--
+--- @class Gears_AddButton : Gears_AddButtonMixin
+--
+
+--- @class Gears_AddButtonMixin : Button, IconButton
 --- @field owner Gears_MainFrame
-Gears_AddButtonMixin = {}
-do
-  --- @type Gears_AddButtonMixin | Gears_AddButton
+Gears_AddButtonMixin = {}; local function Gears_AddButtonMixin_Methods()
   local a = Gears_AddButtonMixin
   function a:OnLoad()
     IconButtonMixin.OnLoad(self)
     self.onClickHandler = function() self.owner:OnClick_AddButton(self) end
     self.tooltipText = L['Create a new equipment set']
   end
-end
+end; Gears_AddButtonMixin_Methods()
 
 --[[-------------------------------------------------------------------
 MainFrame
 ---------------------------------------------------------------------]]
+--
+--- @class Gears_MainFrame : Gears_MainFrameMixin
+--
 
---- @class Gears_MainFrameMixin : Frame
+--- @class Gears_MainFrameMixin : Frame, AceEvent-3.0, AceBucket-3.0
 --- @field private framePool table<number, EquipmentSetFrame>
 --- @field protected ButtonsContainerFrame ButtonsContainerFrame
 --- @field info EquipmentSetInfo
---- @field ScrollFrame ScrollFrameObj
---- @field HeaderIconLeft TextureObj
+--- @field ScrollFrame ScrollFrame
+--- @field HeaderIconLeft Texture
 --- @field __lastIcon IconIDOrPath
-Gears_MainFrameMixin = {}
+Gears_MainFrameMixin = ns:AceEmbed({}, 'AceEvent-3.0', 'AceBucket-3.0')
 
---- @type Gears_MainFrameMixin | Gears_MainFrame
-local o = Gears_MainFrameMixin; ns:AceEvent(o); ns:AceBucket(o)
-
+local o = Gears_MainFrameMixin
 o.framePool = {}
 
 --[[-------------------------------------------------------------------
@@ -101,7 +99,7 @@ local function MainFrameMixin_AnchorToPaperDoll(frame)
     else
       osx, osy    = -8, -3
     end
-  elseif ns:IsMainLine() then
+  elseif ns:IsMainline() then
     osx, osy = -2, 0
     if frame.__origHeight then frame:SetHeight(frame.__origHeight - 3) end
   end
@@ -112,7 +110,6 @@ local function MainFrameMixin_AnchorToPaperDoll(frame)
 end
 
 --- @param self Gears_MainFrameMixin
---- @return ButtonObj
 local function MainFrameMixin_OnLoadButtons(self)
   local equipButton = self:GetEquipButton()
   local saveButton = self:GetSaveButton()
@@ -176,7 +173,7 @@ local function MainFrameMixin_AlignCharacterLevelText()
   -- PaperDollInnerBorderTop: retail and MoP Adjustments
   if not PaperDollInnerBorderTop then return end
 
-  --- @type FontStringObj
+  --- @type FontString
   local c = CharacterLevelText; if not c then return end
   c:ClearAllPoints()
   c:SetPoint("BOTTOM", PaperDollInnerBorderTop, 'TOP', 0, 0)
@@ -223,7 +220,7 @@ function o:OnLoad()
   up:EnableMouse(false)
   down:EnableMouse(false)
   
-  --- @type TextureObj
+  --- @type Texture
   local thumb = sb:GetThumbTexture()
   local thumbAlpha, highlightAlpha = 0.4, 0.8
   
@@ -238,7 +235,7 @@ function o:OnLoad()
     thumb:SetAlpha(thumbAlpha)
   end)
   
-  --- @type ScrollFrameObj
+  --- @type ScrollFrame
   local scrollFrame = self.ScrollFrame
   -- set scrollChild here to enable scrolling
   scrollFrame:SetScrollChild(scrollFrame.ScrollChild)
@@ -365,10 +362,10 @@ function o:BuildEquipmentSet(eqInfo)
     equipmentSet:SetPoint("TOPLEFT", self.framePool[eqInfo.index - 1], "BOTTOMLEFT")
   end
   
-  --- @type ButtonObj
+  --- @type Button
   local iconBtn = equipmentSet.IconButton
   iconBtn:SetNormalTexture(eqInfo.icon)
-  --- @type FontStringObj
+  --- @type FontString
   local eqSetName = equipmentSet.Label
   eqSetName:SetWidth(80)
   eqSetName:SetMaxLines(1)
@@ -425,7 +422,7 @@ function o:WithSelectedEquipmentSet(callback)
   end
 end
 
---- @return EquipmentSetFrame
+--- @return EquipmentSetFrame?
 function o:GetSelected()
   local selected
   self:WithSelectedEquipmentSet(function(sel) selected = sel end)
@@ -435,21 +432,21 @@ end
 function o:HasSelection() return self:GetSelected() ~= nil end
 
 --- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/EquipButton
---- @param button ButtonObj
+--- @param button Button
 --- @param mouseButton Name The name of the button that was clicked.
 function o:OnClick_EquipButton(button, mouseButton)
   self:WithSelectedEquipmentSet(function(sel) sel:EquipGear() end)
 end
 
 --- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/SaveButton
---- @param button ButtonObj
+--- @param button Button
 --- @param mouseButton Name The name of the button that was clicked.
 function o:OnClick_SaveButton(button, mouseButton)
   self:WithSelectedEquipmentSet(function(sel) sel:SaveGear() end)
 end
 
 --- @see MainFrame.xml @XMLPath: Gears_MainFrameTemplate/ButtonsContainerFrame/AddButton
---- @param button ButtonObj
+--- @param button Button
 function o:OnClick_AddButton(button)
   ns:PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN)
   local opt = {

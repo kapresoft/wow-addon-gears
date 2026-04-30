@@ -11,21 +11,24 @@ local C_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
 --[[-------------------------------------------------------------------
 Mixin
 ---------------------------------------------------------------------]]
---- @alias EquipmentSetChangeButton EquipmentSetChangeButtonMixin|ButtonObj|IconButtonMixin
 
---- @class EquipmentSetChangeButtonMixin : Button
+--
+--- @class EquipmentSetChangeButton : EquipmentSetChangeButtonMixin
+--
+
+--- @class EquipmentSetChangeButtonMixin : Button, IconButtonMixin
 --- @field owner EquipmentSetFrame
 --- @field ChangeButton boolean
 Gears_EquipmentSetChangeButtonMixin = {}
 local p, pd, t, tf = ns:log('EquipmentSetChangeButtonMixin')
 
---- @type EquipmentSetChangeButtonMixin | EquipmentSetChangeButton
-local o  = Gears_EquipmentSetChangeButtonMixin
-o.ChangeButton = true
-
 --[[-------------------------------------------------------------------
 Methods
 ---------------------------------------------------------------------]]
+
+local o  = Gears_EquipmentSetChangeButtonMixin
+o.ChangeButton = true
+
 function o:OnLoad()
   IconButtonMixin.OnLoad(self)
   self.tooltipText = EQUIPMENT_SET_EDIT
@@ -44,7 +47,7 @@ function o:OnLeave()
   self.owner:HideBorder()
 end
 
---- @return Name
+--- @return Name?
 function o:GetEquipmentSetName()
   local info = self.owner.info
   return info and info.name
