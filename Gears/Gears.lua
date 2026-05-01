@@ -11,7 +11,7 @@ AddOn
 -------------------------------------------------------------------------------]]
 
 --- @class Gears : AceAddon-3.0, AceEvent-3.0, AceBucket-3.0, AceConsole-3.0
-local A = ns.O.AceAddon:NewAddon(ns.addon, "AceEvent-3.0", "AceBucket-3.0", "AceConsole-3.0")
+local A = ns:AceAddon():NewAddon(ns.addon, "AceEvent-3.0", "AceBucket-3.0", "AceConsole-3.0")
 GEARS = A
 
 --- @type Gears
