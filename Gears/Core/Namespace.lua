@@ -1,31 +1,4 @@
 --[[-------------------------------------------------------------------
-Type: NamespaceObjects
----------------------------------------------------------------------]]
---- @class NamespaceObjects
---- @field GameVersion GameVersion
---- @field LibIconPickerUtil LibIconPickerUtil
---- @field CharacterFrameUtil CharacterFrameUtil
---- @field DatabaseSchema DatabaseSchema
---- @field EquipmentSlotFlyoutManager EquipmentSlotFlyoutManager
---- @field InventoryUtil InventoryUtil
---- @field ItemUtil ItemUtil
---- @field AceEvent AceEvent-3.0
---- @field AceBucket AceBucket-3.0
---- @field AceHook AceHook-3.0
---- @field AceLocale AceLocale-3.0
---- @field AceAddon AceAddon-3.0
---- @field AceDB AceDB-3.0
---- @field Table Kapresoft-Table-2-0
---- @field String Kapresoft-String-2-0
-
---[[-------------------------------------------------------------------
-Aliases
----------------------------------------------------------------------]]
---- @alias Gears_TraceFn fun(...: any) : void @Printer function that outputs plain values to Blizzard Trace UI (like print)
---- @alias Gears_TraceFnFormatted fun(...: any) : void @Printer function that outputs formatted values to Blizzard Trace UI (like print)
---- @alias Gears_LogBuilderFn fun(moduleName:string) : LibPrettyPrint_PrintFn, LibPrettyPrint_PrintFn, Gears_TraceFn, Gears_TraceFnFormatted
-
---[[-------------------------------------------------------------------
 Blizzard Vars
 ---------------------------------------------------------------------]]
 local strtrim = strtrim
@@ -44,12 +17,13 @@ local addon
 --- @field O NamespaceObjects
 --- @field gameVersion GameVersion
 --- @field EvenTracePrinter EventTracePrinter
---- @field tracer EventTracerObj
---- @field private printer LibPrettyPrint_Printer
---- @field private logBuilder Gears_LogBuilderFn
---- @field p LibPrettyPrint_Printer The base printer
+--- @field private logHolder Gears_LogHolder
 --- @field gears Gears_MainFrame
 --- @field toggleButton ToggleButton
+--- @field tr fun(prefix:string, ...:any)
+--- @field colorDef Kapresoft-ColorDefinition-2-0
+--- @field private logName Name @The prefix for all logs and traces
+--- @field private printer LibPrettyPrint_Printer
 local ns
 
 addon, ns = ...
@@ -59,19 +33,40 @@ ns.O = ns.O or {}
 
 --- Matches *.toc SavedVariables definition
 local DB_NAME = 'GEARS_DB'
+ns.logName = strupper(ns.addon)
 
 --- @type NamespaceObjects
 local O = ns.O or {}; ns.O = O
+
+--[[-------------------------------------------------------------------
+Base Colors
+---------------------------------------------------------------------]]
+local colorFormatter = LibStub('Kapresoft-ColorFormatter-2-0')
+
+local prefixColor, subPrefixColor = '59A3FA', '9CFF9C'
+ns.colorDef = {
+  primary = CreateColorFromRGBHexString(prefixColor),
+  secondary = CreateColorFromRGBHexString(subPrefixColor),
+}
+
+--[[-----------------------------------------------------------------------------
+Logger and Tracer
+-------------------------------------------------------------------------------]]
+ns.logHolder = {}; do
+  local h = ns.logHolder;
+  local noop_fn =  function() end
+  local noop_logFnBuilder = function(moduleName) return noop_fn end
+  --- These are noop loggers and tracers for non-dev releases
+  ns.tr, h.printer, h.tracer = noop_fn, noop_logFnBuilder, noop_logFnBuilder
+end
 
 --[[-----------------------------------------------------------------------------
 Type: Settings
 Override in DeveloperSetup to enable
 -------------------------------------------------------------------------------]]
 --- @class Gears_Settings
---- @field developer boolean if true: enables developer mode
---- @field enableTraceUI boolean if true: shows Blizz EventTrace UI on load
-local settings = { developer = false, enableTraceUI = false }; ns.settings = settings
-
+--- @field developer boolean @if true: enables developer mode
+local settings = { developer = false }; ns.settings = settings
 
 --- @return boolean
 function ns:IsDev() return ns.settings.developer == true end
@@ -81,14 +76,6 @@ Logger Methods
 ---------------------------------------------------------------------]]
 local function predicateFn() return ns:IsDev() end
 do
-  local function DelayedCall(delay, fn, ...)
-    assert(type(delay) == 'number' and delay > 0)
-    return function(...)
-      local args = { ... }
-      C_Timer.After(delay, function() fn(unpack(args)) end)
-    end
-  end
-  
   ns.fmt     = LibPrettyPrint:Formatter({
     show_all = true, depth_limit = 3
   }); if not fmt then fmt = ns.fmt end
@@ -97,44 +84,13 @@ do
     prefix = ns.addon, prefix_color = '466EFF', sub_prefix_color = '9CFF9C',
     formatter = ns.fmt
   }, predicateFn)
-
-  function ns:MixinGameVersion(gameVersion) Mixin(self, gameVersion) end
-  
-  --- @param moduleName Name
-  --- @return LibPrettyPrint_Printer, LibPrettyPrint_PrintFn, Gears_TraceFn, Gears_TraceFnFormatted
-  function ns:log(moduleName)
-    if not self.logBuilder then self.logBuilder = self:__CreateLogBuilder(self.printer) end
-    return self.logBuilder(moduleName)
-  end
-  
-  --- @protected
-  --- @param printer LibPrettyPrint_Printer
-  --- @return Gears_LogBuilderFn
-  function ns:__CreateLogBuilder(printer)
-    assert(type(printer) == 'table', '__CreateLogBuilder(printer): {printer} is missing')
-    
-    --- @param moduleName Name
-    local function builderFn(moduleName)
-      local m = moduleName
-      local pr = printer
-      if type(m) == 'string' then m = strtrim(m)
-      else m = nil end
-      
-      if m and #m > 0 then pr = printer:WithSubPrefix(m) end
-      
-      local printerDelayed = DelayedCall(1, pr)
-      local tracer1 = self:traceFn(m)
-      local tracer2 = self:traceFnWithFormatting(m)
-      return pr, printerDelayed, tracer1, tracer2
-    end
-    
-    return builderFn
-  end
 end
+
 --[[-----------------------------------------------------------------------------
 NamespaceObjects: Ace-3.0
 -------------------------------------------------------------------------------]]
 do
+  -- todo: use AceLib
   local obj = ns.O
   obj.AceEvent = LibStub('AceEvent-3.0')
   obj.AceBucket = LibStub('AceBucket-3.0')
@@ -142,7 +98,6 @@ do
   obj.AceLocale = LibStub('AceLocale-3.0')
   obj.AceAddon = LibStub('AceAddon-3.0')
   obj.AceDB = LibStub('AceDB-3.0')
-
 end
 
 --[[-------------------------------------------------------------------
@@ -169,25 +124,6 @@ local function Namespace_Methods()
   
   function ns.TRUE() return true end
   
-  --- @param prefix string|nil
-  --- @return Gears_TraceFn @Printer function that outputs plain values to Blizzard Trace UI (like print)
-  function ns:traceFn(prefix)
-    if not self.tracer then return function() end end
-    if type(prefix) ~= 'string' then
-      return function(...) return self.tracer:td(...) end
-    end
-    return function(...) return self.tracer:t(strtrim(prefix), ...) end
-  end
-  --- @param prefix string
-  --- @return Gears_TraceFnFormatted @Printer function that outputs formatted values to Blizzard Trace UI (like print)
-  function ns:traceFnWithFormatting(prefix)
-    if not self.tracer then return function()  end end
-    if type(prefix) ~= 'string' then
-      return function(...) return self.tracer:tdf(...) end
-    end
-    return function(...) return self.tracer:tf(strtrim(prefix), ...) end
-  end
-
   --- @param name Name The module name; see NamespaceObjects
   --- @param obj any The namespace object
   function ns:register(name, obj)
@@ -211,27 +147,26 @@ local function Namespace_Methods()
   --- @param mainFrame Gears_MainFrame
   function ns:RegisterMainFrame(mainFrame) ns.gears = mainFrame end
   
-  --- @param rgbHex RGBHex|nil    @Optional
-  --- @return fun(key:string) : string The color formatted key
-  function ns:colorFn(rgbHex)
-    return function(text)
-      local c = CreateColorFromRGBHexString(rgbHex)
-      assertsafe(type(c) == 'table', 'colorFn(rgbHex): Could not creat color from {rgbHex}: %s', tostring(rgbHex))
-      return c:WrapTextInColorCode(text)
-    end
-  end
-  
+  --- @param rgbHex RGBHex?     @Optional
+  --- @return cfFn, colorRGBA?
+  function ns:ColorFn(rgbHex) return colorFormatter:ColorFn(rgbHex) end
+
+  --- ### Usage
+  ---  ```
+  ---  -- @returns 'Gears::OnPlayerLogin'
+  ---  local message = ns:msg('OnPlayerLogin')
+  ---  ```
+  --- @param msgName Name @The base message name; used for AceEvent messages
+  --- @return string
   function ns:msg(msgName)
     assert(not IsNilOrBlank(msgName), 'Message name is required.')
     return ('%s::%s'):format(ns.addon, msgName)
   end
-  
+
+  function ns:AddonUtil() return LibStub('Kapresoft-AddonUtil-2-0') end
+
   --- @return table<string, string>
   function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, ns:IsDev()) or {} end
-  
-  --- @return EventTracerObj
-  function ns:NewTracer() return self.EvenTracePrinter:New(self.addon, predicateFn) end
-  
   
   --- >Safe wrapper for PlaySound.
   --- >Returns two results: willPlay:boolean, soundHandle:boolean
@@ -270,19 +205,22 @@ local function Namespace_Methods()
   --- @return ProfileConfig
   function ns:p() return self:db().profile end
 
+  --[[-------------------------------------------------------------------
+  Loggers/Tracers:: NoOp in Official Releases
+                    This is overridden in DeveloperSetup
+  ---------------------------------------------------------------------]]
+  --- Returns the print, delayed-print, tracer, formatted-tracer functions
+  --- ```
+  --- local p, t = ns:log('EventHandler')
+  --- ```
+  --- @see DeveloperSetup.lua
+  --- @param moduleName Name  @The module name or any general prefix
+  --- @return Gears_PrintFn
+  --- @return Gears_TraceFn
+  function ns:log(moduleName)
+    local h = self.logHolder
+    return h.printer(moduleName), h.tracer(moduleName)
+  end
+
 end; Namespace_Methods()
 
-
---[[-------------------------------------------------------------------
-Init Tracer
----------------------------------------------------------------------]]
---- @param callbackFn fun() : void
-function ns:InitTracer(callbackFn)
-  if not predicateFn() then return end
-  
-  self.tracer = self:NewTracer()
-  if not settings.enableTraceUI then self.tracer:HideUI()
-  else self.tracer:ShowUI() end
-  
-  callbackFn()
-end

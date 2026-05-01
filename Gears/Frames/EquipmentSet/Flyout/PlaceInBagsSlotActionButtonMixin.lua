@@ -30,7 +30,7 @@ S.TemplateName = 'Gears_PlaceInBagsSlotActionButtonTemplate'
 --- @class PlaceInBagsSlotActionButton : PlaceInBagsSlotActionButtonMixin
 --
 
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 
 --[[-------------------------------------------------------------------
 Mixin: PlaceInBagsActionButtonWidgetMixin
@@ -59,7 +59,7 @@ local function PlaceInBagsActionButtonWidgetMixin_Methods()
   end
 
   function w:SetupTooltip()
-    local c_white = ns:colorFn('afafaf')
+    local c_white = ns:ColorFn('afafaf')
 
     self.frame:SetScript('OnEnter', function(btn)
       GameTooltip:SetOwner(btn, 'ANCHOR_RIGHT')

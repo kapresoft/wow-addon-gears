@@ -3,7 +3,7 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
-local p, pd, t, tf = ns:log('Localization')
+local p, t = ns:log('Localization')
 
 local L = ns:GetLocale(ns.addon); if not L then return end
 

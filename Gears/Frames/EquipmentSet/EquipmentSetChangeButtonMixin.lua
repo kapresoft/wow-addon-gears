@@ -20,7 +20,7 @@ Mixin
 --- @field owner EquipmentSetFrame
 --- @field ChangeButton boolean
 Gears_EquipmentSetChangeButtonMixin = {}
-local p, pd, t, tf = ns:log('EquipmentSetChangeButtonMixin')
+local p, t = ns:log('EquipmentSetChangeButtonMixin')
 
 --[[-------------------------------------------------------------------
 Methods

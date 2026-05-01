@@ -3,23 +3,19 @@
 ..\FrameXML\UI.xsd">
 
     <Script file="Core\Namespace.lua"/>
+    <!--@do-not-package@-->
+    <Script file="Developer\DeveloperSetup.lua" />
+    <!--@end-do-not-package@-->
     <Script file="Core\MainController.lua"/>
     <Script file="Database\DatabaseSchema.lua" />
     <Include file="Locales\_Locales.xml"/>
-
-    <!--@do-not-package@-->
-    <Script file="Developer\DeveloperSetup.lua" />
-
-    <!--@end-do-not-package@-->
-    <Script file="Util\EventTracePrinter.lua"/>
     <Script file="Util\InventoryUtil.lua"/>
     <Script file="Util\ItemUtil.lua"/>
     <Script file="Util\CharacterFrameUtil.lua"/>
     <Script file="Util\LibIconPickerUtil.lua"/>
-
+    <Include file="Frames\EquipmentSet\EquipmentSetUI.xml"/>
+    <Script file="Gears.lua"/>
     <!--@do-not-package@-->
     <Script file="Developer\Developer.lua" />
     <!--@end-do-not-package@-->
-    <Include file="Frames\EquipmentSet\EquipmentSetUI.xml"/>
-    <Script file="Gears.lua"/>
 </Ui>

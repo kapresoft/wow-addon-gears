@@ -18,7 +18,7 @@ local libName = 'ItemUtil'
 
 --- @class ItemUtil
 local o = {}; ns.O.ItemUtil = o
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 
 --[[-----------------------------------------------------------------------------
 Module::ItemUtil (Methods)
