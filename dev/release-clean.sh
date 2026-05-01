@@ -42,7 +42,7 @@ _Main() {
 
   # Check if options were set
   if (( ${#clean_opt[@]} > 0 )); then
-    echo "Clean option detected"
+    p "Clean option detected"
     if [[ -d $rel_dir ]]; then
       cmd=(rm -rf -- "$rel_dir")
       p "Existing .release found."

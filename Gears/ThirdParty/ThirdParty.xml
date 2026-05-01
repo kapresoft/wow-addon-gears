@@ -11,7 +11,7 @@
     #########################################################
     --><!--@end-do-not-package@-->
 
-    <Script file="Libs\LibStub\LibStub.lua"/>
+    <Script file="Libs\Ace3\LibStub\LibStub.lua"/>
     <Include file="Libs\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
     <Include file="Libs\LibSharedMedia\LibSharedMedia-3.0\lib.xml"/>
     <!--@non-debug@
