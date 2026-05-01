@@ -55,7 +55,6 @@ ignore:
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/Annotations
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AceConfigUtil.lua
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AddonInfoUtil.lua
-  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/ColorFormatter.lua
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/ConsoleHelperMixin.lua
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/DebugChatFrameMixin.lua
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/LuaEvaluator.lua
