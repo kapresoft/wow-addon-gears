@@ -16,6 +16,7 @@ Base Tracer
 local primaryC = ns:ColorFn(ns.colorDef.primary)
 
 function ns.tr(prefix, ...)
+  --- @type EventTrace
   local et = EventTrace; if not (et and et.LogEvent) then return end
   local c1, logNamePlain = primaryC, ns.logName
   local n = c1(logNamePlain)
