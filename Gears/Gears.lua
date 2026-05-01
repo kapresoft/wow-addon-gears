@@ -4,7 +4,7 @@ Local Vars
 
 --- @type Namespace
 local ns = select(2, ...)
-local p, pd, t, tf = ns:log('Gears')
+local p, t = ns:log('AddOn')
 
 --[[-----------------------------------------------------------------------------
 AddOn
@@ -35,7 +35,8 @@ Event Hooks
 function a:OnAddOnReady(evt, isInitialLogin, isReloadingUi)
   --@do-not-package@
   t('OnAddOnReady', 'isInitialLogin=', isInitialLogin,
-      'isReloadingUi=', isReloadingUi, 'GameVersion=', ns.gameVersion)
+      'isReloadingUi=', isReloadingUi, 'GameVersion=', ns.gameVersion,
+      'IsDev=', ns:IsDev())
   --@end-do-not-package@
-  self:SendMessage('GEARS::ADDON_READY', isInitialLogin, isReloadingUi)
+  self:SendMessage(ns:msg('ADDON_READY'), isInitialLogin, isReloadingUi)
 end; a:RegisterEvent('PLAYER_ENTERING_WORLD', 'OnAddOnReady')

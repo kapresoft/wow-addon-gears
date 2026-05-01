@@ -3,7 +3,7 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
-local p, pd, t, tf = ns:log('Locale_esES')
+local p, t = ns:log('Locale_esES')
 
 local L = ns:AceLocale():NewLocale(ns.addon, 'esES'); if not L then return end
 

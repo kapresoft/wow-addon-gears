@@ -37,7 +37,7 @@ S.TemplateName = 'Gears_IgnoreSlotActionButtonTemplate'
 --- @class IgnoreSlotActionButton : IgnoreSlotActionButtonMixin
 --
 
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 
 --[[-------------------------------------------------------------------
 Mixin: IgnoreSlotActionButtonWidgetMixin
@@ -115,7 +115,7 @@ local function IgnoreSlotActionButtonWidgetMixin_Methods()
   function w:GetIgnoreOverlay() return self:Slot().ignoreSlotOverlay end
 
   function w:SetupTooltip()
-    local c_white = ns:colorFn('afafaf')
+    local c_white = ns:ColorFn('afafaf')
 
     self.frame:SetScript('OnEnter', function(btn)
       GameTooltip:SetOwner(btn, 'ANCHOR_RIGHT')

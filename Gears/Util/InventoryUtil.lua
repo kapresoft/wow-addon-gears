@@ -54,7 +54,7 @@ local libName = 'InventoryUtil'
 --- @class InventoryUtil
 local o = {}; ns.O.InventoryUtil = o
 
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 
 --[[-------------------------------------------------------------------
 Support Functions

@@ -30,7 +30,7 @@ Local Vars
 ---------------------------------------------------------------------]]
 local libName = 'MainFrame'
 local LibIconPickerUtil = ns.O.LibIconPickerUtil
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 
 --[[-------------------------------------------------------------------
 Gears_AddButtonMixin

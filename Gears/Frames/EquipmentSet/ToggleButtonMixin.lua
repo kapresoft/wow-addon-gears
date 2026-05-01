@@ -20,7 +20,7 @@ local TOOLTIP_DELAY = 0.01
 local PaperDollSidebarTab3 = PaperDollSidebarTab3
 
 local libName = 'ToggleButton'
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 
 --- todo next: move ecs methods on it's own lua file? publish events on open/close
 

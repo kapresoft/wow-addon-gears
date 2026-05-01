@@ -5,8 +5,7 @@ Local Vars
 local ns = select(2, ...)
 
 local libName = 'MainController'
-local p = ns:log(libName)
-local t = ns:traceFnWithFormatting(libName)
+local p, t = ns:log(libName)
 
 --[[-----------------------------------------------------------------------------
 Library

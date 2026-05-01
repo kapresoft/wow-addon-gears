@@ -55,7 +55,7 @@ Gears_EquipmentSlotFlyoutMixin = ns:NewAceEvent()
 --- @class EquipmentSlotFlyout : EquipmentSlotFlyoutMixin
 --
 
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 
 --[[-------------------------------------------------------------------
 Support Functions

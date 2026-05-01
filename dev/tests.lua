@@ -77,7 +77,7 @@ x = {
         -- removes 'Character'
         local slotName = strsub(name,10)
         local info = { GetInventorySlotInfo(slotName) }
-        print('name:', name, 'info:', pf(info))
+        print('name:', name, 'info:', fmt(info))
       end
     end
   end,

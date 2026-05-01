@@ -38,7 +38,7 @@ New Library
 ---------------------------------------------------------------------]]
 --- @class CharacterFrameUtil
 local o = {}; ns.O.CharacterFrameUtil = o
-local p, pd, t, tf = ns:log('CharacterFrameUtil')
+local p, t = ns:log('CharacterFrameUtil')
 
 --- See Also:: PaperDollFrame.xml # Frame/PaperDollItemsFrame
 --- @param callbackFn fun(info:InventorySlotInfo, btn:BlizzCharacterSlotItemButton, po:ButtonObj) | "function(info, btn, po) end"

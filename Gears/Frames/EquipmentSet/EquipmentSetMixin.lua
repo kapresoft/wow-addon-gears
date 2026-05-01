@@ -20,11 +20,11 @@ local TOOLTIP_DELAY = 0.01
 local BULLET        = '•'
 
 local bulletFmt = ' %s %s: %s'
-local c_white = ns:colorFn('afafaf')
-local c_blue = ns:colorFn('71ABFF')
-local c_green = ns:colorFn('6EE6A0')
-local c_yellow1 = ns:colorFn('E6BF33')
-local c_yellow = ns:colorFn('FFE680')
+local c_white = ns:ColorFn('afafaf')
+local c_blue = ns:ColorFn('71ABFF')
+local c_green = ns:ColorFn('6EE6A0')
+local c_yellow1 = ns:ColorFn('E6BF33')
+local c_yellow = ns:ColorFn('FFE680')
 
 --[[-------------------------------------------------------------------
 Mixin
@@ -44,7 +44,7 @@ Mixin
 --- @field ChangeButton Button
 --- @field private __used boolean?
 Gears_EquipmentSetMixin = {}
-local p, pd, t, tf = ns:log('EquipmentSetMixin')
+local p, t = ns:log('EquipmentSetMixin')
 
 local BACKDROP_WITH_BG = {
   bgFile   = "Interface\\Buttons\\WHITE8X8",

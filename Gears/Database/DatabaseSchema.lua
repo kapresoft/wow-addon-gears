@@ -34,7 +34,7 @@ local libName = 'DatabaseSchema'
 
 --- @class DatabaseSchema
 local o = {}; ns.O.DatabaseSchema = o
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 --[[-------------------------------------------------------------------
 Default Database
 ---------------------------------------------------------------------]]

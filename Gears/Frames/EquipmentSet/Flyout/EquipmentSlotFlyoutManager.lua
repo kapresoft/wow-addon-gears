@@ -22,7 +22,7 @@ local libName = 'EquipmentSlotFlyoutManager'
 local o = ns:AceEmbed({}, 'AceEvent-3.0', 'AceHook-3.0')
 ns:register(libName, o)
 
-local p, pd, t, tf = ns:log(libName)
+local p, t = ns:log(libName)
 
 --- @type table<SlotID, EquipmentSlotFlyout>
 local flyoutsMap = {}
