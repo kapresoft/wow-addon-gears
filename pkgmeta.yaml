@@ -5,10 +5,6 @@ enable-toc-creation: no
 # --------------------------
 license-output: LICENSE.txt
 
-manual-changelog:
-  filename: CHANGELOG.txt
-  markup-type: markdown
-
 required-dependencies:
   - LibIconPicker
 
@@ -26,7 +22,6 @@ tools-used:
   - Bug-Grabber
 
 externals:
-  Gears/ThirdParty/Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
   Gears/ThirdParty/Libs/LibPrettyPrint: https://github.com/kapresoft/wow-addon-LibPrettyPrint
   Gears/ThirdParty/Libs/Ace3: https://github.com/WoWUIDev/Ace3
   Gears/ThirdParty/Libs/LibSharedMedia/LibSharedMedia-3.0: https://repos.wowace.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
@@ -37,7 +32,7 @@ ignore:
   - doc
   - dev
   - pkgmeta.yaml
-  - Gears/ThirdParty/Libs/LibStub/tests
+  - Gears/ThirdParty/Libs/Ace3/changelog.txt
   - Gears/ThirdParty/Libs/Ace3/Ace3.lua
   - Gears/ThirdParty/Libs/Ace3/Ace3.toc
   - Gears/ThirdParty/Libs/Ace3/tests
@@ -57,6 +52,7 @@ ignore:
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.yaml
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
+  - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/Annotations
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AceConfigUtil.lua
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AddonInfoUtil.lua
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/AddonUtil.lua
@@ -67,6 +63,13 @@ ignore:
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/ModuleUtil.lua
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/SequenceMixin.lua
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/Lib-2-0/TimeUtil.lua
+  - Gears/ThirdParty/Libs/LibPrettyPrint/ThirdParty
+  - Gears/ThirdParty/Libs/LibPrettyPrint/*.sh
+  - Gears/ThirdParty/Libs/LibPrettyPrint/*.yaml
+  - Gears/ThirdParty/Libs/LibPrettyPrint/Assets
+  - Gears/ThirdParty/Libs/LibPrettyPrint/LibPrettyPrint.xml
+  - Gears/ThirdParty/Libs/LibPrettyPrint/Libs/Annotations
+  - Gears/ThirdParty/Libs/LibPrettyPrint/Libs/Developer
   - Gears-OptionsUI
 ### Ignore Gears-OptionsUI for now
 
