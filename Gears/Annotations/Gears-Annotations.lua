@@ -10,12 +10,6 @@ Namespace
 --- @field EquipmentSlotFlyoutManager EquipmentSlotFlyoutManager
 --- @field InventoryUtil InventoryUtil
 --- @field ItemUtil ItemUtil
---- @field AceEvent AceEvent-3.0
---- @field AceBucket AceBucket-3.0
---- @field AceHook AceHook-3.0
---- @field AceLocale AceLocale-3.0
---- @field AceAddon AceAddon-3.0
---- @field AceDB AceDB-3.0
 --- @field Table Kapresoft-Table-2-0
 --- @field String Kapresoft-String-2-0
 

@@ -5,7 +5,7 @@ Local Vars
 local ns = select(2, ...)
 local p, t = ns:log('Locale_deDE')
 
-local L = ns:AceLocale():NewLocale(ns.addon, 'deDE'); if not L then return end
+local L = ns:NewLocale(ns.addon, 'deDE'); if not L then return end
 
 --[[-------------------------------------------------------------------
 Locale Values

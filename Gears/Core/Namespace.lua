@@ -86,20 +86,6 @@ do
   }, predicateFn)
 end
 
---[[-----------------------------------------------------------------------------
-NamespaceObjects: Ace-3.0
--------------------------------------------------------------------------------]]
-do
-  -- todo: use AceLib
-  local obj = ns.O
-  obj.AceEvent = LibStub('AceEvent-3.0')
-  obj.AceBucket = LibStub('AceBucket-3.0')
-  obj.AceHook = LibStub('AceHook-3.0')
-  obj.AceLocale = LibStub('AceLocale-3.0')
-  obj.AceAddon = LibStub('AceAddon-3.0')
-  obj.AceDB = LibStub('AceDB-3.0')
-end
-
 --[[-------------------------------------------------------------------
 Kapresoft Modules
 ---------------------------------------------------------------------]]
@@ -123,7 +109,13 @@ local function Namespace_Methods()
   ns.MAX_CHARS_SET_NAME = 32
   
   function ns.TRUE() return true end
-  
+  function ns:AceLib() return AceLib end
+  --- @see AceLocale-3.0.NewLocale
+  --- @return table<string, boolean|string>? locale Locale Table to add localizations to, or nil if the current locale is not required.
+  function ns:NewLocale(locale, isDefault, silent)
+    return ns:AceLocale():NewLocale(ns.addon, locale, isDefault, silent)
+  end
+
   --- @param name Name The module name; see NamespaceObjects
   --- @param obj any The namespace object
   function ns:register(name, obj)
@@ -197,7 +189,7 @@ local function Namespace_Methods()
   --[[--------------------------------------------------------
   Database
   ------------------------------------------------------------]]
-  function ns:InitDatabase() self.__db = ns.O.AceDB:New(DB_NAME, ns.O.DatabaseSchema:GetDefaultDatabase()) end
+  function ns:InitDatabase() self.__db = ns:AceDB():New(DB_NAME, ns.O.DatabaseSchema:GetDefaultDatabase()) end
   --- @return DatabaseObj
   function ns:db() return self.__db end
   --- @return GlobalConfig
