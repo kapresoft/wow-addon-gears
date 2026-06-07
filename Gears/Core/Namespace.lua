@@ -193,7 +193,7 @@ local function Namespace_Methods()
   --- @return DatabaseObj
   function ns:db() return self.__db end
   --- @return GlobalConfig
-  function ns:g() return self:db().global end
+  function ns:g() return self:db()['global'] end
   --- @return ProfileConfig
   function ns:p() return self:db().profile end
 
