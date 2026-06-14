@@ -103,13 +103,13 @@ end
 function o:OnShowPaperDollFrame(evt, gearsMainFrame, pdf)
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
   ToggleButtonMixin_ECS_ToggleButton_Hook(self)
-  
-  local global = ns:g()
-  local isFirstTime = not global.isInitialShowComplete
+
+  local gs = ns:g()
+  local isFirstTime = not gs.isInitialShowComplete
   
   self:UpdateVisibilityState(isFirstTime)
   
-  if isFirstTime then global.isInitialShowComplete = true end
+  if isFirstTime then gs.isInitialShowComplete = true end
 end
 
 --- If Gears is shown, hide it

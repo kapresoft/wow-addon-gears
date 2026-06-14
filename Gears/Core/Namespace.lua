@@ -1,3 +1,5 @@
+local addon, kns = ...
+
 --[[-------------------------------------------------------------------
 Blizzard Vars
 ---------------------------------------------------------------------]]
@@ -8,9 +10,6 @@ Local Vars
 ---------------------------------------------------------------------]]
 local GameVersionMixin = LibStub('Kapresoft-GameVersionMixin-2-0')
 local AceLib = LibStub('Kapresoft-AceLib-2-0')
-
---- @type string
-local addon
 
 --- @class Namespace : Kapresoft-GameVersionMixin-2-0, Kapresoft-AceLib-2-0
 --- @field __db DatabaseObj
@@ -24,9 +23,8 @@ local addon
 --- @field colorDef Kapresoft-ColorDefinition-2-0
 --- @field private logName Name @The prefix for all logs and traces
 --- @field private printer LibPrettyPrint_Printer
-local ns
+local ns = kns
 
-addon, ns = ...
 
 Mixin(ns, GameVersionMixin, AceLib); ns.addon = addon; GEARS_NS = ns
 ns.O = ns.O or {}
@@ -66,7 +64,8 @@ Override in DeveloperSetup to enable
 -------------------------------------------------------------------------------]]
 --- @class Gears_Settings
 --- @field developer boolean @if true: enables developer mode
-local settings = { developer = false }; ns.settings = settings
+--- @field enableSound boolean @if false: suppresses all sounds (use forcePlay to override)
+local settings = { developer = false, enableSound = false }; ns.settings = settings
 
 --- @return boolean
 function ns:IsDev() return ns.settings.developer == true end
@@ -168,12 +167,14 @@ local function Namespace_Methods()
   --- local willPlay, soundHandle = PlaySound(...)
   --- ```
   --- @param soundKitID number
+  --- @param forcePlay boolean?           @If true, plays even when enableSound is false
   --- @param channel SoundChannel?        @The default is 'Effects' or 'SFX' (both are same)
   --- @param forceNoDuplicates boolean?
   --- @param runFinishCallback boolean?
   --- @return boolean?, number?
-  function ns:PlaySound(soundKitID, channel, forceNoDuplicates, runFinishCallback)
+  function ns:PlaySound(soundKitID, forcePlay, channel, forceNoDuplicates, runFinishCallback)
     if not soundKitID then return end
+    if not ns.settings.enableSound and not forcePlay then return end
     return PlaySound(soundKitID, channel, forceNoDuplicates, runFinishCallback)
   end
 
@@ -193,7 +194,7 @@ local function Namespace_Methods()
   --- @return DatabaseObj
   function ns:db() return self.__db end
   --- @return GlobalConfig
-  function ns:g() return self:db()['global'] end
+  function ns:g() return self:db()['global'] end 
   --- @return ProfileConfig
   function ns:p() return self:db().profile end
 
