@@ -228,11 +228,11 @@ end
 --- @NotCombatSafe
 function o:EquipGear()
   if ns:IsMists() then
-    ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
+    ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN, true)
   else
-    ns:PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN)
+    ns:PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN, true)
     C_Timer.After(0.2, function()
-      ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN)
+      ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN, true)
     end)
   end
   
