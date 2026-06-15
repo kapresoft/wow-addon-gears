@@ -84,7 +84,7 @@ function o:CreateSlotFlyouts()
 end
 
 --- @param slotBtn BlizzCharacterSlotItemButton
----@param ignoreAltKey boolean|nil Must set to false to ignore alt key press
+--- @param ignoreAltKey boolean|nil Must set to false to ignore alt key press
 function o:OnSlotEnter(slotBtn, ignoreAltKey)
   if InCombatLockdown() then return end
   
@@ -95,8 +95,11 @@ function o:OnSlotEnter(slotBtn, ignoreAltKey)
   if ignoreAltKey ~= false and not IsAltKeyDown() then
     return OnSlotEnter_ShowGameTooltip(flyout)
   end
-  if flyout.widget:IsExpanded() then return end
-  
+
+  if flyout.widget:IsExpanded() then
+    OnSlotEnter_ShowGameTooltip(flyout, slotID)
+    return
+  end
   flyout.widget:SetInteractionMode(true)
   flyout.widget:OpenPopup()
   OnSlotEnter_ShowGameTooltip(flyout, slotID)
