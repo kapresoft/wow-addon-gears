@@ -31,11 +31,13 @@ local flyoutsMap = {}
 Support Functions
 ---------------------------------------------------------------------]]
 --- @param flyout EquipmentSlotFlyout
-local function OnSlotEnter_ShowGameTooltip(flyout)
+--- @param slotID SlotID?
+local function OnSlotEnter_ShowGameTooltip(flyout, slotID)
   local ofsx, ofsy = 0, 5
-  local itemID = iu:GetItemBySlotID(flyout:SlotID())
-  if not itemID then return end
-  
+  slotID = slotID or flyout:SlotID()
+  local _, itemLink = iu:GetItemBySlotID(slotID)
+  if not itemLink then return end
+
   local owner = flyout
   local relAnchor = 'TOPRIGHT'
   if flyout.widget:IsExpanded() then
@@ -43,10 +45,10 @@ local function OnSlotEnter_ShowGameTooltip(flyout)
     owner = flyout.Flyout
     relAnchor = 'BOTTOMRIGHT'
   end
-  
+
   GameTooltip:SetOwner(owner, 'ANCHOR_NONE')
   GameTooltip:SetPoint('BOTTOMLEFT', owner, relAnchor, ofsx, ofsy)
-  GameTooltip:SetInventoryItemByID(itemID)
+  GameTooltip:SetHyperlink(itemLink)
   if ShoppingTooltip1 then ShoppingTooltip1:Hide() end
   if ShoppingTooltip2 then ShoppingTooltip2:Hide() end
   GameTooltip:Show()
@@ -88,8 +90,8 @@ function o:OnSlotEnter(slotBtn, ignoreAltKey)
   
   local slotID = slotBtn:GetID()
   self.__hoverSlotID = slotID
-  local flyout = flyoutsMap[slotID]; if not flyout then return end
-  
+  local flyout = flyoutsMap[slotID];
+  if not flyout then return end
   if ignoreAltKey ~= false and not IsAltKeyDown() then
     return OnSlotEnter_ShowGameTooltip(flyout)
   end
@@ -153,10 +155,10 @@ function o:OnModifierStateChanged(evt, key, down)
     --- @type BlizzCharacterSlotItemButton
     local s
     if mf and mf[1] then s = mf[1] end
-    if s and s.gears then self:OnSlotEnter(s, true) end
+  if s and s.gears then self:OnSlotEnter(s, true) end
     return
   end
-  
+
   if not ns.gears:IsPaperDollFrameVisible() then return end
   self:ForEachFlyouts(function(flyout)
     --if flyout.widget:IsExpanded() then
