@@ -10,7 +10,7 @@ local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
 local C_UseEquipmentSet = C_EquipmentSet.UseEquipmentSet
 local C_SaveEquipmentSet = C_EquipmentSet.SaveEquipmentSet
 
-local CURRENTLY_EQUIPPED = CURRENTLY_EQUIPPED
+local CURRENTLY_EQUIPPED = CURRENTLY_EQUIPPED or L['Currently Equipped']
 
 --[[-------------------------------------------------------------------
 Local Vars
