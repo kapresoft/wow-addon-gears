@@ -3,6 +3,9 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
+local iu = ns.O.ItemUtil
+local L = ns:GetLocale()
+
 --[[-------------------------------------------------------------------
 Backdrop
 @see Modules/Flyout/EquipmentSlotFlyout.xml#Flyout
@@ -24,6 +27,12 @@ local C_IsSlotIgnoredForSave = C_EquipmentSet and C_EquipmentSet.IsSlotIgnoredFo
 local C_GetIgnoredSlots = C_EquipmentSet and C_EquipmentSet.GetIgnoredSlots
 local C_PickupContainerItem = C_Container and C_Container.PickupContainerItem
 local EquipCursorItem, GameTooltip_ShowCompareItem = EquipCursorItem, GameTooltip_ShowCompareItem
+local MAINHANDSLOT, SECONDARYHANDSLOT, RANGEDSLOT = MAINHANDSLOT, SECONDARYHANDSLOT, RANGEDSLOT
+
+local EQUIPPED_SLOT_LABEL = {
+  [INVSLOT_MAINHAND] = MAINHANDSLOT,
+  [INVSLOT_OFFHAND]  = SECONDARYHANDSLOT,
+}
 
 --[[-------------------------------------------------------------------
 Types
@@ -481,9 +490,15 @@ function o:CreateSlotItems()
       slotFlyout.widget:ClosePopup()
     end)
 
+    local c_white = ns:ColorFn('afafaf')
+
     btn:SetScript('OnEnter', function(self)
       GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
-      GameTooltip:SetInventoryItemByID(infoRef.itemID)
+      GameTooltip:SetHyperlink(infoRef.hyperlink)
+      local slotLabel = EQUIPPED_SLOT_LABEL[infoRef.equippedSlot]
+      if slotLabel then
+        if slotLabel then GameTooltip:AddLine(c_white(L['Currently Equipped'] .. ' ') .. slotLabel) end
+      end
       GameTooltip:Show()
       GameTooltip_ShowCompareItem(GameTooltip)
     end)

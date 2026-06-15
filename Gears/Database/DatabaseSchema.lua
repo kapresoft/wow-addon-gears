@@ -42,10 +42,11 @@ local DB_VERSION = 1
 
 --- @type DatabaseObj
 local DEFAULT_DB = {
-  global = { schemaVersion = DB_VERSION, isInitialShowComplete = false },
-  profile = {},
-  char = {},
+  ['global'] = { schemaVersion = DB_VERSION, isInitialShowComplete = false },
+  ['profile'] = {},
+  ['char'] = {},
 }
+
 
 --[[-----------------------------------------------------------------------------
 Module::DatabaseSchema (Methods)

@@ -140,14 +140,14 @@ Module::InventoryUtil (Methods)
 -------------------------------------------------------------------------------]]
 
 --- @param slotID SlotID
---- @param callbackFn fun(info:ContainerItemInfo, item:ItemInfoDetails) : void
+--- @param callbackFn fun(info:ContainerItemDetails, item:ItemInfoDetails) : void
 function o:ForEachSlotItemCandidate(slotID, callbackFn)
   self:ForEachBagItemMatchingSlot(slotID, callbackFn)
   self:ForEachEquippedItem(slotID, callbackFn)
 end
 
 --- @param slotID SlotID
---- @param callbackFn fun(info:ContainerItemInfo, item:ItemInfoDetails) : void
+--- @param callbackFn fun(info:ContainerItemDetails, item:ItemInfoDetails) : void
 function o:ForEachBagItemMatchingSlot(slotID, callbackFn)
   local it = itemUtil()
   self:ForEachBagItem(function(info)
@@ -160,8 +160,12 @@ function o:ForEachBagItemMatchingSlot(slotID, callbackFn)
   end)
 end
 
+
+--- @class ContainerItemDetails : ContainerItemInfo
+--- @field equippedSlot number
+
 --- @param slotID SlotID @The target slot ID
---- @param callback fun(info:ContainerItemInfo, item:ItemInfoDetails)
+--- @param callback fun(info:ContainerItemDetails, item:ItemInfoDetails)
 function o:ForEachEquippedItem(slotID, callback)
   local it = itemUtil()
   for eqSlotID = INVSLOT_FIRST_EQUIPPED, INVSLOT_LAST_EQUIPPED do
@@ -170,7 +174,7 @@ function o:ForEachEquippedItem(slotID, callback)
       if link then
         local item = it:GetItem(link)
         if item and SlotMatches(slotID, item) then
-          --- @type ContainerItemInfo
+          --- @type ContainerItemDetails
           local info = {
             hyperlink    = link,
             itemID       = item.id,
@@ -195,15 +199,17 @@ function o:GetAvailableSlotItems(slotID)
   return items
 end
 
----@param callback fun(info:ContainerItemInfo) : void
+--- @param callback fun(info:ContainerItemDetails) : void
 function o:ForEachBagItem(callback)
   for bag = 0, NUM_BAG_SLOTS do
     local numSlots = C_GetContainerNumSlots(bag)
     for slot = 1, numSlots do
+      --- @type ContainerItemDetails
       local info = C_GetContainerItemInfo(bag, slot)
       if info and info.hyperlink then
         info.bagID = bag
         info.slotIndex = slot
+        -- info.equippedSlot will be nil since it's in the bag
         callback(info)
       end
     end
