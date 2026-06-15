@@ -34,6 +34,9 @@ local EQUIPPED_SLOT_LABEL = {
   [INVSLOT_OFFHAND]  = SECONDARYHANDSLOT,
 }
 
+-- blizz locales
+local CURRENTLY_EQUIPPED = CURRENTLY_EQUIPPED or L['Currently Equipped']
+
 --[[-------------------------------------------------------------------
 Types
 ---------------------------------------------------------------------]]
@@ -497,7 +500,7 @@ function o:CreateSlotItems()
       GameTooltip:SetHyperlink(infoRef.hyperlink)
       local slotLabel = EQUIPPED_SLOT_LABEL[infoRef.equippedSlot]
       if slotLabel then
-        if slotLabel then GameTooltip:AddLine(c_white(L['Currently Equipped'] .. ' ') .. slotLabel) end
+        GameTooltip:AddLine(c_white(CURRENTLY_EQUIPPED .. ' ') .. slotLabel)
       end
       GameTooltip:Show()
       GameTooltip_ShowCompareItem(GameTooltip)
