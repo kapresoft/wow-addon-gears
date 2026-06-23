@@ -86,14 +86,16 @@ end
 --- @param slotBtn BlizzCharacterSlotItemButton
 --- @param ignoreAltKey boolean|nil Must set to false to ignore alt key press
 function o:OnSlotEnter(slotBtn, ignoreAltKey)
-  if InCombatLockdown() then return end
-  
   local slotID = slotBtn:GetID()
   self.__hoverSlotID = slotID
   local flyout = flyoutsMap[slotID];
   if not flyout then return end
   if ignoreAltKey ~= false and not IsAltKeyDown() then
     return OnSlotEnter_ShowGameTooltip(flyout)
+  end
+
+  if InCombatLockdown() then
+    return OnSlotEnter_ShowGameTooltip(flyout, slotID)
   end
 
   if flyout.widget:IsExpanded() then
@@ -107,21 +109,17 @@ end
 
 --- @param slotBtn BlizzCharacterSlotItemButton
 function o:OnSlotLeave(slotBtn)
-  if InCombatLockdown() then return end
   GameTooltip:Hide()
 
   local slotID = slotBtn:GetID()
   local flyout = flyoutsMap[slotID]
-  if not (IsAltKeyDown() and flyout) then return end
+  if InCombatLockdown() or not (IsAltKeyDown() and flyout) then return end
   
   C_Timer.After(0.081, function()
     if self.__hoverSlotID ~= slotID then return end
     if not slotBtn:IsMouseOver()
             and not flyout:IsMouseOver()
             and not flyout.Flyout:IsMouseOver() then
-      --if ns.gears:IsShown() then return end
-      --t('OnSlotLeave', 'called...')
-      --flyout.widget:ClosePopup(false, false)
     end
   end)
 end
