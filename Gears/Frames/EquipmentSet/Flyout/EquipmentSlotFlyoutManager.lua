@@ -114,14 +114,6 @@ function o:OnSlotLeave(slotBtn)
   local slotID = slotBtn:GetID()
   local flyout = flyoutsMap[slotID]
   if InCombatLockdown() or not (IsAltKeyDown() and flyout) then return end
-  
-  C_Timer.After(0.081, function()
-    if self.__hoverSlotID ~= slotID then return end
-    if not slotBtn:IsMouseOver()
-            and not flyout:IsMouseOver()
-            and not flyout.Flyout:IsMouseOver() then
-    end
-  end)
 end
 
 --- If gears is open, then use Gears Slots
