@@ -60,6 +60,7 @@ local libName = 'EquipmentSlotFlyoutMixin'
 --- @field widget EquipmentSlotFlyoutWidget
 --- @field Flyout FlyoutFrame @Flyout Container
 --- @field Arrow Texture
+--- @field GetParent fun(self:EquipmentSlotFlyoutMixin) : BlizzCharacterSlotItemButton
 --- @see EquipmentSlotFlyoutManager.CreateSlotFlyouts()
 Gears_EquipmentSlotFlyoutMixin = ns:NewAceEvent()
 
