@@ -3,7 +3,7 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
-local cfu, iu = ns.O.CharacterFrameUtil, ns.O.ItemUtil
+local cfu = ns.O.CharacterFrameUtil
 local Tbl_IsEmpty = ns.O.Table.IsEmpty
 
 --[[-------------------------------------------------------------------
@@ -35,8 +35,6 @@ Support Functions
 local function OnSlotEnter_ShowGameTooltip(flyout, slotID)
   local ofsx, ofsy = 0, 5
   slotID = slotID or flyout:SlotID()
-  local _, itemLink = iu:GetItemBySlotID(slotID)
-  if not itemLink then return end
 
   local owner = flyout
   local relAnchor = 'TOPRIGHT'
@@ -47,8 +45,9 @@ local function OnSlotEnter_ShowGameTooltip(flyout, slotID)
   end
 
   GameTooltip:SetOwner(owner, 'ANCHOR_NONE')
+  GameTooltip:SetInventoryItem("player", slotID)
+  GameTooltip:ClearAllPoints()
   GameTooltip:SetPoint('BOTTOMLEFT', owner, relAnchor, ofsx, ofsy)
-  GameTooltip:SetHyperlink(itemLink)
   if ShoppingTooltip1 then ShoppingTooltip1:Hide() end
   if ShoppingTooltip2 then ShoppingTooltip2:Hide() end
   GameTooltip:Show()
