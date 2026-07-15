@@ -178,7 +178,7 @@ function o:OnClick()
     end)
   end
 
-  self:GetParent():Hide()
+  self.widget:SlotFlyoutW():ClosePopup()
 end
 
 --- @return boolean The new ignored-for-save state

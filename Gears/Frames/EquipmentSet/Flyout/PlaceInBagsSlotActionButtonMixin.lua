@@ -58,6 +58,9 @@ local function PlaceInBagsActionButtonWidgetMixin_Methods()
     self:SetupTooltip()
   end
 
+  --- @return EquipmentSlotFlyoutWidget
+  function w:SlotFlyoutW() return self.slotFlyoutButton.widget end
+
   function w:SetupTooltip()
     local c_white = ns:ColorFn('afafaf')
 
@@ -122,7 +125,7 @@ function o:OnClick()
   -- nothing equipped
   local itemLink = GetInventoryItemLink('player', slotID)
   if not itemLink then
-    self:GetParent():Hide(); return
+    self.widget:SlotFlyoutW():ClosePopup(); return
   end
 
   -- move equipped item to bags
@@ -130,7 +133,7 @@ function o:OnClick()
   self:PlaceInBag()
 
   -- close flyout
-  self:GetParent():Hide()
+  self.widget:SlotFlyoutW():ClosePopup()
 end
 
 --- Places the picked up item into the first available
