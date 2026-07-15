@@ -121,8 +121,11 @@ local function IgnoreSlotActionButtonWidgetMixin_Methods()
       GameTooltip:SetOwner(btn, 'ANCHOR_RIGHT')
       local ignored = self:IsSlotIgnoredForSave()
       local localeText = ignored and 'Include Slot' or 'Ignore Slot'
+      local allLocaleText = ignored and 'Include All Slots' or 'Ignore All Slots'
       GameTooltip:SetText(L[localeText])
       GameTooltip:AddLine(c_white(L[localeText .. '::DESC']))
+      GameTooltip:AddLine(' ')
+      GameTooltip:AddLine(c_white(L['Shift-Click'] .. ': ' .. L[allLocaleText]))
       GameTooltip:Show()
     end)
     self.frame:SetScript('OnLeave', function() GameTooltip:Hide() end)
@@ -163,6 +166,15 @@ function o:OnClick()
 
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
   if not ns.gears:HasSelection() then return end
+
+  if IsShiftKeyDown() then
+    local esfm = ns:esfm()
+    local ignoreAll = not self.widget:IsSlotIgnoredForSave()
+    if ignoreAll then esfm:IgnoreAllSlots() else esfm:IncludeAllSlots() end
+    self.widget:SlotFlyoutW():ClosePopup()
+    return
+  end
+
   local ignored = self:ToggleState()
   self.widget:UpdateActionTexture(ignored)
   ns.gears:GetSaveButton():SetEnabled(true)

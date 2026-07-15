@@ -184,12 +184,25 @@ end
 --- @param filterFn fun(flyout:EquipmentSlotFlyout) : boolean | "'function(flyout) return true end'"
 function o:ForEachFlyouts(callbackFn, filterFn)
   if Tbl_IsEmpty(flyoutsMap) or not callbackFn then return end
-  
+
   local filter = filterFn or ns.TRUE
   for _, flyout in pairs(flyoutsMap) do
     if filter(flyout) then callbackFn(flyout) end
   end
 end
+
+--- @param ignored boolean
+function o:SetAllSlotsIgnored(ignored)
+  if not ns.gears:HasSelection() then return end
+  self:ForEachFlyouts(function(flyout)
+    flyout.widget:GetIgnoreSlotButton().widget:SyncIgnoredState(ignored)
+  end)
+  ns.gears:GetSaveButton():SetEnabled(true)
+end
+
+function o:IgnoreAllSlots() self:SetAllSlotsIgnored(true) end
+
+function o:IncludeAllSlots() self:SetAllSlotsIgnored(false) end
 
 --- Slots by EquipmentSetID
 --- @param equipSetID EquipSetID

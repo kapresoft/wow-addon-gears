@@ -36,3 +36,6 @@ L['Ignore Slot']              = true
 L['Ignore Slot::DESC']        = 'Exclude this slot when saving the equipment set'
 L['Place item in bags']       = true
 L['Place item in bags::DESC'] = 'Moves equipped item to first available bag slot'
+L['Shift-Click']              = true
+L['Ignore All Slots']         = true
+L['Include All Slots']        = true
