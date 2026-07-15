@@ -58,7 +58,7 @@
         </Scripts>
 
         <Frames>
-            <Frame parentKey="Flyout" hidden="false" inherits="BackdropTemplate">
+            <Frame parentKey="Flyout" hidden="false" inherits="BackdropTemplate" enableMouse="true">
                 <KeyValues>
                     <KeyValue key="backdropInfo" value="GEARS_BACKDROP_TOAST_12_12" type="global"/>
                 </KeyValues>
