@@ -1,24 +1,25 @@
-## Interface: 11508
+## Interface: 11509
 ## Version: @project-version@
 ## Title: |TInterface/Addons/Gears/Assets/gears-logo-1:18:18|t |cff1784d1Gears|r-OptionsUI
 ## Notes: A lightweight World of Warcraft addon that lets players quickly |nsave, manage, and switch between gear sets to adapt to different |nroles, specs, and gameplay situations with ease. |n|cff1784d1This addon is provided 'as is' without any warranties. |nAll rights reserved. |nRedistribution or modification is not permitted.|r
 ## Author: Antonio W. Lagnada (kapresoft@gmail.com)
 ## Dependencies: Gears
-## Group: Gears
 ## DefaultState: enabled
 
-## Category: Combat
-## Category-enUS: Combat
-## Category-deDE: Kampf
-## Category-esES: Combate
-## Category-esMX: Combate
-## Category-frFR: Combat
-## Category-itIT: Combattimento
-## Category-koKR: 전투
-## Category-ptBR: Combate
-## Category-ruRU: Бой
-## Category-zhCN: 战斗
-## Category-zhTW: 戰鬥
+## Group: Gears
+
+## Category: Bags & Inventory
+## Category-enUS: Bags & Inventory
+## Category-deDE: Taschen & Inventar
+## Category-esES: Bolsas e inventario
+## Category-esMX: Bolsas e inventario
+## Category-frFR: Sacs et inventaire
+## Category-itIT: Borse e inventario
+## Category-koKR: 가방 및 소지품
+## Category-ptBR: Bolsas e inventário
+## Category-ruRU: Сумки и инвентарь
+## Category-zhCN: 背包与物品
+## Category-zhTW: 背包與物品
 
 ## X-Credits: Antonio W. Lagnada (kapresoft@gmail.com)
 ## X-License: All Rights Reserved. |cff1784d1This addon is provided 'as is' without any warranties. All rights reserved. Redistribution or modification is not permitted.|r
