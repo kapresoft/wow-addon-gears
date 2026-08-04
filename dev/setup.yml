@@ -14,10 +14,15 @@ manual-changelog: CHANGELOG.md
 #  - But this is the official: https://repos.wowace.com/wow/ace3/trunk
 # LibIconPicker: We just need the interface files
 externals:
-  ThirdParty-Libs/LibPrettyPrint: https://github.com/kapresoft/wow-addon-LibPrettyPrint
-  ThirdParty-Libs/Ace3: https://github.com/WoWUIDev/Ace3
-  ThirdParty-Libs/LibSharedMedia/LibSharedMedia-3.0: https://repos.wowace.com/wow/libsharedmedia-3-0/trunk/LibSharedMedia-3.0
-  ThirdParty-Libs/Kapresoft-LibUtil: https://github.com/kapresoft/wow-lib-util
+  ThirdParty-Libs/Ace3:
+    url: https://github.com/WoWUIDev/Ace3
+    tag: latest
+  ThirdParty-Libs/LibPrettyPrint:
+    url: https://github.com/kapresoft/wow-addon-LibPrettyPrint
+    tag: latest
+  ThirdParty-Libs/Kapresoft-LibUtil:
+    url: https://github.com/kapresoft/wow-lib-util
+    tag: latest
 
 ignore:
   - "*.sh"
@@ -25,6 +30,7 @@ ignore:
   - "*.yaml"
   - "*.yml"
   - "*.toc"
+  - "*.toml"
   - dev
   - doc
   - Gears
@@ -37,10 +43,16 @@ ignore:
   - ThirdParty-Libs/LibPrettyPrint/dev
   - ThirdParty-Libs/LibPrettyPrint/doc
   - ThirdParty-Libs/LibPrettyPrint/*.toc
+  - ThirdParty-Libs/LibPrettyPrint/LICENSE
+  - ThirdParty-Libs/LibPrettyPrint/Assets
+  - ThirdParty-Libs/LibPrettyPrint/ThirdParty
+  - ThirdParty-Libs/LibPrettyPrint/Libs/Developer
   - ThirdParty-Libs/Kapresoft-LibUtil/dev
-  - ThirdParty-Libs/Kapresoft-LibUtil/External
-  - ThirdParty-Libs/Kapresoft-LibUtil/Lib
-  - ThirdParty-Libs/Kapresoft-LibUtil/_Lib.xml
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-1-0
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Assets
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/ThirdParty
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/LibUtil.lua
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/LibUtil.xml
 
 # Base path is .release/
 move-folders:
