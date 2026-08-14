@@ -15,6 +15,7 @@ Types and Alias
 --- @field index Index
 --- @field name Name
 --- @field icon IconIDOrPath
+--- @field numLost number The number of items in the set missing from the player's inventory
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -57,7 +58,7 @@ MainFrame
 --- @class Gears_MainFrame : Gears_MainFrameMixin
 --
 
---- @class Gears_MainFrameMixin : Frame, AceEvent-3.0, AceBucket-3.0
+--- @class Gears_MainFrameMixin : AceEvent-3.0, AceBucket-3.0, Frame
 --- @field private framePool table<number, EquipmentSetFrame>
 --- @field protected ButtonsContainerFrame ButtonsContainerFrame
 --- @field info EquipmentSetInfo
@@ -73,6 +74,7 @@ o.framePool = {}
 Support Functions
 ---------------------------------------------------------------------]]
 --- @param targetFn fun()
+--- @param ... any
 --- @return fun()
 local function fn(targetFn, ...)
   local boundArgs = { ... }
@@ -131,7 +133,7 @@ local function MainFrameMixin_GetFrame(self, eqInfo)
   local index = eqInfo.index
   if not self.framePool[index] then
     self.framePool[index] = CreateFrame("Button", ("$parent_EquipmentSet%s"):format(eqInfo.id),
-            self.ScrollFrame.ScrollChild, "Gears_EquipmentSetTemplate")
+            self.ScrollFrame.ScrollChild, "Gears_EquipmentSetTemplate" --[[@as Template ]])
   end
   self.framePool[index].owner = self
   self.framePool[index]:SetInfo(eqInfo)
@@ -294,6 +296,13 @@ function o:InitEquipmentSet()
   -- bucket because [PLAYER_EQUIPMENT_CHANGED] fires a few times
   self:RegisterBucketEvent('PLAYER_EQUIPMENT_CHANGED', 0.01, fn(MainFrameMixin_OnEquipmentChanged, self))
   self:RegisterEvent('EQUIPMENT_SETS_CHANGED', fn(MainFrameMixin_OnEquipmentSetsChanged, self))
+
+  -- Catches a currently-equipped set item being destroyed/dropped; fires after
+  -- state has settled, unlike EQUIPMENT_SETS_CHANGED which can fire too early.
+  self:RegisterEvent('PORTRAITS_UPDATED', fn(MainFrameMixin_OnEquipmentSetsChanged, self))
+
+  -- Catches a bagged set item being dropped, sold, or mailed.
+  self:RegisterBucketEvent('BAG_UPDATE_DELAYED', 0.2, fn(MainFrameMixin_OnEquipmentSetsChanged, self))
 end
 
 function o:HideGears()
@@ -333,8 +342,8 @@ function o:ForEachEquipment(callback, acceptFn)
   --- @type table<number,number>
   local ids = eq.GetEquipmentSetIDs()
   for i, id in ipairs(ids) do
-    local name, icon = eq.GetEquipmentSetInfo(id)
-    local info       = { id = id, index = i, name = name, icon = icon }
+    local name, icon, _, _, _, _, _, numLost = eq.GetEquipmentSetInfo(id)
+    local info       = { id = id, index = i, name = name, icon = icon, numLost = numLost }
     if acceptEquipmentSet(info) then
       rowCount = rowCount + 1
       callback(info) end
@@ -355,8 +364,6 @@ end
 
 --- @param eqInfo EquipmentSetInfo
 function o:BuildEquipmentSet(eqInfo)
-  assert(eqInfo, 'BuildEquipmentSet(eqInfo): The param eqInfo is required.')
-  
   local equipmentSet = MainFrameMixin_GetFrame(self, eqInfo)
   if eqInfo.index > 1 then
     equipmentSet:SetPoint("TOPLEFT", self.framePool[eqInfo.index - 1], "BOTTOMLEFT")
@@ -370,7 +377,11 @@ function o:BuildEquipmentSet(eqInfo)
   eqSetName:SetWidth(80)
   eqSetName:SetMaxLines(1)
   eqSetName:SetText(eqInfo.name)
-  
+  -- Issue #18: mark the set name RED when items are missing from inventory
+  local eqColor = NORMAL_FONT_COLOR
+  if (eqInfo.numLost or 0) > 0 then eqColor = RED_FONT_COLOR end
+  eqSetName:SetTextColor(eqColor:GetRGB())
+
   equipmentSet:Show()
   equipmentSet:UpdateFullyEquippedState()
   
