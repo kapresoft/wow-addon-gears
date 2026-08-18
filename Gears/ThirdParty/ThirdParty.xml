@@ -17,7 +17,13 @@
     <!--@non-debug@
     <Include file="Ace3.xml"/>
     @end-non-debug@-->
-    <Include file='LibPrettyPrint.xml'/>
+
+    <Script file="Libs\LibPrettyPrint\Libs\Namespace.lua"/>
+    <Script file="Libs\LibPrettyPrint\Libs\pprint.lua"/>
+    <Script file="Libs\LibPrettyPrint\Libs\Formatter.lua"/>
+    <Script file="Libs\LibPrettyPrint\Libs\Printer.lua"/>
+    <Script file="Libs\LibPrettyPrint\Libs\LibPrettyPrint.lua"/>
+
     <Script file="Libs\Kapresoft-LibUtil\Lib-2-0\Modules\AceLib.lua"/>
     <Script file="Libs\Kapresoft-LibUtil\Lib-2-0\Modules\AceLocaleUtil.lua"/>
     <Script file="Libs\Kapresoft-LibUtil\Lib-2-0\Modules\AddonUtil.lua"/>
