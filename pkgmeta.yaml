@@ -4,6 +4,9 @@ enable-nolib-creation: no
 enable-toc-creation: no
 # --------------------------
 license-output: LICENSE.txt
+manual-changelog:
+  filename: dev/changelog-release.md
+  markup-type: markdown
 
 required-dependencies:
   - LibIconPicker
