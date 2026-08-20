@@ -25,6 +25,9 @@ externals:
   ThirdParty-Libs/LibPrettyPrint:
     url: https://github.com/kapresoft/wow-addon-LibPrettyPrint
     tag: latest
+  ThirdParty-Libs/LibTraceKit:
+    url: https://github.com/kapresoft/wow-addon-LibTraceKit
+    tag: latest
   ThirdParty-Libs/Kapresoft-LibUtil:
     url: https://github.com/kapresoft/wow-lib-util
     tag: latest
@@ -35,29 +38,42 @@ ignore:
   - "*.yaml"
   - "*.yml"
   - "*.toc"
+  - "*.txt"
   - "*.toml"
   - dev
   - doc
   - Gears
   - Gears-OptionsUI
-  - ThirdParty-Libs/LibStub/tests
   - ThirdParty-Libs/Ace3/Ace3.lua
   - ThirdParty-Libs/Ace3/Bindings.xml
-  - ThirdParty-Libs/Ace3/changelog.txt
-  - ThirdParty-Libs/Ace3/LICENSE.txt
   - ThirdParty-Libs/LibPrettyPrint/dev
   - ThirdParty-Libs/LibPrettyPrint/doc
-  - ThirdParty-Libs/LibPrettyPrint/*.toc
-  - ThirdParty-Libs/LibPrettyPrint/LICENSE
   - ThirdParty-Libs/LibPrettyPrint/Assets
   - ThirdParty-Libs/LibPrettyPrint/ThirdParty
-  - ThirdParty-Libs/LibPrettyPrint/Libs/Developer
+  - ThirdParty-Libs/LibPrettyPrint/LibPrettyPrint.xml
+  - ThirdParty-Libs/LibPrettyPrint/Libs/Developer/*.xml
+  - ThirdParty-Libs/LibPrettyPrint/Libs/Developer/Developer*.lua
+  - ThirdParty-Libs/LibPrettyPrint/Libs/Annotations
+  - ThirdParty-Libs/LibTraceKit/dev
+  - ThirdParty-Libs/LibTraceKit/Libs/Assets
+  - ThirdParty-Libs/LibTraceKit/Libs/Developer.lua
+  - ThirdParty-Libs/LibTraceKit/ThirdParty
   - ThirdParty-Libs/Kapresoft-LibUtil/dev
+  - ThirdParty-Libs/Kapresoft-LibUtil/LICENSE
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-1-0
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Assets
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/ThirdParty
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/LibUtil.lua
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/LibUtil.xml
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/Annotations
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/AceConfigUtil.lua
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/AddonInfoUtil.lua
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/ConsoleHelperMixin.lua
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/DebugChatFrameMixin.lua
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/LuaEvaluator.lua
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/ModuleUtil.lua
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/SequenceMixin.lua
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/TimeUtil.lua
 
 # Base path is .release/
 move-folders:

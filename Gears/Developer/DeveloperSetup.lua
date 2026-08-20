@@ -7,22 +7,24 @@ local sformat, upper, date = string.format, string.upper, date
 local ns = select(2, ...)
 ns.settings.developer = true
 
+--- @type LibTraceKit-1.0
+local LibTraceKit = LibStub('LibTraceKit-1.0')
+assertsafe(type(LibTraceKit) ~= nil, 'Failed to reference LibTraceKit-1.0')
+
 local libName = 'DeveloperSetup'
 local Str_IsBlank = ns.O.String.IsBlank
+local TRACE_DELIM = '_'
 
 --[[-----------------------------------------------------------------------------
 Base Tracer
 -------------------------------------------------------------------------------]]
 local primaryC = ns:ColorFn(ns.colorDef.primary)
 
-function ns.tr(prefix, ...)
-  --- @type EventTrace
-  local et = EventTrace; if not (et and et.LogEvent) then return end
-  local c1, logNamePlain = primaryC, ns.logName
-  local n = c1(logNamePlain)
-  if not Str_IsBlank(prefix) then n = n .. '::' .. prefix end
-  et:LogEvent(n, ...)
-end
+--- @param prefix string|any
+--- @return Gears_TraceFn
+local function traceFn(prefix)
+  return LibTraceKit:New(ns.addon, prefix) :WithDelimiter(TRACE_DELIM) --[[@as Gears_TraceFn ]]
+end; local t = traceFn(libName)
 
 --[[-----------------------------------------------------------------------------
 External Dependencies
@@ -46,7 +48,7 @@ local function LoadDevSuite()
   if type(ds) == 'table' and type(ds.IsEnabled) == 'function' then
     local dsEnabled = ds:IsEnabled()
     C_Timer.After(1, function()
-      ns.tr(libName, ('%s is available'):format(ds:GetName()), 'enabled=', dsEnabled)
+      t(libName, ('%s is available'):format(ds:GetName()), 'enabled=', dsEnabled)
     end)
     if dsEnabled then return end
   end
@@ -61,37 +63,27 @@ local function LoadDevSuite()
     devSuiteEnabled = AU:IsAddOnEnabled(DevSuite_AddOn)
     C_Timer.After(0.1, function() StaticPopup_Show(RELOAD_CONFIRMATION_DIALOG) end)
   end
-  C_Timer.After(1, function() ns.tr(libName, 'DevSuite is enabled=', devSuiteEnabled == true) end)
 end; LoadDevSuite()
-
---[[-----------------------------------------------------------------------------
-Log Setup
--------------------------------------------------------------------------------]]
---- Creates a print function
---- ### Example:
---- ```
---- local pr = traceFn3('Util')
---- pr('hello world)  -- prints to console
---- ```
---- @param moduleName Name
-local function printerFn(moduleName)
-  local printer = ns.printer
-  if type(moduleName) ~= 'string' then return printer end
-  local m = strtrim(moduleName)
-  if Str_IsBlank(m) then return printer end
-  return printer:WithSubPrefix(m)
-end
-
---- @param prefix string|any
---- @return Gears_TraceFn
-local function traceFn(prefix)
-  return function(...) local trfn = ns.tr; return trfn(prefix, ...) end
-end
 
 --[[-----------------------------------------------------------------------------
 Core:: Namespace Override for Dev Namespace
 -------------------------------------------------------------------------------]]
 do
+  --- Creates a print function
+  --- ### Example:
+  --- ```
+  --- local pr = printFn('DeveloperSetup')
+  --- pr('hello world)  -- prints to console {{Gears::DeveloperSetup}} hello world
+  --- ```
+  --- @param moduleName Name
+  local function printerFn(moduleName)
+    local printer = ns.printer
+    if type(moduleName) ~= 'string' then return printer end
+    local m = strtrim(moduleName)
+    if Str_IsBlank(m) then return printer end
+    return printer:WithSubPrefix(m)
+  end
+
   local h = ns.logHolder
   h.printer = printerFn
   h.tracer = traceFn

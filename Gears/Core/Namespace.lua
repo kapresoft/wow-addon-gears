@@ -19,7 +19,6 @@ local AceLib = LibStub('Kapresoft-AceLib-2-0')
 --- @field private logHolder Gears_LogHolder
 --- @field gears Gears_MainFrame
 --- @field toggleButton ToggleButton
---- @field tr fun(prefix:string, ...:any)
 --- @field colorDef Kapresoft-ColorDefinition-2-0
 --- @field private logName Name @The prefix for all logs and traces
 --- @field private printer LibPrettyPrint_Printer
@@ -51,11 +50,9 @@ ns.colorDef = {
 Logger and Tracer
 -------------------------------------------------------------------------------]]
 ns.logHolder = {}; do
-  local h = ns.logHolder;
-  local noop_fn =  function() end
-  local noop_logFnBuilder = function(moduleName) return noop_fn end
+  local h = ns.logHolder; local noop_fn =  function() end
   --- These are noop loggers and tracers for non-dev releases
-  ns.tr, h.printer, h.tracer = noop_fn, noop_logFnBuilder, noop_logFnBuilder
+  h.printer, h.tracer = noop_fn, noop_fn
 end
 
 --[[-----------------------------------------------------------------------------
