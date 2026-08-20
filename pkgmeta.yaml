@@ -45,6 +45,7 @@ ignore:
   - README.md
   - dev
   - pkgmeta.yaml
+  - Gears/Developer
   - Gears/ThirdParty/Libs/Ace3/changelog.txt
   - Gears/ThirdParty/Libs/Ace3/Ace3.lua
   - Gears/ThirdParty/Libs/Ace3/Ace3.toc
@@ -58,6 +59,7 @@ ignore:
   - Gears/ThirdParty/Libs/LibPrettyPrint/*.md
   - Gears/ThirdParty/Libs/LibTraceKit/dev
   - Gears/ThirdParty/Libs/LibTraceKit/*.toc
+  - Gears/ThirdParty/Libs/LibTraceKit/*.md
   - Gears/ThirdParty/Libs/LibTraceKit/Libs/Assets
   - Gears/ThirdParty/Libs/LibTraceKit/Libs/Developer.lua
   - Gears/ThirdParty/Libs/LibTraceKit/ThirdParty
