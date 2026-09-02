@@ -13,7 +13,7 @@ The goal is simplicity, stability, and trust: no bloated features, no fragile ha
 
 ### Donations
 
-If Gears has made your addon development easier, consider supporting its development:
+If Gears has made your gameplay easier, consider supporting its development:
 
 - **[Paypal&trade; Donation](https://www.paypal.com/donate/?hosted_button_id=AX58YP3GSGXVU)**
 - **[Bitcoin Donation](https://www.blockchain.com/btc/address/3QQVAwJGkKHMM2oq6CLVWYgfx83TFVwp39)**
