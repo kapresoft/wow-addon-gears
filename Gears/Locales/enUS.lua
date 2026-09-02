@@ -26,8 +26,13 @@ L['Create a new equipment set'] = true
 L['New Equipment Set']          = true
 L['LibIconPicker Missing']      = 'This feature requires LibIconPicker.|nPlease make sure LibIconPicker is installed and enabled, then reload the UI.'
 
-L['Available commands:']        = true
-L['displays the addon info']    = true
+L['Available commands:']                       = true
+L['displays the addon info']                   = true
+L['equips the named or indexed equipment set'] = true
+L['Usage']                                     = true
+L['No such equipment set with name or index']  = true
+L['Equipped:']                                 = true
+L['Already Equipped:']                         = true
 
 --[[-------------------------------------------------------------------
 New Locale Items Below (Needs translation)

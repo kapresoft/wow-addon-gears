@@ -16,7 +16,8 @@ The goal is simplicity, stability, and trust: no bloated features, no fragile ha
 Type `/gears` in chat to see the list of available commands:
 
 ```
-/gears info               - displays the addon info
+/gears info                    - displays the addon info
+/gears equip <index-or-name>   - equips the named or indexed equipment set
 ```
 
 ### Donations

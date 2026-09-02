@@ -7,7 +7,6 @@ Blizzard Vars
 ---------------------------------------------------------------------]]
 local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
 local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
-local C_UseEquipmentSet = C_EquipmentSet.UseEquipmentSet
 local C_SaveEquipmentSet = C_EquipmentSet.SaveEquipmentSet
 
 local CURRENTLY_EQUIPPED = CURRENTLY_EQUIPPED or L['Currently Equipped']
@@ -72,8 +71,8 @@ local function GetEquipmentSet(id)
   numLost, numIgnored = C_GetEquipmentSetInfo(id)
   
   if not name then return nil end
-  
-  --- @class EquipmentSetDetails
+
+  --- @type EquipmentSetDetails
   local eq = {
     name           = name,
     iconID         = iconFileID,
@@ -235,13 +234,9 @@ function o:EquipGear()
       ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN, true)
     end)
   end
-  
-  if InCombatLockdown() then return ShowError(L['Equip While Combat']) end
-  if EquipmentManager_EquipSet then
-    EquipmentManager_EquipSet(self:GetID())
-  else
-    C_UseEquipmentSet(self:GetID())
-  end
+
+  local success, reason = ns:EquipEquipmentSet(self:GetID())
+  if not success and reason == 'combat' then ShowError(L['Equip While Combat']) end
 end
 
 function o:SaveGear()

@@ -8,10 +8,12 @@ local p, t = ns:log('AddOn')
 
 local L = ns:GetLocale()
 local cu1 = ns:ColorFn(ns.colorDef.util2)
+local errFn = ns:ColorFn(ns.colorDef.error)
 
 --- @type { cmd: string, desc: string }[] @Available slash commands, in display order
 local slashCommands = {
   { cmd = 'info', desc = L['displays the addon info'] },
+  { cmd = 'equip <index-or-name>', desc = L['equips the named or indexed equipment set'] },
 }
 
 local addonInfoUtil__
@@ -19,6 +21,21 @@ local addonInfoUtil__
 local function addonInfoUtil()
   if not addonInfoUtil__ then addonInfoUtil__ = ns:AddonInfoUtil():New(ns.addon) end
   return addonInfoUtil__
+end
+
+--- Resolves an equipment set by its 1-based display index or its name (case-insensitive).
+--- @param indexOrName string
+--- @return EquipmentSetInfo?
+local function FindEquipmentSet(indexOrName)
+  local asIndex = tonumber(indexOrName)
+  local needle = indexOrName:lower()
+  local found
+  ns.gears:ForEachEquipment(function(info)
+    if asIndex and info.index == asIndex then found = info
+    elseif not asIndex and info.name:lower() == needle then found = info
+    end
+  end)
+  return found
 end
 
 --[[-----------------------------------------------------------------------------
@@ -52,11 +69,45 @@ function a:PrintSlashCommandHelp()
   end
 end
 
+function a:PrintEquipUsage()
+  self:Print(('%s: %s'):format(L['Usage'], cu1('/gears equip <index-or-name>')))
+end
+
+--- @param nameOrIndex string
+function a:EquipEquipmentSet(nameOrIndex)
+  if not nameOrIndex or nameOrIndex == '' then
+    self:PrintEquipUsage()
+    return
+  end
+
+  local eqs = FindEquipmentSet(nameOrIndex)
+  if not eqs then
+    self:Print(errFn(('%s: %s'):format(L['No such equipment set with name or index'], nameOrIndex)))
+    return
+  end
+
+  local _, _, _, isEquipped = C_EquipmentSet.GetEquipmentSetInfo(eqs.id)
+  if isEquipped then
+    self:Print(('%s %s (#%d)'):format(L['Already Equipped:'], cu1(eqs.name), eqs.index))
+    return
+  end
+
+  local success, reason = ns:EquipEquipmentSet(eqs.id)
+  if not success and reason == 'combat' then
+    self:Print(errFn(L['Equip While Combat']))
+    return
+  end
+
+  self:Print(('%s %s (#%d)'):format(L['Equipped:'], cu1(eqs.name), eqs.index))
+end
+
 --- @param input string
 function a:OnSlashCommand(input)
-  local cmd = input:match('^(%S*)')
+  local cmd, rest = input:match('^(%S*)%s*(.-)$')
   if cmd == 'info' then
     self:Print(addonInfoUtil():GetInfoSlashCommandText())
+  elseif cmd == 'equip' then
+    self:EquipEquipmentSet(rest)
   else
     self:PrintSlashCommandHelp()
   end
