@@ -14,6 +14,7 @@ local errFn = ns:ColorFn(ns.colorDef.error)
 local slashCommands = {
   { cmd = 'info', desc = L['displays the addon info'] },
   { cmd = 'equip <index-or-name>', desc = L['equips the named or indexed equipment set'] },
+  { cmd = 'status', desc = L['shows the currently equipped set, if any'] },
 }
 
 local addonInfoUtil__
@@ -34,6 +35,17 @@ local function FindEquipmentSet(indexOrName)
     if asIndex and info.index == asIndex then found = info
     elseif not asIndex and info.name:lower() == needle then found = info
     end
+  end)
+  return found
+end
+
+--- Finds the equipment set that is currently fully equipped, if any.
+--- @return EquipmentSetInfo?
+local function FindEquippedSet()
+  local found
+  ns.gears:ForEachEquipment(function(info)
+    local _, _, _, isEquipped = C_EquipmentSet.GetEquipmentSetInfo(info.id)
+    if isEquipped then found = info end
   end)
   return found
 end
@@ -101,6 +113,15 @@ function a:EquipEquipmentSet(nameOrIndex)
   self:Print(('%s %s (#%d)'):format(L['Equipped:'], cu1(eqs.name), eqs.index))
 end
 
+function a:PrintStatus()
+  local eqs = FindEquippedSet()
+  if not eqs then
+    self:Print(L['No equipment set is currently equipped'])
+    return
+  end
+  self:Print(('%s %s (#%d)'):format(L['Equipped:'], cu1(eqs.name), eqs.index))
+end
+
 --- @param input string
 function a:OnSlashCommand(input)
   local cmd, rest = input:match('^(%S*)%s*(.-)$')
@@ -108,6 +129,8 @@ function a:OnSlashCommand(input)
     self:Print(addonInfoUtil():GetInfoSlashCommandText())
   elseif cmd == 'equip' then
     self:EquipEquipmentSet(rest)
+  elseif cmd == 'status' then
+    self:PrintStatus()
   else
     self:PrintSlashCommandHelp()
   end
