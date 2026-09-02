@@ -33,6 +33,8 @@ L['Usage']                                     = true
 L['No such equipment set with name or index']  = true
 L['Equipped:']                                 = true
 L['Already Equipped:']                         = true
+L['shows the currently equipped set, if any']  = true
+L['No equipment set is currently equipped']    = true
 
 --[[-------------------------------------------------------------------
 New Locale Items Below (Needs translation)
