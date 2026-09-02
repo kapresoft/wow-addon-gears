@@ -40,10 +40,11 @@ Base Colors
 ---------------------------------------------------------------------]]
 local colorFormatter = LibStub('Kapresoft-ColorFormatter-2-0')
 
-local prefixColor, subPrefixColor = '59A3FA', '9CFF9C'
+local prefixColor, subPrefixColor, util2Color = '59A3FA', '9CFF9C', 'FFE680'
 ns.colorDef = {
   primary = CreateColorFromRGBHexString(prefixColor),
   secondary = CreateColorFromRGBHexString(subPrefixColor),
+  util2 = CreateColorFromRGBHexString(util2Color),
 }
 
 --[[-----------------------------------------------------------------------------
@@ -152,6 +153,7 @@ local function Namespace_Methods()
   end
 
   function ns:AddonUtil() return LibStub('Kapresoft-AddonUtil-2-0') end
+  function ns:AddonInfoUtil() return LibStub('Kapresoft-AddonInfoUtil-2-0') end
 
   --- @return table<string, string>
   function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, ns:IsDev()) or {} end
