@@ -67,8 +67,6 @@ ignore:
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/LibUtil.xml
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/Annotations
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/AceConfigUtil.lua
-  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/AddonInfoUtil.lua
-  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/ConsoleHelperMixin.lua
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/DebugChatFrameMixin.lua
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/LuaEvaluator.lua
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/ModuleUtil.lua

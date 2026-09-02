@@ -11,6 +11,14 @@ Designed to be lightweight and performance-friendly, the addon focuses on fast, 
 
 The goal is simplicity, stability, and trust: no bloated features, no fragile hacks—just a dependable equipment set manager built on supported WoW APIs.
 
+### Console Commands
+
+Type `/gears` in chat to see the list of available commands:
+
+```
+/gears info               - displays the addon info
+```
+
 ### Donations
 
 If Gears has made your gameplay easier, consider supporting its development:
