@@ -15,6 +15,7 @@ local slashCommands = {
   { cmd = 'info', desc = L['displays the addon info'] },
   { cmd = 'equip <index-or-name>', desc = L['equips the named or indexed equipment set'] },
   { cmd = 'status', desc = L['shows the currently equipped set, if any'] },
+  { cmd = 'list', desc = L['lists all equipment sets'] },
 }
 
 local addonInfoUtil__
@@ -122,6 +123,28 @@ function a:PrintStatus()
   self:Print(('%s %s (#%d)'):format(L['Equipped:'], cu1(eqs.name), eqs.index))
 end
 
+function a:PrintList()
+  local equipped = FindEquippedSet()
+  local equippedId = equipped and equipped.id
+
+  local lines = {}
+  local count = ns.gears:ForEachEquipment(function(info)
+    local line = ('  #%d %s'):format(info.index, cu1(info.name))
+    if info.id == equippedId then
+      line = ('%s %s'):format(line, ('(%s)'):format(L['equipped']))
+    end
+    lines[#lines + 1] = line
+  end)
+
+  if count == 0 then
+    self:Print(L['No equipment sets found'])
+    return
+  end
+
+  self:Print(L['Equipment Sets:'])
+  for _, line in ipairs(lines) do self:Print(line) end
+end
+
 --- @param input string
 function a:OnSlashCommand(input)
   local cmd, rest = input:match('^(%S*)%s*(.-)$')
@@ -131,6 +154,8 @@ function a:OnSlashCommand(input)
     self:EquipEquipmentSet(rest)
   elseif cmd == 'status' then
     self:PrintStatus()
+  elseif cmd == 'list' then
+    self:PrintList()
   else
     self:PrintSlashCommandHelp()
   end

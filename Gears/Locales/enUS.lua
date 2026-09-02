@@ -35,6 +35,10 @@ L['Equipped:']                                 = true
 L['Already Equipped:']                         = true
 L['shows the currently equipped set, if any']  = true
 L['No equipment set is currently equipped']    = true
+L['lists all equipment sets']                  = true
+L['No equipment sets found']                   = true
+L['Equipment Sets:']                           = true
+L['equipped']                                  = true
 
 --[[-------------------------------------------------------------------
 New Locale Items Below (Needs translation)

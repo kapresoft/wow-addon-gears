@@ -18,6 +18,8 @@ Type `/gears` in chat to see the list of available commands:
 ```
 /gears info                    - displays the addon info
 /gears equip <index-or-name>   - equips the named or indexed equipment set
+/gears status                  - shows the currently equipped set, if any
+/gears list                    - lists all equipment sets
 ```
 
 ### Donations
