@@ -40,11 +40,12 @@ Base Colors
 ---------------------------------------------------------------------]]
 local colorFormatter = LibStub('Kapresoft-ColorFormatter-2-0')
 
-local prefixColor, subPrefixColor, util2Color = '59A3FA', '9CFF9C', 'FFE680'
+local prefixColor, subPrefixColor, util2Color, errorColor = '59A3FA', '9CFF9C', 'FFE680', 'FF4444'
 ns.colorDef = {
   primary = CreateColorFromRGBHexString(prefixColor),
   secondary = CreateColorFromRGBHexString(subPrefixColor),
   util2 = CreateColorFromRGBHexString(util2Color),
+  error = CreateColorFromRGBHexString(errorColor),
 }
 
 --[[-----------------------------------------------------------------------------
@@ -181,6 +182,22 @@ local function Namespace_Methods()
   function ns:HasBlizzEquipmentManager()
     return PaperDollFrame and PaperDollSidebarTab1
             and PaperDollFrame.EquipmentManagerPane
+  end
+
+  --- Equips the equipment set by ID. Does not play sounds or present UI;
+  --- callers decide how to surface success/failure.
+  --- @NotCombatSafe
+  --- @param id Identifier @The equipmentSet ID
+  --- @return boolean success
+  --- @return 'combat'? reason @Present when success is false
+  function ns:EquipEquipmentSet(id)
+    if InCombatLockdown() then return false, 'combat' end
+    if EquipmentManager_EquipSet then
+      EquipmentManager_EquipSet(id)
+    else
+      C_EquipmentSet.UseEquipmentSet(id)
+    end
+    return true
   end
   
   --- @return EquipmentSlotFlyoutManager
