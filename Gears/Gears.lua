@@ -166,9 +166,13 @@ Event Hooks
 ---------------------------------------------------------------------]]
 function a:OnAddOnReady(evt, isInitialLogin, isReloadingUi)
   --@do-not-package@
-  t('OnAddOnReady', 'isInitialLogin=', isInitialLogin,
-      'isReloadingUi=', isReloadingUi, 'GameVersion=', ns.gameVersion,
-      'IsDev=', ns:IsDev())
+  isInitialLogin = true
+  t('OnAddOnReady', 'isInitialLogin(forced, dev-only)=', isInitialLogin,
+      'isReloadingUi=', isReloadingUi, 'GameVersion=', ns.gameVersion)
   --@end-do-not-package@
   self:SendMessage(ns:msg('ADDON_READY'), isInitialLogin, isReloadingUi)
+
+  if not isInitialLogin then return end
+
+  C_Timer.After(2, function() ns:ShowNextUnseenAnnouncement() end)
 end; a:RegisterEvent('PLAYER_ENTERING_WORLD', 'OnAddOnReady')
