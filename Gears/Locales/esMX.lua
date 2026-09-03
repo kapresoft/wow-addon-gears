@@ -3,14 +3,14 @@ Local Vars
 -------------------------------------------------------------------------------]]
 --- @type Namespace
 local ns = select(2, ...)
-local p, t = ns:log('Locale_esES')
+local p, t = ns:log('Locale_esMX')
 
-local L = ns:NewLocale('esES'); if not L then return end
+local L = ns:NewLocale('esMX'); if not L then return end
 
 --[[-------------------------------------------------------------------
 Locale Values
 ---------------------------------------------------------------------]]
-L["Set Name"]              = "Nombre del conjunto"
+L['Set Name']              = 'Nombre del conjunto'
 L['Currently Equipped']    = 'Equipado actualmente'
 L['Left-click']            = 'Clic izquierdo'
 L['Double-click']          = 'Doble clic'
@@ -19,7 +19,7 @@ L['Available Actions']     = 'Acciones disponibles'
 L['Select']                = 'Seleccionar'
 L['Equip']                 = 'Equipar'
 L['Drag to an action bar'] = 'Arrastrar a una barra de acción'
-L['Equip While Combat']    = 'Los conjuntos de equipo no pueden cambiarse durante el combate.'
+L['Equip While Combat']    = 'Los conjuntos de equipo no se pueden cambiar durante el combate.'
 
 L['Open Gears Panel']           = 'Abrir el panel de Gears'
 L['Create a new equipment set'] = 'Crear un nuevo conjunto de equipo'

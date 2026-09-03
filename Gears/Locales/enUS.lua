@@ -5,7 +5,7 @@ Local Vars
 local ns = select(2, ...)
 local p, t = ns:log('Locale_enUS')
 
-local L = ns:NewLocale(ns.addon, 'enUS', true); if not L then return end
+local L = ns:NewLocale('enUS', true); if not L then return end
 
 --[[-------------------------------------------------------------------
 Locale Values

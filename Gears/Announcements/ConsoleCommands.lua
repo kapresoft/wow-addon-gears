@@ -58,7 +58,7 @@ local def = {
   ),
 
   content_deDE = BuildContent(
-    'Achtung! Gears unterstützt jetzt Konsolenbefehle für schnellen Zugriff, ohne das Fenster zu öffnen.',
+    'Übrigens: Gears unterstützt jetzt Konsolenbefehle für schnellen Zugriff, ohne das Fenster zu öffnen.',
     'zeigt die Addon-Informationen an',
     'rüstet das benannte oder indizierte Ausrüstungsset aus',
     'zeigt das aktuell angelegte Set an, falls vorhanden',
@@ -66,7 +66,7 @@ local def = {
   ),
 
   content_frFR = BuildContent(
-    'Attention ! Gears prend désormais en charge les commandes de console pour un accès rapide sans ouvrir le panneau.',
+    'Petite info : Gears prend désormais en charge les commandes de console pour un accès rapide sans ouvrir le panneau.',
     "affiche les informations de l'addon",
     "équipe l'ensemble d'équipement nommé ou indexé",
     'affiche le set actuellement équipé, le cas échéant',
@@ -74,7 +74,7 @@ local def = {
   ),
 
   content_esES = BuildContent(
-    '¡Atención! Gears ahora admite comandos de consola para un acceso rápido sin abrir el panel.',
+    'Aviso rápido: Gears ahora admite comandos de consola para un acceso rápido sin abrir el panel.',
     'muestra la información del addon',
     'equipa el conjunto de equipo indicado por nombre o índice',
     'muestra el conjunto actualmente equipado, si lo hay',
@@ -82,7 +82,7 @@ local def = {
   ),
 
   content_esMX = BuildContent(
-    '¡Atención! Gears ahora admite comandos de consola para un acceso rápido sin abrir el panel.',
+    'Aviso rápido: Gears ahora admite comandos de consola para un acceso rápido sin abrir el panel.',
     'muestra la información del addon',
     'equipa el conjunto de equipo indicado por nombre o índice',
     'muestra el conjunto actualmente equipado, si lo hay',
@@ -90,7 +90,7 @@ local def = {
   ),
 
   content_ruRU = BuildContent(
-    'Внимание! Gears теперь поддерживает консольные команды для быстрого доступа без открытия панели.',
+    'Кстати: теперь в Gears есть консольные команды для быстрого доступа без открытия панели.',
     'показывает информацию об аддоне',
     'экипирует комплект по имени или индексу',
     'показывает текущий надетый комплект, если есть',
@@ -98,7 +98,7 @@ local def = {
   ),
 
   content_ptBR = BuildContent(
-    'Atenção! O Gears agora suporta comandos de console para acesso rápido sem abrir o painel.',
+    'Aviso rápido: o Gears agora suporta comandos de console para acesso rápido sem abrir o painel.',
     'exibe as informações do addon',
     'equipa o conjunto de equipamento pelo nome ou índice',
     'mostra o conjunto atualmente equipado, se houver',
@@ -106,7 +106,7 @@ local def = {
   ),
 
   content_zhCN = BuildContent(
-    '注意！Gears 现已支持控制台命令，无需打开面板即可快速访问。',
+    '小提示：Gears 现已支持控制台命令，无需打开面板即可快速访问。',
     '显示插件信息',
     '按名称或索引装备指定的装备集',
     '显示当前已装备的装备集（如有）',
@@ -114,7 +114,7 @@ local def = {
   ),
 
   content_zhTW = BuildContent(
-    '注意！Gears 現已支援主控台指令，無需開啟面板即可快速存取。',
+    '小提醒：Gears 現已支援主控台指令，無需開啟面板即可快速存取。',
     '顯示外掛資訊',
     '依名稱或索引裝備指定的裝備組',
     '顯示目前已裝備的裝備組（如有）',
@@ -122,7 +122,7 @@ local def = {
   ),
 
   content_koKR = BuildContent(
-    '알림! Gears가 이제 패널을 열지 않고도 빠르게 사용할 수 있는 콘솔 명령어를 지원합니다.',
+    '알아두세요: 이제 Gears에서 패널을 열지 않고도 빠르게 사용할 수 있는 콘솔 명령어를 지원합니다.',
     '애드온 정보를 표시합니다',
     '이름 또는 번호로 지정한 장비 세트를 장착합니다',
     '현재 장착된 세트가 있으면 표시합니다',
@@ -130,7 +130,7 @@ local def = {
   ),
 
   content_itIT = BuildContent(
-    'Attenzione! Gears ora supporta i comandi console per un accesso rapido senza aprire il pannello.',
+    'Piccola novità: Gears ora supporta i comandi console per un accesso rapido senza aprire il pannello.',
     "mostra le informazioni sull'addon",
     "equipaggia il set di equipaggiamento indicato per nome o indice",
     'mostra il set attualmente equipaggiato, se presente',
