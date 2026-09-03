@@ -21,6 +21,7 @@ Type Definitions
 --- @class GlobalConfig
 --- @field schemaVersion number
 --- @field isInitialShowComplete boolean @True after Gears has been shown once on first PaperDoll open; used to prevent auto-show on subsequent opens
+--- @field announcementsShown table<string, boolean> @Keyed by announcement dbKey; true once that one-time announcement dialog has been shown
 
 --  ================================================
 --- @class ProfileConfig
@@ -42,7 +43,11 @@ local DB_VERSION = 1
 
 --- @type DatabaseObj
 local DEFAULT_DB = {
-  ['global'] = { schemaVersion = DB_VERSION, isInitialShowComplete = false },
+  ['global'] = {
+      schemaVersion = DB_VERSION,
+      isInitialShowComplete = false,
+      announcementsShown = {}
+  },
   ['profile'] = {},
   ['char'] = {},
 }

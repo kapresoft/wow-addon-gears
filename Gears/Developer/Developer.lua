@@ -49,4 +49,9 @@ function o:eqIds()
   return result
 end
 
+-- /dump gdev:resetAnnouncements()
+function o:resetAnnouncements()
+  ns:g().announcementsShown = {}
+end
+
 

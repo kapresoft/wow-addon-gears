@@ -53,7 +53,6 @@ ignore:
   - ThirdParty-Libs/LibPrettyPrint/LibPrettyPrint.xml
   - ThirdParty-Libs/LibPrettyPrint/Libs/Developer/*.xml
   - ThirdParty-Libs/LibPrettyPrint/Libs/Developer/Developer*.lua
-  - ThirdParty-Libs/LibPrettyPrint/Libs/Annotations
   - ThirdParty-Libs/LibTraceKit/dev
   - ThirdParty-Libs/LibTraceKit/Libs/Assets
   - ThirdParty-Libs/LibTraceKit/Libs/Developer.lua
@@ -65,7 +64,6 @@ ignore:
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/ThirdParty
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/LibUtil.lua
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/LibUtil.xml
-  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/Annotations
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/AceConfigUtil.lua
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/DebugChatFrameMixin.lua
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Modules/LuaEvaluator.lua

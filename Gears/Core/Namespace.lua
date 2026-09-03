@@ -22,6 +22,9 @@ local AceLib = LibStub('Kapresoft-AceLib-2-0')
 --- @field colorDef Kapresoft-ColorDefinition-2-0
 --- @field private logName Name @The prefix for all logs and traces
 --- @field private printer LibPrettyPrint_Printer
+--- @field RegisterAnnouncement fun(self: Namespace, def: AnnouncementDef) @see Announcement/AnnouncementDialogMixin.lua
+--- @field ShowAnnouncementByKey fun(self: Namespace, dbKey: string) @see Announcement/AnnouncementDialogMixin.lua
+--- @field ShowNextUnseenAnnouncement fun(self: Namespace) @see Announcement/AnnouncementDialogMixin.lua
 local ns = kns
 
 
