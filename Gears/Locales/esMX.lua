@@ -50,3 +50,7 @@ L['Place item in bags::DESC']   = 'Mueve el objeto equipado al primer espacio di
 L['Shift-Click']                = 'Mayús-clic'
 L['Ignore All Slots']           = 'Ignorar todas las ranuras'
 L['Include All Slots']          = 'Incluir todas las ranuras'
+L['General']                       = 'General'
+L['Announce Equip in Chat']        = 'Anunciar equipar en el chat'
+L['Announce Equip in Chat::DESC']  = 'Muestra un mensaje de confirmación en la ventana de chat al usar /gears equip'
+L['opens the Gears options panel'] = 'abre el panel de opciones de Gears'

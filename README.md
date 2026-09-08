@@ -23,7 +23,19 @@ Type `/gears` in chat to see the list of available commands:
 /gears options                 - opens the Gears options panel (requires Gears-OptionsUI)
 ```
 
-Type `/gears-options` to configure Gears directly from the command line (e.g. `/gears-options general announceEquip off` to silence the "Equipped:" chat message printed by `/gears equip`, or `on` to re-enable it). Both `/gears options` and `/gears-options` require the **Gears-OptionsUI** companion addon to be enabled.
+Type `/gears-options` to configure Gears directly from the command line. Both `/gears options` and `/gears-options` require the **Gears-OptionsUI** companion addon to be enabled.
+
+Examples:
+```
+# Toggles state
+/gears-options general announceEquip
+
+# Enables state
+/gears-options general announceEquip on
+
+# Disables state
+/gears-options general announceEquip off
+```
 
 ### Donations
 
