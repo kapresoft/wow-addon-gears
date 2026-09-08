@@ -1,5 +1,5 @@
 
---- @type Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 local eq = C_EquipmentSet
 local LibIconPickerUtil = ns.O.LibIconPickerUtil

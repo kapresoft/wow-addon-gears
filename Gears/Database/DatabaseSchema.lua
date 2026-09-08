@@ -1,7 +1,7 @@
 --[[-----------------------------------------------------------------------------
 Local Vars
 -------------------------------------------------------------------------------]]
---- @type Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 local Table = ns.O.Table
 local tbl_DeepCopy = Table.DeepCopy
@@ -22,6 +22,7 @@ Type Definitions
 --- @field schemaVersion number
 --- @field isInitialShowComplete boolean @True after Gears has been shown once on first PaperDoll open; used to prevent auto-show on subsequent opens
 --- @field announcementsShown table<string, boolean> @Keyed by announcement dbKey; true once that one-time announcement dialog has been shown
+--- @field announceEquip boolean @When true, `/gears equip` prints an "Equipped:" chat message on success
 
 --  ================================================
 --- @class ProfileConfig
@@ -39,14 +40,15 @@ local p, t = ns:log(libName)
 --[[-------------------------------------------------------------------
 Default Database
 ---------------------------------------------------------------------]]
-local DB_VERSION = 1
+local DB_VERSION = 2
 
 --- @type DatabaseObj
 local DEFAULT_DB = {
   ['global'] = {
       schemaVersion = DB_VERSION,
       isInitialShowComplete = false,
-      announcementsShown = {}
+      announcementsShown = {},
+      announceEquip = true,
   },
   ['profile'] = {},
   ['char'] = {},

@@ -20,7 +20,10 @@ Type `/gears` in chat to see the list of available commands:
 /gears equip <index-or-name>   - equips the named or indexed equipment set
 /gears status                  - shows the currently equipped set, if any
 /gears list                    - lists all equipment sets
+/gears options                 - opens the Gears options panel (requires Gears-OptionsUI)
 ```
+
+Type `/gears-options` to configure Gears directly from the command line (e.g. `/gears-options general announceEquip off` to silence the "Equipped:" chat message printed by `/gears equip`, or `on` to re-enable it). Both `/gears options` and `/gears-options` require the **Gears-OptionsUI** companion addon to be enabled.
 
 ### Donations
 

@@ -1,4 +1,4 @@
---- @type Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 
 -- Matches Gears.lua's `cu1` command-keyword highlight, for visual

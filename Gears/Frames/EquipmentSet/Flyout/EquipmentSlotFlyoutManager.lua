@@ -1,7 +1,7 @@
 --[[-----------------------------------------------------------------------------
 Local Vars
 -------------------------------------------------------------------------------]]
---- @type Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 local cfu = ns.O.CharacterFrameUtil
 local Tbl_IsEmpty = ns.O.Table.IsEmpty

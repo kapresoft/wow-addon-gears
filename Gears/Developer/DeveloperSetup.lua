@@ -3,7 +3,7 @@ Local Vars
 -------------------------------------------------------------------------------]]
 local sformat, upper, date = string.format, string.upper, date
 
---- @type Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 ns.settings.developer = true
 
@@ -25,6 +25,21 @@ local primaryC = ns:ColorFn(ns.colorDef.primary)
 local function traceFn(prefix)
   return LibTraceKit:New(ns.addon, prefix) :WithDelimiter(TRACE_DELIM) --[[@as Gears_TraceFn ]]
 end; local t = traceFn(libName)
+
+--- Creates a print function
+--- ### Example:
+--- ```
+--- local pr = printFn('DeveloperSetup')
+--- pr('hello world)  -- prints to console {{Gears::DeveloperSetup}} hello world
+--- ```
+--- @param moduleName Name
+local function printerFn(moduleName)
+  local printer = ns.printer
+  if type(moduleName) ~= 'string' then return printer end
+  local m = strtrim(moduleName)
+  if Str_IsBlank(m) then return printer end
+  return printer:WithSubPrefix(m)
+end
 
 --[[-----------------------------------------------------------------------------
 External Dependencies
@@ -69,21 +84,6 @@ end; LoadDevSuite()
 Core:: Namespace Override for Dev Namespace
 -------------------------------------------------------------------------------]]
 do
-  --- Creates a print function
-  --- ### Example:
-  --- ```
-  --- local pr = printFn('DeveloperSetup')
-  --- pr('hello world)  -- prints to console {{Gears::DeveloperSetup}} hello world
-  --- ```
-  --- @param moduleName Name
-  local function printerFn(moduleName)
-    local printer = ns.printer
-    if type(moduleName) ~= 'string' then return printer end
-    local m = strtrim(moduleName)
-    if Str_IsBlank(m) then return printer end
-    return printer:WithSubPrefix(m)
-  end
-
   local h = ns.logHolder
   h.printer = printerFn
   h.tracer = traceFn

@@ -1,7 +1,7 @@
 --[[-----------------------------------------------------------------------------
 Local Vars
 -------------------------------------------------------------------------------]]
---- @type Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 local iu = ns.O.ItemUtil
 local L = ns:GetLocale()

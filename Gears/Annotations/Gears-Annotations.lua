@@ -2,6 +2,16 @@
 Namespace
 -------------------------------------------------------------------------------]]
 
+--- @type Gears
+GEARS = {}
+--- @type Gears_Namespace
+GEARS_NS = {}
+
+--- @type Gears_OptionsUI
+GEARS_OPTIONSUI = {}
+--- @type Gears_OptionsUI_Namespace
+GEARS_OPTIONSUI_NS = {}
+
 --- @class NamespaceObjects
 --- @field GameVersion GameVersion
 --- @field LibIconPickerUtil LibIconPickerUtil
