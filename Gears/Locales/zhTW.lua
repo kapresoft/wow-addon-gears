@@ -50,3 +50,7 @@ L['Place item in bags::DESC']   = '將已裝備的物品移動到第一個可用
 L['Shift-Click']                = 'Shift+點擊'
 L['Ignore All Slots']           = '忽略所有欄位'
 L['Include All Slots']          = '包含所有欄位'
+L['General']                       = '一般'
+L['Announce Equip in Chat']        = '在聊天中宣布裝備'
+L['Announce Equip in Chat::DESC']  = '使用 /gears equip 時在聊天視窗中顯示確認訊息'
+L['opens the Gears options panel'] = '開啟 Gears 選項面板'
