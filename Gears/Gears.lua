@@ -2,7 +2,7 @@
 Local Vars
 -------------------------------------------------------------------------------]]
 
---- @type Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 local p, t = ns:log('AddOn')
 
@@ -17,6 +17,8 @@ local slashCommands = {
   { cmd = 'status', desc = L['shows the currently equipped set, if any'] },
   { cmd = 'list', desc = L['lists all equipment sets'] },
 }
+
+local dependentAddOns = { 'Gears-OptionsUI' }
 
 local addonInfoUtil__
 --- @return Kapresoft-AddonInfoUtil-2-0
@@ -67,10 +69,19 @@ Lifecycle Methods
 ---------------------------------------------------------------------]]
 function a:OnInitialize()
   ns:InitDatabase()
+  for _, addonName in ipairs(dependentAddOns) do
+    self:RegisterMessage(addonName .. '::OnEnable', 'OnReadyDependentAddOn')
+  end
   self:RegisterChatCommand('gears', 'OnSlashCommand')
 end
 function a:OnEnable() end
 function a:OnDisable() end
+
+--- @param evt EventName
+--- @param addon AceAddon
+function a:OnReadyDependentAddOn(evt, addon)
+  ns:Register(addon:GetName(), addon)
+end
 
 --[[-------------------------------------------------------------------
 Addon Methods
@@ -79,6 +90,9 @@ function a:PrintSlashCommandHelp()
   self:Print(L['Available commands:'])
   for _, c in ipairs(slashCommands) do
     self:Print(('  %s - %s'):format(cu1(c.cmd), c.desc))
+  end
+  if ns.O[dependentAddOns[1]] then
+    self:Print(('  %s - %s'):format(cu1('options'), L['opens the Gears options panel']))
   end
 end
 
@@ -101,7 +115,9 @@ function a:EquipEquipmentSet(nameOrIndex)
 
   local _, _, _, isEquipped = C_EquipmentSet.GetEquipmentSetInfo(eqs.id)
   if isEquipped then
-    self:Print(('%s %s (#%d)'):format(L['Already Equipped:'], cu1(eqs.name), eqs.index))
+    if ns:g().announceEquip then
+      self:Print(('%s %s (#%d)'):format(L['Already Equipped:'], cu1(eqs.name), eqs.index))
+    end
     return
   end
 
@@ -111,7 +127,9 @@ function a:EquipEquipmentSet(nameOrIndex)
     return
   end
 
-  self:Print(('%s %s (#%d)'):format(L['Equipped:'], cu1(eqs.name), eqs.index))
+  if ns:g().announceEquip then
+    self:Print(('%s %s (#%d)'):format(L['Equipped:'], cu1(eqs.name), eqs.index))
+  end
 end
 
 function a:PrintStatus()
@@ -145,6 +163,14 @@ function a:PrintList()
   for _, line in ipairs(lines) do self:Print(line) end
 end
 
+function a:OpenOptions()
+  if not ns.O[dependentAddOns[1]] then
+    self:PrintSlashCommandHelp()
+    return
+  end
+  ns:AceConfigDialog():Open(ns.addon)
+end
+
 --- @param input string
 function a:OnSlashCommand(input)
   local cmd, rest = input:match('^(%S*)%s*(.-)$')
@@ -156,6 +182,8 @@ function a:OnSlashCommand(input)
     self:PrintStatus()
   elseif cmd == 'list' then
     self:PrintList()
+  elseif cmd == 'options' then
+    self:OpenOptions()
   else
     self:PrintSlashCommandHelp()
   end

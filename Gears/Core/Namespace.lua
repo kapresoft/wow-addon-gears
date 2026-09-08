@@ -8,10 +8,10 @@ local strtrim = strtrim
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
-local GameVersionMixin = LibStub('Kapresoft-GameVersionMixin-2-0')
+local GVM = LibStub('Kapresoft-GameVersionMixin-2-0')
 local AceLib = LibStub('Kapresoft-AceLib-2-0')
 
---- @class Namespace : Kapresoft-GameVersionMixin-2-0, Kapresoft-AceLib-2-0
+--- @class Gears_Namespace : Kapresoft-GameVersionMixin-2-0, Kapresoft-AceLib-2-0
 --- @field __db DatabaseObj
 --- @field O NamespaceObjects
 --- @field gameVersion GameVersion
@@ -22,13 +22,13 @@ local AceLib = LibStub('Kapresoft-AceLib-2-0')
 --- @field colorDef Kapresoft-ColorDefinition-2-0
 --- @field private logName Name @The prefix for all logs and traces
 --- @field private printer LibPrettyPrint_Printer
---- @field RegisterAnnouncement fun(self: Namespace, def: AnnouncementDef) @see Announcement/AnnouncementDialogMixin.lua
---- @field ShowAnnouncementByKey fun(self: Namespace, dbKey: string) @see Announcement/AnnouncementDialogMixin.lua
---- @field ShowNextUnseenAnnouncement fun(self: Namespace) @see Announcement/AnnouncementDialogMixin.lua
+--- @field RegisterAnnouncement fun(self: Gears_Namespace, def: AnnouncementDef) @see Announcement/AnnouncementDialogMixin.lua
+--- @field ShowAnnouncementByKey fun(self: Gears_Namespace, dbKey: string) @see Announcement/AnnouncementDialogMixin.lua
+--- @field ShowNextUnseenAnnouncement fun(self: Gears_Namespace) @see Announcement/AnnouncementDialogMixin.lua
 local ns = kns
 
 
-Mixin(ns, GameVersionMixin, AceLib); ns.addon = addon; GEARS_NS = ns
+Mixin(ns, GVM, AceLib); ns.addon = addon; GEARS_NS = ns
 ns.O = ns.O or {}
 
 --- Matches *.toc SavedVariables definition
@@ -111,10 +111,12 @@ local function Namespace_Methods()
   
   function ns.TRUE() return true end
   function ns:AceLib() return AceLib end
+  --- For non-enUS locales only; always registers with isDefault=false, silent=true.
   --- @see AceLocale-3.0.NewLocale
+  --- @param locale string
   --- @return table<string, boolean|string>? locale Locale Table to add localizations to, or nil if the current locale is not required.
-  function ns:NewLocale(locale, isDefault, silent)
-    return ns:AceLocale():NewLocale(ns.addon, locale, isDefault, silent)
+  function ns:NewLocale(locale)
+    return ns:AceLocale():NewLocale(ns.addon, locale, false, true)
   end
 
   --- @param name Name The module name; see NamespaceObjects
@@ -136,6 +138,17 @@ local function Namespace_Methods()
   --- @param lib `T`
   --- @return table|T library
   function ns:obj(lib) return ns.O[lib] end
+
+  --- Register a Namespace Module/Library, e.g. a dependent addon announcing its presence.
+  --- @generic T
+  --- @param libName string
+  --- @param anyObj T
+  --- @return T
+  function ns:Register(libName, anyObj)
+    assert(type(libName) == 'string' and #libName > 0, 'Register(libName, obj): {libName} is required.')
+    ns.O[libName] = anyObj
+    return anyObj
+  end
 
   --- @param mainFrame Gears_MainFrame
   function ns:RegisterMainFrame(mainFrame) ns.gears = mainFrame end
@@ -160,7 +173,7 @@ local function Namespace_Methods()
   function ns:AddonInfoUtil() return LibStub('Kapresoft-AddonInfoUtil-2-0') end
 
   --- @return table<string, string>
-  function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, ns:IsDev()) or {} end
+  function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, true) or {} end
   
   --- >Safe wrapper for PlaySound.
   --- >Returns two results: willPlay:boolean, soundHandle:boolean
@@ -209,6 +222,7 @@ local function Namespace_Methods()
   --[[--------------------------------------------------------
   Database
   ------------------------------------------------------------]]
+
   function ns:InitDatabase() self.__db = ns:AceDB():New(DB_NAME, ns.O.DatabaseSchema:GetDefaultDatabase()) end
   --- @return DatabaseObj
   function ns:db() return self.__db end

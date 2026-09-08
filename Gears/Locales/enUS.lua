@@ -1,11 +1,12 @@
 --[[-----------------------------------------------------------------------------
 Local Vars
 -------------------------------------------------------------------------------]]
---- @type Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 local p, t = ns:log('Locale_enUS')
 
-local L = ns:NewLocale('enUS', true); if not L then return end
+local L = ns:AceLocale():NewLocale(ns.addon, 'enUS', true, true)
+if not L then return end
 
 --[[-------------------------------------------------------------------
 Locale Values
@@ -53,3 +54,7 @@ L['Place item in bags::DESC'] = 'Moves equipped item to first available bag slot
 L['Shift-Click']              = true
 L['Ignore All Slots']         = true
 L['Include All Slots']        = true
+L['General']                  = true
+L['Announce Equip in Chat']       = true
+L['Announce Equip in Chat::DESC'] = 'Prints a confirmation message in the chat window when using /gears equip'
+L['opens the Gears options panel'] = true

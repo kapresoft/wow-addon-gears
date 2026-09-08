@@ -46,6 +46,7 @@ ignore:
   - dev
   - pkgmeta.yaml
   - Gears/Developer
+  - Gears-OptionsUI/Developer
   - Gears/ThirdParty/Libs/Ace3/changelog.txt
   - Gears/ThirdParty/Libs/Ace3/Ace3.lua
   - Gears/ThirdParty/Libs/Ace3/Ace3.toc
@@ -87,8 +88,6 @@ ignore:
   - Gears/ThirdParty/Libs/LibPrettyPrint/LibPrettyPrint.xml
   - Gears/ThirdParty/Libs/LibPrettyPrint/Libs/Annotations
   - Gears/ThirdParty/Libs/LibPrettyPrint/Libs/Developer
-  - Gears-OptionsUI
-### Ignore Gears-OptionsUI for now
 
 # REQUIRED for CurseForge packager (non-obvious):
 # The LEFT side MUST be <repo-folder>/<addon-folder>
