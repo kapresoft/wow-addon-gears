@@ -25,7 +25,7 @@ Options Table
 local function CreateOptions()
   return {
     type = 'group',
-    name = 'Gears',
+    name = cns:GetVersion(),
     args = {
       general = {
         type = 'group',
@@ -49,7 +49,6 @@ end
 
 function o:RegisterOptions()
   AceConfig:RegisterOptionsTable(cns.addon, CreateOptions(), { CONSOLE_COMMAND_OPTIONS })
-  AceConfigDialog:AddToBlizOptions(cns.addon, cns.addon)
 end
 
 --[[-------------------------------------------------------------------

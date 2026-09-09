@@ -20,13 +20,6 @@ local slashCommands = {
 
 local dependentAddOns = { 'Gears-OptionsUI' }
 
-local addonInfoUtil__
---- @return Kapresoft-AddonInfoUtil-2-0
-local function addonInfoUtil()
-  if not addonInfoUtil__ then addonInfoUtil__ = ns:AddonInfoUtil():New(ns.addon) end
-  return addonInfoUtil__
-end
-
 --- Resolves an equipment set by its 1-based display index or its name (case-insensitive).
 --- @param indexOrName string
 --- @return EquipmentSetInfo?
@@ -175,7 +168,7 @@ end
 function a:OnSlashCommand(input)
   local cmd, rest = input:match('^(%S*)%s*(.-)$')
   if cmd == 'info' then
-    self:Print(addonInfoUtil():GetInfoSlashCommandText())
+    self:Print(ns:aiu():GetInfoSlashCommandText())
   elseif cmd == 'equip' then
     self:EquipEquipmentSet(rest)
   elseif cmd == 'status' then
