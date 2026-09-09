@@ -172,6 +172,22 @@ local function Namespace_Methods()
   function ns:AddonUtil() return LibStub('Kapresoft-AddonUtil-2-0') end
   function ns:AddonInfoUtil() return LibStub('Kapresoft-AddonInfoUtil-2-0') end
 
+  local addonInfoUtil__
+  --- @return Kapresoft-AddonInfoUtil-2-0
+  function ns:aiu()
+    if not addonInfoUtil__ then addonInfoUtil__ = ns:AddonInfoUtil():New(ns.addon) end
+    return addonInfoUtil__
+  end
+
+  --- @return string @e.g. "Gears v2026.9.8"
+  function ns:GetVersion()
+    local version = ('%s v%s'):format(ns.addon, ns:aiu():GetVersion())
+    --@do-not-package@
+    version = 'Gears v1.0.0.DEV'
+    --@end-do-not-package@
+    return version
+  end
+
   --- @return table<string, string>
   function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, true) or {} end
   
