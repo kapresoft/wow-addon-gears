@@ -1,7 +1,7 @@
 ## Interface: 11509, 20506, 30403, 40402, 50504, 120100
 ## Version: @project-version@
 ## Title: |cff1784d1Gears|r-OptionsUI
-## Notes: The Options UI component of the core |cff1784d1Gears|r addon.|n|cff1784d1This addon is provided 'as is' without any warranties. All rights reserved. Redistribution or modification is not permitted.|r
+## Notes: The options and the UI component of the core |cff1784d1Gears|r addon.|n|cff1784d1This addon is provided 'as is' without any warranties. All rights reserved. Redistribution or modification is not permitted.|r
 ## Author: Antonio W. Lagnada (kapresoft@gmail.com)
 ## IconTexture: Interface/AddOns/Gears-OptionsUI/Assets/gears-logo-1
 
