@@ -25,7 +25,7 @@ Options Table
 local function CreateOptions()
   return {
     type = 'group',
-    name = cns:GetVersion(),
+    name = ('%s v%s'):format(cns.addon, cns:GetVersion()),
     args = {
       general = {
         type = 'group',

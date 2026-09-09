@@ -179,11 +179,11 @@ local function Namespace_Methods()
     return addonInfoUtil__
   end
 
-  --- @return string @e.g. "Gears v2026.9.8"
+  --- @return string @e.g. "2026.9.8"
   function ns:GetVersion()
-    local version = ('%s v%s'):format(ns.addon, ns:aiu():GetVersion())
+    local version = ns:aiu():GetVersion()
     --@do-not-package@
-    version = 'Gears v1.0.0.DEV'
+    version = '1.0.0.DEV'
     --@end-do-not-package@
     return version
   end
