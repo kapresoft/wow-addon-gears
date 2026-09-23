@@ -23,6 +23,11 @@ L['Drag to an action bar']      = true
 L['Equip While Combat']         = 'Equipment sets cannot be changed during combat.'
 
 L['Open Gears Panel']           = true
+L['Alt-click']                  = true
+L['Keep open this session']     = true
+L['Kept open this session']     = true
+L['Close and stop keeping open'] = true
+L['Resets on /reload']          = true
 L['Create a new equipment set'] = true
 L['New Equipment Set']          = true
 L['LibIconPicker Missing']      = 'This feature requires LibIconPicker.|nPlease make sure LibIconPicker is installed and enabled, then reload the UI.'
