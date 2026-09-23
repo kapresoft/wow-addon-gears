@@ -22,6 +22,11 @@ L['Drag to an action bar'] = 'Перетащите на панель дейст�
 L['Equip While Combat']    = 'Комплекты экипировки нельзя менять во время боя.'
 
 L['Open Gears Panel']           = 'Открыть панель Gears'
+L['Alt-click']                  = 'Alt-клик'
+L['Keep open this session']     = 'Держать открытой в этом сеансе'
+L['Kept open this session']     = 'Открыта в этом сеансе'
+L['Close and stop keeping open'] = 'Закрыть и больше не держать открытой'
+L['Resets on /reload']          = 'Сбрасывается при /reload'
 L['Create a new equipment set'] = 'Создать новый комплект экипировки'
 L['New Equipment Set']          = 'Новый комплект экипировки'
 L['LibIconPicker Missing']      = 'Для этой функции требуется LibIconPicker.|nУбедитесь, что LibIconPicker установлен и включён, затем перезагрузите интерфейс.'

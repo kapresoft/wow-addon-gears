@@ -22,6 +22,11 @@ L['Drag to an action bar'] = "Trascina su una barra azione"
 L['Equip While Combat']    = 'I set di equipaggiamento non possono essere cambiati durante il combattimento.'
 
 L['Open Gears Panel']           = 'Apri il pannello Gears'
+L['Alt-click']                  = 'Alt-clic'
+L['Keep open this session']     = 'Tieni aperto per questa sessione'
+L['Kept open this session']     = 'Aperto per questa sessione'
+L['Close and stop keeping open'] = 'Chiudi e smetti di tenerlo aperto'
+L['Resets on /reload']          = 'Si reimposta con /reload'
 L['Create a new equipment set'] = 'Crea un nuovo set di equipaggiamento'
 L['New Equipment Set']          = 'Nuovo set di equipaggiamento'
 L['LibIconPicker Missing']      = 'Questa funzione richiede LibIconPicker.|nAssicurati che LibIconPicker sia installato e attivato, quindi ricarica l’interfaccia.'
