@@ -14,6 +14,11 @@ Local Vars
 ---------------------------------------------------------------------]]
 local TOGGLE_BUTTON_ICON = [[Interface\AddOns\Gears\Assets\gears-button-2b]]
 local TOOLTIP_DELAY = 0.01
+local c_white = ns:ColorFn('afafaf')
+local c_yellow = ns:ColorFn('FFE680')
+local c_gold = ns:ColorFn('FFD100')
+local GLOW_NORMAL = { 0.2, 1.0, 0.4, 1.0 }
+local GLOW_STICKY = { 1.0, 0.82, 0.0, 1.0 }
 
 --- The equipment manager tab on advanced versions of wow like MoP, Retail, etc.
 --- @type Frame
@@ -35,6 +40,7 @@ ToggleButtonMixin
 --- @field private __blizzEquipHooked boolean
 --- @field private __ecsOnClickHooked boolean
 --- @field private __ecsToggleButtonHooked boolean
+--- @field private __sticky boolean @Session only; cleared by any close
 Gears_ToggleButtonMixin = ns:NewAceEvent();
 
 local o  = Gears_ToggleButtonMixin
@@ -61,8 +67,7 @@ function o:OnLoad()
   hl:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -3, 3)
   self:SetScale(0.9)
   
-  local checked = self:GetCheckedTexture()
-  checked:SetVertexColor(0.2, 1.0, 0.4, 1.0)
+  self:__UpdateGlow()
   
   local icon = self:CreateTexture(nil, 'OVERLAY')
   icon:SetSize(28, 28)
@@ -107,7 +112,7 @@ function o:OnShowPaperDollFrame(evt, gearsMainFrame, pdf)
   local gs = ns:g()
   local isFirstTime = not gs.isInitialShowComplete
   
-  self:UpdateVisibilityState(isFirstTime)
+  self:UpdateVisibilityState(isFirstTime or self.__sticky == true)
   
   if isFirstTime then gs.isInitialShowComplete = true end
 end
@@ -117,7 +122,11 @@ function o:OnClick_ECS_ToggleButton()
   if self:IsChecked() then self:Click() end
 end
 
-function o:OnClick() self:UpdateVisibility() end
+function o:OnClick()
+  self.__sticky = self:IsChecked() and IsAltKeyDown()
+  self:__UpdateGlow()
+  self:UpdateVisibility()
+end
 
 --- @param visible boolean
 function o:UpdateVisibilityState(visible)
@@ -133,14 +142,30 @@ end
 
 function o:OnEnter()
   self:SendMessage(ns:msg('SlotEnter'))
-  if self:GetChecked() then return end
+  if self:GetChecked() and not self.__sticky then return end
   
   C_Timer.After(TOOLTIP_DELAY, function()
     if not self:IsMouseOver() then return end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    GameTooltip:SetText(L['Open Gears Panel'], 1, 1, 1)
+    self:__SetTooltipText()
     GameTooltip:Show()
   end)
+end
+
+function o:__SetTooltipText()
+  if self.__sticky then
+    GameTooltip:SetText(c_gold(L['Kept open this session']))
+    GameTooltip:AddLine(c_yellow(L['Left-click']) .. ': ' .. c_white(L['Close and stop keeping open']))
+    GameTooltip:AddLine(c_white(L['Resets on /reload']))
+    return
+  end
+  GameTooltip:SetText(L['Open Gears Panel'], 1, 1, 1)
+  GameTooltip:AddLine(c_yellow(L['Alt-click']) .. ': ' .. c_white(L['Keep open this session']))
+end
+
+function o:__UpdateGlow()
+  local c = self.__sticky and GLOW_STICKY or GLOW_NORMAL
+  self:GetCheckedTexture():SetVertexColor(unpack(c))
 end
 
 function o:OnLeave() GameTooltip:Hide() end
@@ -166,6 +191,8 @@ end
 function o:__ShowBlizzESManager() end
 
 function o:__HideGears()
+  self.__sticky = false
+  self:__UpdateGlow()
   ns:PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:HideGears()
   ns:esfm():EnableEquipmentSlots(false)
