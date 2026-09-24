@@ -11,6 +11,21 @@ Designed to be lightweight and performance-friendly, the addon focuses on fast, 
 
 The goal is simplicity, stability, and trust: no bloated features, no fragile hacks—just a dependable equipment set manager built on supported WoW APIs.
 
+## What's New
+
+### **Drag and drop Icon from anywhere**
+>_A LibIconPicker Update_
+
+Set an icon without searching the grid: drag an item from your bags, a spell from your spellbook, or a macro, mount, battle pet, or equipment set onto the selected icon, then click **Okay**. The selected icon highlights while you hold something it accepts, and a one-time tip points it out the first time the picker opens. Addons that use LibIconPicker get this automatically, with no API changes.
+
+![drag-n-drop-icon-feature-23Sep2026-clip.png](doc/media/drag-n-drop-icon-feature-23Sep2026-clip.png)
+
+### **Alt-click Gears button to keep the panel open this session**
+
+If you swap gear often, reopening Gears every time you press **C** gets tedious. **Alt-click** the Gears button and it stays open for the whole session. The button glows **gold** so you know it's on. Click it normally to close the panel and go back to the default behavior. It also resets on `/reload`.
+
+![alt-click-gears.png](doc/media/alt-click-gears.png)
+
 ### Console Commands
 
 Type `/gears` in chat to see the list of available commands:
