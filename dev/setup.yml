@@ -32,6 +32,14 @@ externals:
     url: https://github.com/kapresoft/wow-lib-util
     tag: latest
 
+  ## annotations always get pulled from main
+  ThirdParty-Libs/Annotations/Kapresoft-LibUtil:
+    url: https://github.com/kapresoft/wow-lib-util
+    path: Lib-2-0/Annotations
+  ThirdParty-Libs/Annotations/LibPrettyPrint:
+    url: https://github.com/kapresoft/wow-addon-LibPrettyPrint
+    path: Libs/Annotations
+
 ignore:
   - "*.sh"
   - "*.md"
@@ -53,6 +61,7 @@ ignore:
   - ThirdParty-Libs/LibPrettyPrint/LibPrettyPrint.xml
   - ThirdParty-Libs/LibPrettyPrint/Libs/Developer/*.xml
   - ThirdParty-Libs/LibPrettyPrint/Libs/Developer/Developer*.lua
+  - ThirdParty-Libs/LibPrettyPrint/Libs/Annotations
   - ThirdParty-Libs/LibTraceKit/dev
   - ThirdParty-Libs/LibTraceKit/Libs/Assets
   - ThirdParty-Libs/LibTraceKit/Libs/Developer.lua
@@ -60,6 +69,7 @@ ignore:
   - ThirdParty-Libs/Kapresoft-LibUtil/dev
   - ThirdParty-Libs/Kapresoft-LibUtil/LICENSE
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-1-0
+  - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Annotations
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/Assets
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/ThirdParty
   - ThirdParty-Libs/Kapresoft-LibUtil/Lib-2-0/LibUtil.lua
