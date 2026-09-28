@@ -19,6 +19,8 @@ L['Available Actions']     = '可用操作'
 L['Select']                = '选择'
 L['Equip']                 = '装备'
 L['Drag to an action bar'] = '拖动到快捷栏'
+L['Set Icon::TooltipHint'] = '拖放到此套装的图标上即可更换图标。'
+L['Set Icon::HelpTip']     = '拖放到任意套装的图标上即可更换图标。'
 L['Equip While Combat']    = '战斗中无法更换装备组。'
 
 L['Open Gears Panel']           = '打开 Gears 面板'

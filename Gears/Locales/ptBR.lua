@@ -19,6 +19,8 @@ L['Available Actions']     = 'Ações disponíveis'
 L['Select']                = 'Selecionar'
 L['Equip']                 = 'Equipar'
 L['Drag to an action bar'] = 'Arrastar para uma barra de ação'
+L['Set Icon::TooltipHint'] = 'Arraste e solte no ícone deste conjunto para alterá-lo.'
+L['Set Icon::HelpTip']     = 'Arraste e solte no ícone de qualquer conjunto para alterá-lo.'
 L['Equip While Combat']    = 'Conjuntos de equipamento não podem ser trocados durante o combate.'
 
 L['Open Gears Panel']           = 'Abrir o painel do Gears'
