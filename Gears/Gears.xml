@@ -14,6 +14,7 @@
     <Script file="Util\CharacterFrameUtil.lua"/>
     <Script file="Util\LibIconPickerUtil.lua"/>
     <Include file="Assets\Fonts\_Fonts.xml"/>
+    <Include file="Frames\Help\Help.xml"/>
     <Include file="Frames\EquipmentSet\EquipmentSetUI.xml"/>
     <Include file="Frames\Announcement\AnnouncementUI.xml"/>
     <Include file="Announcements\_Announcements.xml"/>

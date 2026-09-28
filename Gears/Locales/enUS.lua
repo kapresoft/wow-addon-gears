@@ -20,6 +20,8 @@ L['Available Actions']          = true
 L['Select']                     = true
 L['Equip']                      = true
 L['Drag to an action bar']      = true
+L['Set Icon::TooltipHint']      = "Drag and drop onto this set's icon to change it."
+L['Set Icon::HelpTip']          = "Drag and drop onto any set's icon to change it."
 L['Equip While Combat']         = 'Equipment sets cannot be changed during combat.'
 
 L['Open Gears Panel']           = true

@@ -7,6 +7,7 @@ Blizzard Vars
 ---------------------------------------------------------------------]]
 local C_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
 local C_PickupEquipmentSet = C_EquipmentSet.PickupEquipmentSet
+local C_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
 local C_SaveEquipmentSet = C_EquipmentSet.SaveEquipmentSet
 
 local CURRENTLY_EQUIPPED = CURRENTLY_EQUIPPED or L['Currently Equipped']
@@ -33,12 +34,16 @@ Mixin
 --- @class EquipmentSetFrame : EquipmentSetMixin
 --
 
+--- @class EquipmentSetIconButton : Button
+--- @field Checked Texture @Shown while the cursor holds a droppable icon
+
 --- @class EquipmentSetMixin : Button, BackdropTemplate
 --- @field GetID fun(self:EquipmentSetMixin) : number @The EquipmentSet Identifier
 --- @field owner Gears_MainFrame
 --- @field info EquipmentSetInfo
 --- @field selected boolean
 --- @field CheckMark Texture
+--- @field IconButton EquipmentSetIconButton
 --- @field DeleteButton Button
 --- @field ChangeButton Button
 --- @field private __used boolean?
@@ -93,6 +98,48 @@ local function IsFullyEquipped(id)
   local eqs = GetEquipmentSet(id); return eqs ~= nil and eqs.isEquipped
 end
 
+--- Keyed by GetCursorInfo() type; args are its other returns.
+--- No 'equipmentset' entry: rows are drag sources themselves.
+--- @type table<string, fun(id: number|string, arg2: any, arg3: any): IconIDOrPath?>
+local cursorIconResolvers = {
+  item      = function(itemID) return C_Item.GetItemIconByID(itemID) end,
+  spell     = function(_, _, spellID) return (C_Spell.GetSpellTexture(spellID)) end,
+  macro     = function(index) return (select(2, GetMacroInfo(index))) end,
+  mount     = function(mountID) return (select(3, C_MountJournal.GetMountInfoByID(mountID))) end,
+  battlepet = function(petID) return (select(9, C_PetJournal.GetPetInfoByPetID(petID))) end,
+}
+
+--- @return IconIDOrPath? @nil if the cursor holds nothing droppable
+local function GetCursorIcon()
+  local cursorType, id, arg2, arg3 = GetCursorInfo()
+  local resolve = cursorType and cursorIconResolvers[cursorType]
+  return resolve and resolve(id, arg2, arg3)
+end
+
+--- @type Frame?
+local hookedPicker
+
+local function UpdateAllDropTargetStates()
+  ns.gears:ForEachEquipmentFrame(function(eqs) eqs:UpdateDropTargetState() end)
+end
+
+--- The picker loads on demand, so hook it on first sight
+--- @param picker Frame
+local function HookIconPickerOnce(picker)
+  if hookedPicker == picker then return end
+  picker:HookScript('OnShow', UpdateAllDropTargetStates)
+  picker:HookScript('OnHide', UpdateAllDropTargetStates)
+  hookedPicker = picker
+end
+
+--- @return boolean
+local function IsIconPickerShown()
+  --- @type Frame
+  local picker = LibIconPicker_IconSelector; if not picker then return false end
+  HookIconPickerOnce(picker)
+  return picker:IsShown()
+end
+
 --- @param tt GameTooltip
 --- @param id Identifier EquipmentSet ID
 local function GameTooltip_AddEquipmentDetails(tt, id)
@@ -104,6 +151,7 @@ end
 
 --- @param self EquipmentSetFrame
 local function EquipmentSet_ShowTooltip(self)
+  if GetCursorIcon() then return end
   C_Timer.After(TOOLTIP_DELAY, function()
     if not self:IsMouseOver() then return end
     
@@ -121,6 +169,8 @@ local function EquipmentSet_ShowTooltip(self)
     GameTooltip:AddLine(leftClick)
     GameTooltip:AddLine(doubleClick)
     GameTooltip:AddLine(drag)
+    GameTooltip:AddLine(' ')
+    GameTooltip:AddLine(c_green(L['Set Icon::TooltipHint']), nil, nil, nil, true)
     if not ns.gears:HasSelection() then
       GameTooltip:AddLine(' ')
       GameTooltip:AddLine(bottomText)
@@ -144,7 +194,15 @@ function o:OnLoad()
   self:__OnLoadCheckMark()
   self:__OnLoadCreateDeleteButton()
   self:__OnLoadCreateChangeButton()
+  if self:IsVisible() then self:OnShow() end
 end
+
+function o:OnShow()
+  self:RegisterEvent('CURSOR_CHANGED')
+  self:UpdateDropTargetState()
+end
+function o:OnHide() self:UnregisterEvent('CURSOR_CHANGED') end
+function o:OnEvent() self:UpdateDropTargetState() end
 
 function o:__OnLoadCreateDeleteButton()
   --- @class DeleteButton : Button, IconButton
@@ -178,6 +236,24 @@ end
 function o:OnDragStart() C_PickupEquipmentSet(self:GetID()) end
 --- Nothing to do here
 function o:OnDragStop() end
+function o:OnReceiveDrag() self:DropCursorIcon() end
+
+function o:UpdateDropTargetState()
+  self.IconButton.Checked:SetShown(GetCursorIcon() ~= nil and not IsIconPickerShown())
+end
+
+--- Sets the cursor's icon as the set icon when dropped on IconButton
+--- @return boolean @true if the icon was changed
+function o:DropCursorIcon()
+  if not self.IconButton:IsMouseOver() then return false end
+  local icon = GetCursorIcon(); if not icon then return false end
+
+  local id, name = self:GetIdentity()
+  C_ModifyEquipmentSet(id, name, icon)
+  ClearCursor()
+  self.owner.DragTip:Dismiss()
+  return true
+end
 
 --- Show check-mark if fully equipped.
 --- The `callbackFn` is optional.
@@ -190,7 +266,10 @@ function o:UpdateFullyEquippedState(callbackFn)
   if callbackFn then callbackFn(equipped) end
 end
 
-function o:OnMouseDown() ns.gears:SelectEquipmentSet(self) end
+function o:OnMouseDown()
+  if self:DropCursorIcon() then return end
+  ns.gears:SelectEquipmentSet(self)
+end
 
 function o:OnEnter()
   EquipmentSet_ShowTooltip(self)
@@ -216,6 +295,7 @@ end
 function o:OnDoubleClick() self:EquipGear() end
 
 function o:ShowActionButtons()
+  if GetCursorInfo() then return end
   self.DeleteButton:Show()
   self.ChangeButton:Show()
 end
@@ -269,7 +349,7 @@ function o:SetSelected(selected)
 end
 
 function o:ShowBorderOnHover()
-  if self.selected then return end
+  if self.selected or GetCursorInfo() then return end
   self:SetBackdropColor(1.0, 0.9, 0.2, 0.05)
   self:SetBackdropBorderColor(1.0, 0.82, 0.0, 0.9)
 end

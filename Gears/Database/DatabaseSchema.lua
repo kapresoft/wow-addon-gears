@@ -23,6 +23,7 @@ Type Definitions
 --- @field isInitialShowComplete boolean @True after Gears has been shown once on first PaperDoll open; used to prevent auto-show on subsequent opens
 --- @field announcementsShown table<string, boolean> @Keyed by announcement dbKey; true once that one-time announcement dialog has been shown
 --- @field announceEquip boolean @When true, `/gears equip` prints an "Equipped:" chat message on success
+--- @field helpTipsDismissed table<string, boolean> @Keyed by help tip tipKey; true once that tip is closed or its action is done
 
 --  ================================================
 --- @class ProfileConfig
@@ -49,6 +50,7 @@ local DEFAULT_DB = {
       isInitialShowComplete = false,
       announcementsShown = {},
       announceEquip = true,
+      helpTipsDismissed = {},
   },
   ['profile'] = {},
   ['char'] = {},

@@ -19,6 +19,8 @@ L['Available Actions']     = '사용 가능한 작업'
 L['Select']                = '선택'
 L['Equip']                 = '장착'
 L['Drag to an action bar'] = '단축바로 드래그'
+L['Set Icon::TooltipHint'] = '이 세트의 아이콘에 끌어다 놓으면 아이콘이 바뀝니다.'
+L['Set Icon::HelpTip']     = '어떤 세트의 아이콘에든 끌어다 놓으면 아이콘이 바뀝니다.'
 L['Equip While Combat']    = '전투 중에는 장비 세트를 변경할 수 없습니다.'
 
 L['Open Gears Panel']           = 'Gears 패널 열기'

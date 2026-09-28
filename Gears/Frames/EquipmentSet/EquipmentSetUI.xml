@@ -72,6 +72,10 @@
             <OnDoubleClick method="OnDoubleClick"/>
             <OnDragStart method="OnDragStart"/>
             <OnDragStop method="OnDragStop"/>
+            <OnReceiveDrag method="OnReceiveDrag"/>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+            <OnEvent method="OnEvent"/>
         </Scripts>
 
         <Anchors>
@@ -86,6 +90,17 @@
                 <Anchors>
                     <Anchor point="LEFT" x="8" y="0"/>
                 </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture parentKey="Checked" hidden="true" alphaMode="ADD"
+                                 file="Interface\Buttons\CheckButtonHilight">
+                            <Anchors>
+                                <Anchor point="TOPLEFT"/>
+                                <Anchor point="BOTTOMRIGHT"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
                 <NormalTexture file="Interface\Icons\INV_Misc_QuestionMark"/>
             </Button>
         </Frames>
@@ -121,6 +136,7 @@
 
         <Scripts>
             <OnLoad method="OnLoad"/>
+            <OnShow method="OnShow"/>
             <OnEnter method="OnEnter"/>
         </Scripts>
 
@@ -233,6 +249,12 @@
                     </Frame>
                 </Frames>
             </ScrollFrame>
+            <Frame parentKey="DragTip" inherits="Gears_HelpTipTemplate">
+                <KeyValues>
+                    <KeyValue key="tipKey" value="SetIconDrag"/>
+                    <KeyValue key="textKey" value="Set Icon::HelpTip"/>
+                </KeyValues>
+            </Frame>
         </Frames>
     </Frame>
 

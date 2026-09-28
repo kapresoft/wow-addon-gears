@@ -64,6 +64,7 @@ MainFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrame
 --- @field HeaderIconLeft Texture
+--- @field DragTip Gears_HelpTip
 --- @field __lastIcon IconIDOrPath
 Gears_MainFrameMixin = ns:AceEmbed({}, 'AceEvent-3.0', 'AceBucket-3.0')
 
@@ -280,6 +281,12 @@ function o:OnInit()
   self:SendMessage(ns:msg('OnAfterInit'), self)
 end
 
+--- Deferred to the next open when there are no sets yet
+function o:OnShow()
+  local first = self.framePool[1]
+  self.DragTip:ShowOnce(first and first:IsShown() and first.IconButton or nil)
+end
+
 --- When the mouse is out of the EquipmentSetFrame and into the main frame,
 --- hide other EquipmentSet specific action buttons
 function o:OnEnter()
@@ -328,6 +335,7 @@ function o:RefreshEquipmentSet()
   end
   
   self:UpdateScrollHeight(usedCount)
+  if usedCount == 0 then self.DragTip:Hide() end
 end
 
 --- Iterate through all equipments with an optional accept function.
