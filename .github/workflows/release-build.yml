@@ -148,14 +148,15 @@ jobs:
       ## ------------------------------------------------ ##
       - name: Check Vars
         run: |
-          echo buildArtifactChecksum="$($sha256Script $buildArtifact)" >> $GITHUB_ENV
+          buildArtifactChecksum="$($sha256Script $buildArtifact)"
+          echo buildArtifactChecksum="${buildArtifactChecksum}" >> $GITHUB_ENV
           echo "buildArtifact is $buildArtifact"
           echo "buildArtifactChecksum is $buildArtifactChecksum"
       ## ------------------------------------------------ ##
       - name: Notices
         run: |
           echo -e "::notice::HOME=${HOME}\n::notice::buildArtifact=${buildArtifact}"
-          echo "::notice::Sha256=${buildArtifactSha256}"
+          echo ::notice::Build Artifact=${buildArtifactFilename}, SHA256=${buildArtifactChecksum}
 
       - name: Create a draft release
         id: create_draft_release
