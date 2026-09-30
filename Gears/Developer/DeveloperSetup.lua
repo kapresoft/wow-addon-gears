@@ -23,7 +23,7 @@ local primaryC = ns:ColorFn(ns.colorDef.primary)
 --- @param prefix string|any
 --- @return Gears_TraceFn
 local function traceFn(prefix)
-  return LibTraceKit:New(ns.addon, prefix) :WithDelimiter(TRACE_DELIM) --[[@as Gears_TraceFn ]]
+  return LibTraceKit:New(ns.addon, prefix):WithDelimiter(TRACE_DELIM) --[[@as Gears_TraceFn ]]
 end; local t = traceFn(libName)
 
 --- Creates a print function
@@ -50,10 +50,14 @@ Methods
 local RELOAD_CONFIRMATION_DIALOG = 'GEARS_RELOAD_CONFIRMATION_DIALOG'
 --- Usage: StaticPopup_Show(RELOAD_CONFIRMATION_DIALOG)
 StaticPopupDialogs[RELOAD_CONFIRMATION_DIALOG] = {
-    text = strupper(ns.addon) .. " dev mode requires DevSuite.\nA UI restart is needed to enable it.\n\nRestart now?",
-    button1 = OKAY, button2 = CANCEL,
-    timeout = 0, whileDead = true, hideOnEscape = true,
-    OnAccept = ReloadUI
+  text = strupper(ns.addon)
+    .. ' dev mode requires DevSuite.\nA UI restart is needed to enable it.\n\nRestart now?',
+  button1 = OKAY,
+  button2 = CANCEL,
+  timeout = 0,
+  whileDead = true,
+  hideOnEscape = true,
+  OnAccept = ReloadUI,
 }
 
 local function LoadDevSuite()
@@ -62,9 +66,10 @@ local function LoadDevSuite()
 
   if type(ds) == 'table' and type(ds.IsEnabled) == 'function' then
     local dsEnabled = ds:IsEnabled()
-    C_Timer.After(1, function()
-      t(libName, ('%s is available'):format(ds:GetName()), 'enabled=', dsEnabled)
-    end)
+    C_Timer.After(
+      1,
+      function() t(libName, ('%s is available'):format(ds:GetName()), 'enabled=', dsEnabled) end
+    )
     if dsEnabled then return end
   end
 
@@ -88,4 +93,3 @@ do
   h.printer = printerFn
   h.tracer = traceFn
 end
-

@@ -41,44 +41,44 @@ ToggleButtonMixin
 --- @field private __ecsOnClickHooked boolean
 --- @field private __ecsToggleButtonHooked boolean
 --- @field private __sticky boolean @Session only; cleared by any close
-Gears_ToggleButtonMixin = ns:NewAceEvent();
+Gears_ToggleButtonMixin = ns:NewAceEvent()
 
-local o  = Gears_ToggleButtonMixin
+local o = Gears_ToggleButtonMixin
 
 --- Handles Clicks on the Original Blizz Equipment Gear tab
 --- @param self ToggleButton
 local function ToggleButtonMixin_BlizzEquipmentGearHook(self)
   if not PaperDollSidebarTab3 or self.__blizzEquipHooked then return end
   self.__blizzEquipHooked = true
-  PaperDollSidebarTab3:HookScript("OnClick", function(btn) self:OnClick_BlizzEquipmentPanel() end)
+  PaperDollSidebarTab3:HookScript('OnClick', function(btn) self:OnClick_BlizzEquipmentPanel() end)
 end
 
 function o:OnLoad()
   ns.toggleButton = self
-  
+
   self:SetParent(PaperDollFrame)
   self.owner = PaperDollFrame
-  
+
   -- green highlight
-  local hl  = self:GetHighlightTexture()
+  local hl = self:GetHighlightTexture()
   hl:SetColorTexture(0.2, 1.0, 0.4, 0.25)
   hl:ClearAllPoints()
-  hl:SetPoint("TOPLEFT", self, "TOPLEFT", 3, -3)
-  hl:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -3, 3)
+  hl:SetPoint('TOPLEFT', self, 'TOPLEFT', 3, -3)
+  hl:SetPoint('BOTTOMRIGHT', self, 'BOTTOMRIGHT', -3, 3)
   self:SetScale(0.9)
-  
+
   self:__UpdateGlow()
-  
+
   local icon = self:CreateTexture(nil, 'OVERLAY')
   icon:SetSize(28, 28)
   icon:SetPoint('CENTER', self)
   icon:SetTexture(TOGGLE_BUTTON_ICON)
   icon:SetDrawLayer('OVERLAY', 1)
   self.Icon = icon
-  
+
   self:RegisterMessage(ns:msg('OnAfterInit'), 'OnAfterInit')
   self:RegisterMessage(ns:msg('ShowPaperDollFrame'), 'OnShowPaperDollFrame')
-  
+
   self:Show()
 end
 
@@ -87,18 +87,16 @@ end
 --- @param gearsMainFrame Gears_MainFrameMixin
 function o:OnAfterInit(evt, gearsMainFrame)
   self.__ecsFrame, self.__ecsButton = ECS_StatsFrame, ECS_ToggleButton
-  
+
   ToggleButtonMixin_BlizzEquipmentGearHook(self)
-  
+
   self:UpdateVisibilityState(false)
 end
 
 --- @param self ToggleButtonMixin|ToggleButton
 local function ToggleButtonMixin_ECS_ToggleButton_Hook(self)
   if not self.__ecsButton or self.__ecsToggleButtonHooked then return end
-  self.__ecsButton:HookScript("OnClick", function(btn)
-    self:OnClick_ECS_ToggleButton()
-  end)
+  self.__ecsButton:HookScript('OnClick', function(btn) self:OnClick_ECS_ToggleButton() end)
   self.__ecsToggleButtonHooked = true
 end
 
@@ -111,9 +109,9 @@ function o:OnShowPaperDollFrame(evt, gearsMainFrame, pdf)
 
   local gs = ns:g()
   local isFirstTime = not gs.isInitialShowComplete
-  
+
   self:UpdateVisibilityState(isFirstTime or self.__sticky == true)
-  
+
   if isFirstTime then gs.isInitialShowComplete = true end
 end
 
@@ -136,17 +134,20 @@ end
 
 function o:UpdateVisibility()
   GameTooltip:Hide()
-  if self:IsChecked() then self:__ShowGears(); return end
+  if self:IsChecked() then
+    self:__ShowGears()
+    return
+  end
   self:__HideGears()
 end
 
 function o:OnEnter()
   self:SendMessage(ns:msg('SlotEnter'))
   if self:GetChecked() and not self.__sticky then return end
-  
+
   C_Timer.After(TOOLTIP_DELAY, function()
     if not self:IsMouseOver() then return end
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
     self:__SetTooltipText()
     GameTooltip:Show()
   end)
@@ -155,7 +156,9 @@ end
 function o:__SetTooltipText()
   if self.__sticky then
     GameTooltip:SetText(c_gold(L['Kept open this session']))
-    GameTooltip:AddLine(c_yellow(L['Left-click']) .. ': ' .. c_white(L['Close and stop keeping open']))
+    GameTooltip:AddLine(
+      c_yellow(L['Left-click']) .. ': ' .. c_white(L['Close and stop keeping open'])
+    )
     GameTooltip:AddLine(c_white(L['Resets on /reload']))
     return
   end
@@ -177,7 +180,7 @@ function o:__ShowGears()
   ns.gears:Show()
   ns:esfm():EnableEquipmentSlots(true)
   self:__HideECS()
-  
+
   self:__HideBlizzESManager()
 end
 
@@ -196,7 +199,7 @@ function o:__HideGears()
   ns:PlaySound(SOUNDKIT.IG_MINIMAP_CLOSE)
   ns.gears:HideGears()
   ns:esfm():EnableEquipmentSlots(false)
-  
+
   self:__ShowBlizzESManager()
 end
 
@@ -211,11 +214,11 @@ end
 
 function o:AnchorToPaperDoll()
   if not (EngravingFrame and RuneFrameControlButton) then return end
-  
+
   --- @type CheckButton
   local anch = RuneFrameControlButton
   --- @type CheckButton
-  local btn  = Gears_ToggleButton
+  local btn = Gears_ToggleButton
   btn:ClearAllPoints()
   btn:SetPoint('TOPRIGHT', anch, 'TOPLEFT', -2, 1)
 end
@@ -227,5 +230,6 @@ end
 
 --- @return boolean
 function o:__BlizzEquipManagerIsShown()
-  local em = self:__GetBlizzEquipManager(); return em and em:IsShown()
+  local em = self:__GetBlizzEquipManager()
+  return em and em:IsShown()
 end

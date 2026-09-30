@@ -5,7 +5,7 @@ local L = ns:GetLocale()
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
-local LibIconPickerUtil    = ns.O.LibIconPickerUtil
+local LibIconPickerUtil = ns.O.LibIconPickerUtil
 local C_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
 
 --[[-------------------------------------------------------------------
@@ -26,7 +26,7 @@ local p, t = ns:log('EquipmentSetChangeButtonMixin')
 Methods
 ---------------------------------------------------------------------]]
 
-local o  = Gears_EquipmentSetChangeButtonMixin
+local o = Gears_EquipmentSetChangeButtonMixin
 o.ChangeButton = true
 
 function o:OnLoad()
@@ -34,7 +34,7 @@ function o:OnLoad()
   self.tooltipText = EQUIPMENT_SET_EDIT
   -- baseline (dimmed)
   self.Icon:SetAlpha(0.4)
-  self.onClickHandler = function() self:ShowPicker()  end
+  self.onClickHandler = function() self:ShowPicker() end
 end
 
 function o:OnEnter()
@@ -56,8 +56,9 @@ end
 function o:ShowPicker()
   local id, name, icon = self.owner:GetIdentity()
   local opt = {
-    icon = icon, showTextInput = true,
-    textInput = { label = L['Set Name'] .. ':', value = name, max = ns.MAX_CHARS_SET_NAME }
+    icon = icon,
+    showTextInput = true,
+    textInput = { label = L['Set Name'] .. ':', value = name, max = ns.MAX_CHARS_SET_NAME },
   }
   LibIconPickerUtil:Get(function(lip)
     lip:Open(function(sel)
@@ -66,4 +67,3 @@ function o:ShowPicker()
     end, opt)
   end)
 end
-

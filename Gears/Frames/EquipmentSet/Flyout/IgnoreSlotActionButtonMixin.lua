@@ -97,7 +97,8 @@ local function IgnoreSlotActionButtonWidgetMixin_Methods()
   --- @param ignored boolean
   function w:UpdateCharItemSlotIgnoredOverlay(ignored)
     local fn = ignored and 'Show' or 'Hide'
-    local overlay = self:GetIgnoreOverlay(); overlay[fn](overlay)
+    local overlay = self:GetIgnoreOverlay()
+    overlay[fn](overlay)
   end
 
   --- @return boolean
@@ -147,12 +148,12 @@ function o:OnLoad()
   self.Icon:SetTexture(ignoreTex)
 
   --- @type Texture
-  local overlay = charItemSlot:CreateTexture(nil, "OVERLAY", nil, 7)
+  local overlay = charItemSlot:CreateTexture(nil, 'OVERLAY', nil, 7)
   overlay:SetTexture(overlayTex)
 
   local icon = charItemSlot.icon or charItemSlot.IconTexture
   overlay:SetScale(0.5)
-  overlay:SetPoint("CENTER", icon, "CENTER", 0, -3)
+  overlay:SetPoint('CENTER', icon, 'CENTER', 0, -3)
 
   overlay:SetAlpha(0.75)
   overlay:Hide()
@@ -170,7 +171,11 @@ function o:OnClick()
   if IsShiftKeyDown() then
     local esfm = ns:esfm()
     local ignoreAll = not self.widget:IsSlotIgnoredForSave()
-    if ignoreAll then esfm:IgnoreAllSlots() else esfm:IncludeAllSlots() end
+    if ignoreAll then
+      esfm:IgnoreAllSlots()
+    else
+      esfm:IncludeAllSlots()
+    end
     self.widget:SlotFlyoutW():ClosePopup()
     return
   end
@@ -179,7 +184,8 @@ function o:OnClick()
   self.widget:UpdateActionTexture(ignored)
   ns.gears:GetSaveButton():SetEnabled(true)
 
-  local trace = false; if trace then
+  local trace = false
+  if trace then
     Gears_MainFrame:WithSelectedEquipmentSet(function(sel)
       local ignoredSlots = C_GetIgnoredSlots(sel.info.id)
       for slotID, ignoredSlot in pairs(ignoredSlots) do
@@ -197,8 +203,11 @@ end
 function o:ToggleState()
   local wx = self.widget
 
-  if wx:IsSlotIgnoredForSave() then wx:UnignoreSlotForSave()
-  else wx:IgnoreSlotForSave() end
+  if wx:IsSlotIgnoredForSave() then
+    wx:UnignoreSlotForSave()
+  else
+    wx:IgnoreSlotForSave()
+  end
 
   return wx:IsSlotIgnoredForSave()
 end

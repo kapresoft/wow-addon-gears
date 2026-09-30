@@ -46,22 +46,19 @@ local DB_VERSION = 2
 --- @type DatabaseObj
 local DEFAULT_DB = {
   ['global'] = {
-      schemaVersion = DB_VERSION,
-      isInitialShowComplete = false,
-      announcementsShown = {},
-      announceEquip = true,
-      helpTipsDismissed = {},
+    schemaVersion = DB_VERSION,
+    isInitialShowComplete = false,
+    announcementsShown = {},
+    announceEquip = true,
+    helpTipsDismissed = {},
   },
   ['profile'] = {},
   ['char'] = {},
 }
-
 
 --[[-----------------------------------------------------------------------------
 Module::DatabaseSchema (Methods)
 -------------------------------------------------------------------------------]]
 
 --- @return DatabaseObj
-function o:GetDefaultDatabase()
-  local db = tbl_DeepCopy(DEFAULT_DB); return db
-end
+function o:GetDefaultDatabase() return tbl_DeepCopy(DEFAULT_DB) end

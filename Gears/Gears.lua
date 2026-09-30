@@ -28,8 +28,10 @@ local function FindEquipmentSet(indexOrName)
   local needle = indexOrName:lower()
   local found
   ns.gears:ForEachEquipment(function(info)
-    if asIndex and info.index == asIndex then found = info
-    elseif not asIndex and info.name:lower() == needle then found = info
+    if asIndex and info.index == asIndex then
+      found = info
+    elseif not asIndex and info.name:lower() == needle then
+      found = info
     end
   end)
   return found
@@ -51,7 +53,7 @@ AddOn
 -------------------------------------------------------------------------------]]
 
 --- @class Gears : AceAddon-3.0, AceEvent-3.0, AceBucket-3.0, AceConsole-3.0
-local A = ns:AceAddon():NewAddon(ns.addon, "AceEvent-3.0", "AceBucket-3.0", "AceConsole-3.0")
+local A = ns:AceAddon():NewAddon(ns.addon, 'AceEvent-3.0', 'AceBucket-3.0', 'AceConsole-3.0')
 GEARS = A
 
 --- @type Gears
@@ -72,9 +74,7 @@ function a:OnDisable() end
 
 --- @param evt EventName
 --- @param addon AceAddon
-function a:OnReadyDependentAddOn(evt, addon)
-  ns:Register(addon:GetName(), addon)
-end
+function a:OnReadyDependentAddOn(evt, addon) ns:Register(addon:GetName(), addon) end
 
 --[[-------------------------------------------------------------------
 Addon Methods
@@ -141,9 +141,7 @@ function a:PrintList()
   local lines = {}
   local count = ns.gears:ForEachEquipment(function(info)
     local line = ('  #%d %s'):format(info.index, cu1(info.name))
-    if info.id == equippedId then
-      line = ('%s %s'):format(line, ('(%s)'):format(L['equipped']))
-    end
+    if info.id == equippedId then line = ('%s %s'):format(line, ('(%s)'):format(L['equipped'])) end
     lines[#lines + 1] = line
   end)
 
@@ -153,7 +151,9 @@ function a:PrintList()
   end
 
   self:Print(L['Equipment Sets:'])
-  for _, line in ipairs(lines) do self:Print(line) end
+  for _, line in ipairs(lines) do
+    self:Print(line)
+  end
 end
 
 function a:OpenOptions()
@@ -188,8 +188,15 @@ Event Hooks
 function a:OnAddOnReady(evt, isInitialLogin, isReloadingUi)
   --@do-not-package@
   isInitialLogin = true
-  t('OnAddOnReady', 'isInitialLogin(forced, dev-only)=', isInitialLogin,
-      'isReloadingUi=', isReloadingUi, 'GameVersion=', ns.gameVersion)
+  t(
+    'OnAddOnReady',
+    'isInitialLogin(forced, dev-only)=',
+    isInitialLogin,
+    'isReloadingUi=',
+    isReloadingUi,
+    'GameVersion=',
+    ns.gameVersion
+  )
   --@end-do-not-package@
   self:SendMessage(ns:msg('ADDON_READY'), isInitialLogin, isReloadingUi)
 

@@ -11,14 +11,14 @@ Backdrop
 @see Modules/Flyout/EquipmentSlotFlyout.xml#Flyout
 ---------------------------------------------------------------------]]
 GEARS_BACKDROP_TOAST_12_12 = {
-  bgFile = "Interface\\Buttons\\WHITE8X8",
-  edgeFile = "Interface\\FriendsFrame\\UI-Toast-Border",
+  bgFile = 'Interface\\Buttons\\WHITE8X8',
+  edgeFile = 'Interface\\FriendsFrame\\UI-Toast-Border',
   tile = true,
   tileEdge = true,
   tileSize = 12,
   edgeSize = 12,
   insets = { left = 3, right = 3, top = 3, bottom = 3 },
-};
+}
 
 --[[-------------------------------------------------------------------
 Blizzard Vars
@@ -31,7 +31,7 @@ local MAINHANDSLOT, SECONDARYHANDSLOT, RANGEDSLOT = MAINHANDSLOT, SECONDARYHANDS
 
 local EQUIPPED_SLOT_LABEL = {
   [INVSLOT_MAINHAND] = MAINHANDSLOT,
-  [INVSLOT_OFFHAND]  = SECONDARYHANDSLOT,
+  [INVSLOT_OFFHAND] = SECONDARYHANDSLOT,
 }
 
 -- blizz locales
@@ -99,7 +99,6 @@ local w = {}; EquipmentSlotFlyoutWidgetMixin = w
 Methods: EquipmentSlotFlyoutWidgetMixin
 -------------------------------------------------------------------------------]]
 local function EquipmentSlotFlyoutWidgetMixin_Methods()
-
   --- @param slotFlyout EquipmentSlotFlyout
   --- @param slotInfo InventorySlotInfo
   --- @param slotButton BlizzCharacterSlotItemButton
@@ -128,14 +127,10 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
 
   --- @return boolean
   function w:ShouldShowSlotGroup()
-    return self:IsSlotShown()
-            and ns.gears:HasSelection()
-            and ns.gears:IsShown()
+    return self:IsSlotShown() and ns.gears:HasSelection() and ns.gears:IsShown()
   end
   --- @param ignored boolean
-  function w:SyncIgnoredState(ignored)
-    self:isb().widget:SyncIgnoredState(ignored)
-  end
+  function w:SyncIgnoredState(ignored) self:isb().widget:SyncIgnoredState(ignored) end
   --- @return boolean
   function w:IsIgnored()
     local ignored = false
@@ -190,14 +185,10 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   --- @return boolean
   function w:IsDownExpand()
     local slotID = self:SlotID()
-    return slotID == INVSLOT_MAINHAND
-            or slotID == INVSLOT_OFFHAND
-            or slotID == INVSLOT_RANGED
+    return slotID == INVSLOT_MAINHAND or slotID == INVSLOT_OFFHAND or slotID == INVSLOT_RANGED
   end
   function w:HideFlyoutActions() return self.frame.Flyout:Hide() end
-  function w:NotifyOpened()
-    self.frame:SendMessage(ns:msg('SlotOpened'), self:SlotID())
-  end
+  function w:NotifyOpened() self.frame:SendMessage(ns:msg('SlotOpened'), self:SlotID()) end
   --- Some equipment slots (e.g. CharacterAmmoSlot) are not
   --- applicable to the player's class and should be hidden.
   function w:ShowSlotGroup() self.frame:Show() end
@@ -211,9 +202,7 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   function w:GetSlotAnchor()
     local ofsx, ofsy = -7, 0
     local relativeTo = self:Slot()
-    if self:IsDownExpand() then
-      return 'TOP', relativeTo, 'BOTTOM', 0, 10
-    end
+    if self:IsDownExpand() then return 'TOP', relativeTo, 'BOTTOM', 0, 10 end
     return 'LEFT', relativeTo, 'RIGHT', ofsx, ofsy
   end
 
@@ -224,9 +213,7 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   -- hide ignore overlay if present (reset visual state)
   function w:ResetSlot()
     local slot = self:Slot()
-    if slot and slot.ignoreSlotOverlay then
-      slot.ignoreSlotOverlay:Hide()
-    end
+    if slot and slot.ignoreSlotOverlay then slot.ignoreSlotOverlay:Hide() end
   end
   function w:ShowExpandArrow() -- ▶
     if self:IsDownExpand() then
@@ -260,7 +247,6 @@ local function EquipmentSlotFlyoutWidgetMixin_Methods()
   --- ############################################
   function w:n() return self:Slot():GetName() end
   function w:ndbg() return ('%s::%s'):format(self.info.name, self.info.id, self:n()) end
-
 end; EquipmentSlotFlyoutWidgetMixin_Methods()
 
 --[[-----------------------------------------------------------------------------
@@ -271,7 +257,6 @@ FlyoutFrameMixin
 local FlyoutFrameMixin = {}
 
 local function FlyoutFrameMixin_Methods()
-
   local fo = FlyoutFrameMixin
 
   function fo:OnLoad()
@@ -284,9 +269,7 @@ local function FlyoutFrameMixin_Methods()
     self:Show()
   end
 
-  function fo:OnFinished()
-    self:SetAlpha(1)
-  end
+  function fo:OnFinished() self:SetAlpha(1) end
 
   function fo:AnchorForDownExpansion()
     self:ClearAllPoints()
@@ -331,8 +314,8 @@ function o:OnLoad()
   Mixin(self.Flyout, FlyoutFrameMixin)
   self.Flyout:OnLoad()
 
-  self.Arrow:SetTexture(310765);
-  self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48);
+  self.Arrow:SetTexture(310765)
+  self.Arrow:SetTexCoord(0.02, 0.98, 0.02, 0.48)
 end
 
 --- @return SlotID
@@ -348,8 +331,12 @@ function o:Create(slotInfo, characterSlotButton)
   local slotFlyout = CreateFrame('Button', nil, characterSlotButton, self.TemplateName, slotInfo.id)
   local name = characterSlotButton:GetName() .. 'Flyout'
   slotFlyout:SetParentKey(name)
-  slotFlyout.widget = CreateAndInitFromMixin(EquipmentSlotFlyoutWidgetMixin,
-          slotFlyout, slotInfo, characterSlotButton)
+  slotFlyout.widget = CreateAndInitFromMixin(
+    EquipmentSlotFlyoutWidgetMixin,
+    slotFlyout,
+    slotInfo,
+    characterSlotButton
+  )
   do
     --- @class Gears_BlizzCharacterSlotItemButton
     local gears = {}
@@ -385,16 +372,18 @@ function o:CreateActionButtons()
   flyout.buttons = {}
 
   --- @type Button @Include Button
-  local placeInBagsBtn = CreateFrame("Button", nil, flyout, Gears_PlaceInBagsSlotActionButtonMixin.TemplateName)
+  local placeInBagsBtn =
+    CreateFrame('Button', nil, flyout, Gears_PlaceInBagsSlotActionButtonMixin.TemplateName)
   placeInBagsBtn:ClearAllPoints()
-  placeInBagsBtn:SetPoint("LEFT", flyout, "LEFT", 8, 0)
+  placeInBagsBtn:SetPoint('LEFT', flyout, 'LEFT', 8, 0)
   flyout.PlaceInBagsButton = placeInBagsBtn
   table.insert(flyout.buttons, placeInBagsBtn)
 
   --- @type IgnoreSlotActionButton
-  local ignoreSlotBtn = CreateFrame("Button", nil, flyout, Gears_IgnoreSlotActionButtonMixin.TemplateName)
+  local ignoreSlotBtn =
+    CreateFrame('Button', nil, flyout, Gears_IgnoreSlotActionButtonMixin.TemplateName)
   ignoreSlotBtn:ClearAllPoints()
-  ignoreSlotBtn:SetPoint("LEFT", placeInBagsBtn, "RIGHT", 1, 0)
+  ignoreSlotBtn:SetPoint('LEFT', placeInBagsBtn, 'RIGHT', 1, 0)
   flyout.IgnoreSlotButton = ignoreSlotBtn
   table.insert(flyout.buttons, ignoreSlotBtn)
 
@@ -462,14 +451,18 @@ function o:CreateSlotItems()
     hasActions = true
     local infoRef = info
     --- @type Button
-    local btn = CreateFrame('Button', nil, flyout,
-      'GearsEquipmentSlotActionButtonTemplate' --[[@as Template]] )
+    local btn = CreateFrame(
+      'Button',
+      nil,
+      flyout,
+      'GearsEquipmentSlotActionButtonTemplate' --[[@as Template]]
+    )
     btn:SetParentKey(('ItemButton%d'):format(#flyout.buttons + 1))
     if info.iconFileID then btn.Icon:SetTexture(info.iconFileID) end
 
     btn:ClearAllPoints()
     if prev == self.widget.flyoutFrame then
-      btn:SetPoint('LEFT', prev, 'LEFT', 9, 0)   -- first / only button
+      btn:SetPoint('LEFT', prev, 'LEFT', 9, 0) -- first / only button
     else
       btn:SetPoint('LEFT', prev, 'RIGHT', spacing, 0) -- chained
     end
@@ -500,9 +493,7 @@ function o:CreateSlotItems()
       GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
       GameTooltip:SetHyperlink(infoRef.hyperlink)
       local slotLabel = EQUIPPED_SLOT_LABEL[infoRef.equippedSlot]
-      if slotLabel then
-        GameTooltip:AddLine(c_white(CURRENTLY_EQUIPPED .. ' ') .. slotLabel)
-      end
+      if slotLabel then GameTooltip:AddLine(c_white(CURRENTLY_EQUIPPED .. ' ') .. slotLabel) end
       GameTooltip:Show()
       GameTooltip_ShowCompareItem(GameTooltip)
     end)
@@ -524,22 +515,20 @@ Script Methods
 
 --- @see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate/Scripts/OnEnter
 function o:OnClick()
-  if self.widget.expanded then
-    return self.widget:ClosePopup(false, true)
-  end
+  if self.widget.expanded then return self.widget:ClosePopup(false, true) end
   self.widget:OpenPopup()
 end
 
 --- @see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate/Scripts/OnEnter
 function o:OnEnter()
   self.Arrow:SetVertexColor(0.4, 0.95, 0.4, 1)
-  self.Arrow:SetBlendMode("BLEND")
+  self.Arrow:SetBlendMode('BLEND')
 end
 
 --- @see EquipmentSlotFlyout.xml/GearsEquipmentSlotFlyoutTemplate/Scripts/OnLeave
 function o:OnLeave()
   self.Arrow:SetVertexColor(1, 1, 1, 1)
-  self.Arrow:SetBlendMode("BLEND")
+  self.Arrow:SetBlendMode('BLEND')
 end
 
 --[[-------------------------------------------------------------------
@@ -556,11 +545,12 @@ function o:OnSlotEnter(evt, slotID)
   self.widget:ClosePopup(false, false)
 end
 
-function o:OnEquipmentSetSelected(evt, slotID)
-  self.widget:ClosePopup(false, false)
-end
+function o:OnEquipmentSetSelected(evt, slotID) self.widget:ClosePopup(false, false) end
 
 function o:OnShowPaperDollFrame()
-  if not self.widget:ShouldShowSlotGroup() then self.widget:ClosePopup() return end
+  if not self.widget:ShouldShowSlotGroup() then
+    self.widget:ClosePopup()
+    return
+  end
   self.widget:ShowSlotGroup()
 end

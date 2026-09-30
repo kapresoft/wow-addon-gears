@@ -14,16 +14,20 @@ GEARS_OPTIONSUI_NS = ns
 Logger and Tracer
 ---------------------------------------------------------------------]]
 ns.fmt = LibPrettyPrint:Formatter({
-  show_all = true, depth_limit = 3
+  show_all = true,
+  depth_limit = 3,
 })
 
 ns.printer = LibPrettyPrint:Printer({
-  prefix = ns.addon, prefix_color = '466EFF', sub_prefix_color = '9CFF9C',
-  formatter = ns.fmt
+  prefix = ns.addon,
+  prefix_color = '466EFF',
+  sub_prefix_color = '9CFF9C',
+  formatter = ns.fmt,
 })
 
 ns.logHolder = {}; do
-  local h = ns.logHolder; local noop_fn = function() end
+  local h = ns.logHolder
+  local noop_fn = function() end
   --- These are noop loggers and tracers for non-dev releases
   h.printer, h.tracer = noop_fn, noop_fn
 end

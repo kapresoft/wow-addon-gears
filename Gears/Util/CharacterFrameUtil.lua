@@ -1,5 +1,5 @@
 --- @type Gears_Namespace
-local ns= select(2, ...)
+local ns = select(2, ...)
 
 --[[-------------------------------------------------------------------
 Types
@@ -45,10 +45,10 @@ local p, t = ns:log('CharacterFrameUtil')
 function o:ForEachEquipmentSlot(callbackFn)
   local pdif = PaperDollItemsFrame
   if not (pdif and GetInventorySlotInfo) then return end
-  
+
   --- @type table<number, SlotItemButton>
   local children = { pdif:GetChildren() }
-  
+
   for _, slotItemButton in ipairs(children) do
     local slotID = slotItemButton:GetID()
     if slotID ~= 0 then -- CharacterAmmoSlot can't be ignored

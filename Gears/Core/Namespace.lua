@@ -27,8 +27,9 @@ local AceLib = LibStub('Kapresoft-AceLib-2-0')
 --- @field ShowNextUnseenAnnouncement fun(self: Gears_Namespace) @see Announcement/AnnouncementDialogMixin.lua
 local ns = kns
 
-
-Mixin(ns, GVM, AceLib); ns.addon = addon; GEARS_NS = ns
+Mixin(ns, GVM, AceLib)
+ns.addon = addon
+GEARS_NS = ns
 ns.O = ns.O or {}
 
 --- Matches *.toc SavedVariables definition
@@ -36,7 +37,8 @@ local DB_NAME = 'GEARS_DB'
 ns.logName = strupper(ns.addon)
 
 --- @type NamespaceObjects
-local O = ns.O or {}; ns.O = O
+local O = ns.O or {}
+ns.O = O
 
 --[[-------------------------------------------------------------------
 Base Colors
@@ -55,7 +57,8 @@ ns.colorDef = {
 Logger and Tracer
 -------------------------------------------------------------------------------]]
 ns.logHolder = {}; do
-  local h = ns.logHolder; local noop_fn =  function() end
+  local h = ns.logHolder
+  local noop_fn = function() end
   --- These are noop loggers and tracers for non-dev releases
   h.printer, h.tracer = noop_fn, noop_fn
 end
@@ -67,7 +70,8 @@ Override in DeveloperSetup to enable
 --- @class Gears_Settings
 --- @field developer boolean @if true: enables developer mode
 --- @field enableSound boolean @if false: suppresses all sounds (use forcePlay to override)
-local settings = { developer = false, enableSound = false }; ns.settings = settings
+local settings = { developer = false, enableSound = false }
+ns.settings = settings
 
 --- @return boolean
 function ns:IsDev() return ns.settings.developer == true end
@@ -77,13 +81,17 @@ Logger Methods
 ---------------------------------------------------------------------]]
 local function predicateFn() return ns:IsDev() end
 do
-  ns.fmt     = LibPrettyPrint:Formatter({
-    show_all = true, depth_limit = 3
-  }); if not fmt then fmt = ns.fmt end
-  
+  ns.fmt = LibPrettyPrint:Formatter({
+    show_all = true,
+    depth_limit = 3,
+  })
+  if not fmt then fmt = ns.fmt end
+
   ns.printer = LibPrettyPrint:Printer({
-    prefix = ns.addon, prefix_color = '466EFF', sub_prefix_color = '9CFF9C',
-    formatter = ns.fmt
+    prefix = ns.addon,
+    prefix_color = '466EFF',
+    sub_prefix_color = '9CFF9C',
+    formatter = ns.fmt,
   }, predicateFn)
 end
 
@@ -100,30 +108,31 @@ end
 Namespace: Methods
 -------------------------------------------------------------------------------]]
 local function Namespace_Methods()
-  
   local AceLocaleUtil = LibStub('Kapresoft-AceLocaleUtil-2-0')
-  
-  local function IsNilOrBlank(v) return v == nil or strtrim(v) == "" end
-  
-  ns.sformat        = string.format
-  ns.settings       = settings
+
+  local function IsNilOrBlank(v) return v == nil or strtrim(v) == '' end
+
+  ns.sformat = string.format
+  ns.settings = settings
   ns.MAX_CHARS_SET_NAME = 32
-  
+
   function ns.TRUE() return true end
   function ns:AceLib() return AceLib end
   --- For non-enUS locales only; always registers with isDefault=false, silent=true.
   --- @see AceLocale-3.0.NewLocale
   --- @param locale string
   --- @return table<string, boolean|string>? locale Locale Table to add localizations to, or nil if the current locale is not required.
-  function ns:NewLocale(locale)
-    return ns:AceLocale():NewLocale(ns.addon, locale, false, true)
-  end
+  function ns:NewLocale(locale) return ns:AceLocale():NewLocale(ns.addon, locale, false, true) end
 
   --- @param name Name The module name; see NamespaceObjects
   --- @param obj any The namespace object
   function ns:register(name, obj)
     assert(type(name) == 'string', 'ns:register(name, obj): {name} should be a string')
-    assertsafe(type(obj) == 'table', 'ns:register(name, obj): {obj} should be a obj/table but was: %s', type(obj))
+    assertsafe(
+      type(obj) == 'table',
+      'ns:register(name, obj): {obj} should be a obj/table but was: %s',
+      type(obj)
+    )
     O[name] = obj
     return obj
   end
@@ -145,14 +154,17 @@ local function Namespace_Methods()
   --- @param anyObj T
   --- @return T
   function ns:Register(libName, anyObj)
-    assert(type(libName) == 'string' and #libName > 0, 'Register(libName, obj): {libName} is required.')
+    assert(
+      type(libName) == 'string' and #libName > 0,
+      'Register(libName, obj): {libName} is required.'
+    )
     ns.O[libName] = anyObj
     return anyObj
   end
 
   --- @param mainFrame Gears_MainFrame
   function ns:RegisterMainFrame(mainFrame) ns.gears = mainFrame end
-  
+
   --- @param rgbHex RGBHex?     @Optional
   --- @return cfFn, colorRGBA?
   function ns:ColorFn(rgbHex) return colorFormatter:ColorFn(rgbHex) end
@@ -190,7 +202,7 @@ local function Namespace_Methods()
 
   --- @return table<string, string>
   function ns:GetLocale() return AceLocaleUtil:GetLocale(ns.addon, true) or {} end
-  
+
   --- >Safe wrapper for PlaySound.
   --- >Returns two results: willPlay:boolean, soundHandle:boolean
   --- [Documentation](https://warcraft.wiki.gg/wiki/API_PlaySound)
@@ -212,8 +224,7 @@ local function Namespace_Methods()
 
   --- @boolean
   function ns:HasBlizzEquipmentManager()
-    return PaperDollFrame and PaperDollSidebarTab1
-            and PaperDollFrame.EquipmentManagerPane
+    return PaperDollFrame and PaperDollSidebarTab1 and PaperDollFrame.EquipmentManagerPane
   end
 
   --- Equips the equipment set by ID. Does not play sounds or present UI;
@@ -231,19 +242,21 @@ local function Namespace_Methods()
     end
     return true
   end
-  
+
   --- @return EquipmentSlotFlyoutManager
   function ns:esfm() return ns.O.EquipmentSlotFlyoutManager end
-  
+
   --[[--------------------------------------------------------
   Database
   ------------------------------------------------------------]]
 
-  function ns:InitDatabase() self.__db = ns:AceDB():New(DB_NAME, ns.O.DatabaseSchema:GetDefaultDatabase()) end
+  function ns:InitDatabase()
+    self.__db = ns:AceDB():New(DB_NAME, ns.O.DatabaseSchema:GetDefaultDatabase())
+  end
   --- @return DatabaseObj
   function ns:db() return self.__db end
   --- @return GlobalConfig
-  function ns:g() return self:db()['global'] end 
+  function ns:g() return self:db()['global'] end
   --- @return ProfileConfig
   function ns:p() return self:db().profile end
 
@@ -263,6 +276,4 @@ local function Namespace_Methods()
     local h = self.logHolder
     return h.printer(moduleName), h.tracer(moduleName)
   end
-
 end; Namespace_Methods()
-
