@@ -19,9 +19,7 @@ local registrationOrder = {}
 --- @param def AnnouncementDef
 --- @param field 'title'|'content'
 --- @return string
-local function ResolveLocalized(def, field)
-  return def[field .. '_' .. GetLocale()] or def[field]
-end
+local function ResolveLocalized(def, field) return def[field .. '_' .. GetLocale()] or def[field] end
 
 --[[-------------------------------------------------------------------
 Types
@@ -111,10 +109,11 @@ Namespace API
 --- `ns:ShowAnnouncementByKey(dbKey)`.
 --- @param def AnnouncementDef
 function ns:RegisterAnnouncement(def)
-  assert(type(def) == 'table' and type(def.dbKey) == 'string', 'RegisterAnnouncement(def): {def.dbKey} is required')
-  if not registry[def.dbKey] then
-    registrationOrder[#registrationOrder + 1] = def.dbKey
-  end
+  assert(
+    type(def) == 'table' and type(def.dbKey) == 'string',
+    'RegisterAnnouncement(def): {def.dbKey} is required'
+  )
+  if not registry[def.dbKey] then registrationOrder[#registrationOrder + 1] = def.dbKey end
   registry[def.dbKey] = def
 end
 

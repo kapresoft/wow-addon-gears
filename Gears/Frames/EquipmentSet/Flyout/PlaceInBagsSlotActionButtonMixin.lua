@@ -70,9 +70,7 @@ local function PlaceInBagsActionButtonWidgetMixin_Methods()
       GameTooltip:AddLine(c_white(L['Place item in bags::DESC']))
       GameTooltip:Show()
     end)
-    self.frame:SetScript('OnLeave', function()
-      GameTooltip:Hide()
-    end)
+    self.frame:SetScript('OnLeave', function() GameTooltip:Hide() end)
   end
 
   function w:SetEnabledState(enabled)
@@ -125,7 +123,8 @@ function o:OnClick()
   -- nothing equipped
   local itemLink = GetInventoryItemLink('player', slotID)
   if not itemLink then
-    self.widget:SlotFlyoutW():ClosePopup(); return
+    self.widget:SlotFlyoutW():ClosePopup()
+    return
   end
 
   -- move equipped item to bags
@@ -160,7 +159,8 @@ function o:TryPlaceInBag(bag)
   for slot = 1, numSlots do
     local info = C_GetContainerItemInfo(bag, slot)
     if not info then
-      C_PickupContainerItem(bag, slot); return true
+      C_PickupContainerItem(bag, slot)
+      return true
     end
   end
 

@@ -34,7 +34,8 @@ local function BuildContent(opener, descInfo, descEquip, descStatus, descList)
 end
 
 local def = {
-  width = 520, height = 230,
+  width = 520,
+  height = 230,
   dbKey = 'consoleCommands',
 
   title = 'New Console Commands',
@@ -132,7 +133,7 @@ local def = {
   content_itIT = BuildContent(
     'Piccola novità: Gears ora supporta i comandi console per un accesso rapido senza aprire il pannello.',
     "mostra le informazioni sull'addon",
-    "equipaggia il set di equipaggiamento indicato per nome o indice",
+    'equipaggia il set di equipaggiamento indicato per nome o indice',
     'mostra il set attualmente equipaggiato, se presente',
     'elenca tutti i set di equipaggiamento'
   ),

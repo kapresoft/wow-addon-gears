@@ -45,7 +45,7 @@ local function OnSlotEnter_ShowGameTooltip(flyout, slotID)
   end
 
   GameTooltip:SetOwner(owner, 'ANCHOR_NONE')
-  GameTooltip:SetInventoryItem("player", slotID)
+  GameTooltip:SetInventoryItem('player', slotID)
   GameTooltip:ClearAllPoints()
   GameTooltip:SetPoint('BOTTOMLEFT', owner, relAnchor, ofsx, ofsy)
   if ShoppingTooltip1 then ShoppingTooltip1:Hide() end
@@ -62,9 +62,10 @@ Module::EquipmentSlotFlyoutManager (Methods)
 function o:OnEquipmentSetSelected(msg, equipSetInfo)
   self:EnableEquipmentSlots(true)
   C_ClearIgnoredSlotsForSave()
-  self:ForEachEquipSetSlots(equipSetInfo.id, function(flyout, ignored)
-    flyout.widget:SyncIgnoredState(ignored)
-  end)
+  self:ForEachEquipSetSlots(
+    equipSetInfo.id,
+    function(flyout, ignored) flyout.widget:SyncIgnoredState(ignored) end
+  )
 end
 
 function o:CreateSlotFlyouts()
@@ -87,15 +88,13 @@ end
 function o:OnSlotEnter(slotBtn, ignoreAltKey)
   local slotID = slotBtn:GetID()
   self.__hoverSlotID = slotID
-  local flyout = flyoutsMap[slotID];
+  local flyout = flyoutsMap[slotID]
   if not flyout then return end
   if ignoreAltKey ~= false and not IsAltKeyDown() then
     return OnSlotEnter_ShowGameTooltip(flyout)
   end
 
-  if InCombatLockdown() then
-    return OnSlotEnter_ShowGameTooltip(flyout, slotID)
-  end
+  if InCombatLockdown() then return OnSlotEnter_ShowGameTooltip(flyout, slotID) end
 
   if flyout.widget:IsExpanded() then
     OnSlotEnter_ShowGameTooltip(flyout, slotID)
@@ -121,8 +120,10 @@ function o:OnEnterDynamic(btn)
   local origOnEnter = btn:GetScript('OnEnter')
   if not origOnEnter then return end
   btn:SetScript('OnEnter', function(b)
-    if ns.gears:IsShown() then self:OnSlotEnter(b)
-    elseif origOnEnter then origOnEnter(b)
+    if ns.gears:IsShown() then
+      self:OnSlotEnter(b)
+    elseif origOnEnter then
+      origOnEnter(b)
     end
   end)
 end
@@ -132,8 +133,10 @@ function o:OnLeaveDynamic(btn)
   local origOnLeave = btn:GetScript('OnLeave')
   if not origOnLeave then return end
   btn:SetScript('OnLeave', function(b)
-    if ns.gears:IsShown() then self:OnSlotLeave(b)
-    elseif origOnLeave then origOnLeave(b)
+    if ns.gears:IsShown() then
+      self:OnSlotLeave(b)
+    elseif origOnLeave then
+      origOnLeave(b)
     end
   end)
 end
@@ -147,15 +150,15 @@ function o:OnModifierStateChanged(evt, key, down)
     --- @type BlizzCharacterSlotItemButton
     local s
     if mf and mf[1] then s = mf[1] end
-  if s and s.gears then self:OnSlotEnter(s, true) end
+    if s and s.gears then self:OnSlotEnter(s, true) end
     return
   end
 
   if not ns.gears:IsPaperDollFrameVisible() then return end
   self:ForEachFlyouts(function(flyout)
     --if flyout.widget:IsExpanded() then
-      flyout.widget:ClosePopup(false, false)
-      GameTooltip:Hide()
+    flyout.widget:ClosePopup(false, false)
+    GameTooltip:Hide()
     --end
   end)
 end
@@ -167,16 +170,12 @@ function o:EnableEquipmentSlots(enable)
 end
 
 function o:ShowFlyouts()
-  self:ForEachFlyouts(function(flyout)
-    flyout.widget:ShowSlotGroup()
-  end)
+  self:ForEachFlyouts(function(flyout) flyout.widget:ShowSlotGroup() end)
 end
 
 function o:HideFlyouts()
   if ns.gears:HasSelection() and ns.gears:IsShown() then return end
-  self:ForEachFlyouts(function(flyout)
-    flyout.widget:ClosePopup(true)
-  end)
+  self:ForEachFlyouts(function(flyout) flyout.widget:ClosePopup(true) end)
 end
 
 --- This method does not care about equipment set IDs
@@ -194,9 +193,9 @@ end
 --- @param ignored boolean
 function o:SetAllSlotsIgnored(ignored)
   if not ns.gears:HasSelection() then return end
-  self:ForEachFlyouts(function(flyout)
-    flyout.widget:GetIgnoreSlotButton().widget:SyncIgnoredState(ignored)
-  end)
+  self:ForEachFlyouts(
+    function(flyout) flyout.widget:GetIgnoreSlotButton().widget:SyncIgnoredState(ignored) end
+  )
   ns.gears:GetSaveButton():SetEnabled(true)
 end
 
@@ -208,10 +207,10 @@ function o:IncludeAllSlots() self:SetAllSlotsIgnored(false) end
 --- @param equipSetID EquipSetID
 --- @param callbackFn fun(slotFlyout:EquipmentSlotFlyout, slotBtn:BlizzCharacterSlotItemButton, ignored:boolean) : void | "'function(slotFlyout, slotBtn, ignored) end'"
 function o:ForEachEquipSetSlots(equipSetID, callbackFn)
-  if not (callbackFn) then return end
-  
+  if not callbackFn then return end
+
   local ignoredSlots = C_GetIgnoredSlots(equipSetID)
-  
+
   for _, slotFlyout in pairs(flyoutsMap) do
     local slotID = slotFlyout:GetID()
     local ignored = ignoredSlots and ignoredSlots[slotID]
@@ -234,7 +233,10 @@ Event Handlers
 function o:OnEnterCombat()
   local btn = Gears_ToggleButton
   if not ns.gears:IsPaperDollFrameVisible() then return end
-  if not btn:IsChecked() then self:HideFlyouts(); return end
+  if not btn:IsChecked() then
+    self:HideFlyouts()
+    return
+  end
   btn:Click()
 end
 

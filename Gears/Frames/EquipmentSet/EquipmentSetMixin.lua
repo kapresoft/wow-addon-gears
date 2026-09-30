@@ -17,7 +17,7 @@ Local Vars
 ---------------------------------------------------------------------]]
 local CHECKBOX_TEXTURE = [[Interface\Buttons\UI-CheckBox-Check]]
 local TOOLTIP_DELAY = 0.01
-local BULLET        = '•'
+local BULLET = '•'
 
 local bulletFmt = ' %s %s: %s'
 local c_white = ns:ColorFn('afafaf')
@@ -51,10 +51,10 @@ Gears_EquipmentSetMixin = {}
 local p, t = ns:log('EquipmentSetMixin')
 
 local BACKDROP_WITH_BG = {
-  bgFile   = "Interface\\Buttons\\WHITE8X8",
-  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+  bgFile = 'Interface\\Buttons\\WHITE8X8',
+  edgeFile = 'Interface\\Tooltips\\UI-Tooltip-Border',
   edgeSize = 12,
-  insets   = { left = 3, right = 3, top = 3, bottom = 3 },
+  insets = { left = 3, right = 3, top = 3, bottom = 3 },
 }
 --[[-------------------------------------------------------------------
 Support Functions
@@ -69,25 +69,24 @@ end
 --- @param id Identifier The equipmentSet ID
 --- @return EquipmentSetDetails?
 local function GetEquipmentSet(id)
-  assert(type(id) == 'number', "GetEquipmentSet(id): {id} is missing")
-  
-  local name, iconFileID, setID, isEquipped,
-  numItems, numEquipped, numInInventory,
-  numLost, numIgnored = C_GetEquipmentSetInfo(id)
-  
+  assert(type(id) == 'number', 'GetEquipmentSet(id): {id} is missing')
+
+  local name, iconFileID, setID, isEquipped, numItems, numEquipped, numInInventory, numLost, numIgnored =
+    C_GetEquipmentSetInfo(id)
+
   if not name then return nil end
 
   --- @type EquipmentSetDetails
   local eq = {
-    name           = name,
-    iconID         = iconFileID,
-    id             = setID,
-    isEquipped     = isEquipped,
-    numItems       = numItems,
-    numEquipped    = numEquipped,
+    name = name,
+    iconID = iconFileID,
+    id = setID,
+    isEquipped = isEquipped,
+    numItems = numItems,
+    numEquipped = numEquipped,
     numInInventory = numInInventory,
-    numLost        = numLost,
-    numIgnored     = numIgnored,
+    numLost = numLost,
+    numIgnored = numIgnored,
   }
   return eq
 end
@@ -95,17 +94,18 @@ end
 --- @param id Identifier @The equipmentSet ID
 --- @return boolean
 local function IsFullyEquipped(id)
-  local eqs = GetEquipmentSet(id); return eqs ~= nil and eqs.isEquipped
+  local eqs = GetEquipmentSet(id)
+  return eqs ~= nil and eqs.isEquipped
 end
 
 --- Keyed by GetCursorInfo() type; args are its other returns.
 --- No 'equipmentset' entry: rows are drag sources themselves.
 --- @type table<string, fun(id: number|string, arg2: any, arg3: any): IconIDOrPath?>
 local cursorIconResolvers = {
-  item      = function(itemID) return C_Item.GetItemIconByID(itemID) end,
-  spell     = function(_, _, spellID) return (C_Spell.GetSpellTexture(spellID)) end,
-  macro     = function(index) return (select(2, GetMacroInfo(index))) end,
-  mount     = function(mountID) return (select(3, C_MountJournal.GetMountInfoByID(mountID))) end,
+  item = function(itemID) return C_Item.GetItemIconByID(itemID) end,
+  spell = function(_, _, spellID) return (C_Spell.GetSpellTexture(spellID)) end,
+  macro = function(index) return (select(2, GetMacroInfo(index))) end,
+  mount = function(mountID) return (select(3, C_MountJournal.GetMountInfoByID(mountID))) end,
   battlepet = function(petID) return (select(9, C_PetJournal.GetPetInfoByPetID(petID))) end,
 }
 
@@ -135,7 +135,8 @@ end
 --- @return boolean
 local function IsIconPickerShown()
   --- @type Frame
-  local picker = LibIconPicker_IconSelector; if not picker then return false end
+  local picker = LibIconPicker_IconSelector
+  if not picker then return false end
   HookIconPickerOnce(picker)
   return picker:IsShown()
 end
@@ -144,9 +145,7 @@ end
 --- @param id Identifier EquipmentSet ID
 local function GameTooltip_AddEquipmentDetails(tt, id)
   local eqs = GetEquipmentSet(id)
-  if eqs and eqs.isEquipped then
-    tt:AddLine(c_green(CURRENTLY_EQUIPPED))
-  end
+  if eqs and eqs.isEquipped then tt:AddLine(c_green(CURRENTLY_EQUIPPED)) end
 end
 
 --- @param self EquipmentSetFrame
@@ -154,17 +153,29 @@ local function EquipmentSet_ShowTooltip(self)
   if GetCursorIcon() then return end
   C_Timer.After(TOOLTIP_DELAY, function()
     if not self:IsMouseOver() then return end
-    
+
     local availableActions = c_blue(L['Available Actions']) .. ':'
-    local leftClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Left-click']), c_white(L['Select']))
-    local doubleClick = (bulletFmt):format(c_white(BULLET), c_yellow(L['Double-click']),  c_white(L['Equip']))
-    local drag = (bulletFmt):format(c_white(BULLET), c_yellow(L['Drag']), c_white(L['Drag to an action bar']))
+    local leftClick = (bulletFmt):format(
+      c_white(BULLET),
+      c_yellow(L['Left-click']),
+      c_white(L['Select'])
+    )
+    local doubleClick = (bulletFmt):format(
+      c_white(BULLET),
+      c_yellow(L['Double-click']),
+      c_white(L['Equip'])
+    )
+    local drag = (bulletFmt):format(
+      c_white(BULLET),
+      c_yellow(L['Drag']),
+      c_white(L['Drag to an action bar'])
+    )
     local bottomText = c_white(L['Select a set to enable slot actions'])
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
     local eqID = self:GetID()
     GameTooltip:SetEquipmentSet(eqID)
     GameTooltip_AddEquipmentDetails(GameTooltip, eqID)
-    GameTooltip:AddLine(" ")
+    GameTooltip:AddLine(' ')
     GameTooltip:AddLine(availableActions)
     GameTooltip:AddLine(leftClick)
     GameTooltip:AddLine(doubleClick)
@@ -188,7 +199,7 @@ o.EquipmentSet = true
 
 function o:OnLoad()
   BackdropTemplateMixin.OnBackdropLoaded(self)
-  
+
   self:SetBackdrop(BACKDROP_WITH_BG)
   self:HideBorder()
   self:__OnLoadCheckMark()
@@ -206,23 +217,31 @@ function o:OnEvent() self:UpdateDropTargetState() end
 
 function o:__OnLoadCreateDeleteButton()
   --- @class DeleteButton : Button, IconButton
-  local btn = CreateFrame("Button", "$parentDeleteButton",
-    self, "Gears_DeleteButtonTemplate" --[[@as Template]])
+  local btn = CreateFrame(
+    'Button',
+    '$parentDeleteButton',
+    self,
+    'Gears_DeleteButtonTemplate' --[[@as Template]]
+  )
   btn.owner = self
   btn:SetFrameLevel(self:GetFrameLevel() + 2)
   btn:ClearAllPoints()
-  btn:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -2, 2)
+  btn:SetPoint('BOTTOMRIGHT', self, 'BOTTOMRIGHT', -2, 2)
   btn:Hide()
 end
 
 function o:__OnLoadCreateChangeButton()
   --- @class ChangeButton : Button, IconButton
-  local btn = CreateFrame( "Button", "$parentChangeButton",
-          self, "Gears_ChangeButtonTemplate" --[[@as Template]])
+  local btn = CreateFrame(
+    'Button',
+    '$parentChangeButton',
+    self,
+    'Gears_ChangeButtonTemplate' --[[@as Template]]
+  )
   btn.owner = self
   btn:SetFrameLevel(self:GetFrameLevel() + 2)
   btn:ClearAllPoints()
-  btn:SetPoint("RIGHT", self.DeleteButton, "LEFT", 4, 0)
+  btn:SetPoint('RIGHT', self.DeleteButton, 'LEFT', 4, 0)
   btn:Hide()
 end
 
@@ -246,7 +265,8 @@ end
 --- @return boolean @true if the icon was changed
 function o:DropCursorIcon()
   if not self.IconButton:IsMouseOver() then return false end
-  local icon = GetCursorIcon(); if not icon then return false end
+  local icon = GetCursorIcon()
+  if not icon then return false end
 
   local id, name = self:GetIdentity()
   C_ModifyEquipmentSet(id, name, icon)
@@ -260,8 +280,10 @@ end
 --- @param callbackFn nil|fun(isFullyEquipped:boolean) | "function(isFullyEquipped) end"
 function o:UpdateFullyEquippedState(callbackFn)
   local equipped = IsFullyEquipped(self:GetID())
-  if equipped then self.CheckMark:Show()
-  else self.CheckMark:Hide()
+  if equipped then
+    self.CheckMark:Show()
+  else
+    self.CheckMark:Hide()
   end
   if callbackFn then callbackFn(equipped) end
 end
@@ -273,15 +295,16 @@ end
 
 function o:OnEnter()
   EquipmentSet_ShowTooltip(self)
-  
+
   if not self.selected then self:ShowBorderOnHover() end
-  
+
   --- When we hover over to another EquipmentSetFrame,
   --- hide other EquipmentSet specific action buttons
-  self.owner:ForEachEquipmentFrame(function(otherEQS)
-    otherEQS:HideActionButtons()
-  end, function(eqsInfo) return self:GetID() ~= eqsInfo.id end)
-  
+  self.owner:ForEachEquipmentFrame(
+    function(otherEQS) otherEQS:HideActionButtons() end,
+    function(eqsInfo) return self:GetID() ~= eqsInfo.id end
+  )
+
   self:ShowActionButtons()
 end
 
@@ -310,9 +333,7 @@ function o:EquipGear()
     ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN, true)
   else
     ns:PlaySound(SOUNDKIT.PUT_DOWN_SMALL_CHAIN, true)
-    C_Timer.After(0.2, function()
-      ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN, true)
-    end)
+    C_Timer.After(0.2, function() ns:PlaySound(SOUNDKIT.IG_BACKPACK_OPEN, true) end)
   end
 
   local success, reason = ns:EquipEquipmentSet(self:GetID())
@@ -331,7 +352,7 @@ end
 
 ---@param info EquipmentSetInfo
 function o:SetInfo(info)
-  assert(type(info) == 'table', "SetInfo(info): {info} is missing")
+  assert(type(info) == 'table', 'SetInfo(info): {info} is missing')
   self.info = info
   self:SetID(info.id)
 end
@@ -341,10 +362,13 @@ end
 --- @param selected boolean
 function o:SetSelected(selected)
   assert(type(selected) == 'boolean', 'Expected SetSelected(selected:boolean)')
-  
+
   ns:PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
   self.selected = selected
-  if self.selected then self:ShowAsSelectedBorder(); return end
+  if self.selected then
+    self:ShowAsSelectedBorder()
+    return
+  end
   self:HideBorder()
 end
 
@@ -375,7 +399,8 @@ end
 
 --- @return Name
 function o:GetEquipmentSetName()
-  local info = self.info; return info and info.name
+  local info = self.info
+  return info and info.name
 end
 
 --- @return Name

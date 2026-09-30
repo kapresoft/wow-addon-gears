@@ -26,22 +26,34 @@ Module::ItemUtil (Methods)
 --- @param itemIdentifier ItemIdentifier
 --- @return ItemInfoDetails
 function o:GetItem(itemIdentifier)
-  assert(type(itemIdentifier) == 'string' or type(itemIdentifier) == 'number',
-    'GetItem(itemIdentifier):: {itemIdentifier} should be a name, id or link')
-  
-  local itemName, itemLink,
-  itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount,
-  itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
-  expacID, setID, isCraftingReagent = C_GetItemInfo(itemIdentifier)
-  
+  assert(
+    type(itemIdentifier) == 'string' or type(itemIdentifier) == 'number',
+    'GetItem(itemIdentifier):: {itemIdentifier} should be a name, id or link'
+  )
+
+  local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expacID, setID, isCraftingReagent =
+    C_GetItemInfo(itemIdentifier)
+
   local itemID = C_GetItemInfoInstant(itemIdentifier)
-  
+
   --- @type ItemInfoDetails
-  local itemInfo = { id = itemID, name = itemName, link = itemLink, icon = itemTexture,
-                     quality = itemQuality, level = itemLevel, minLevel = itemMinLevel,
-                     type = itemType, subType = itemSubType, stackCount = itemStackCount,
-                     equipLoc=itemEquipLoc, classID=classID, subclassID=subclassID,
-                     bindType=bindType, isCraftingReagent=isCraftingReagent }
+  local itemInfo = {
+    id = itemID,
+    name = itemName,
+    link = itemLink,
+    icon = itemTexture,
+    quality = itemQuality,
+    level = itemLevel,
+    minLevel = itemMinLevel,
+    type = itemType,
+    subType = itemSubType,
+    stackCount = itemStackCount,
+    equipLoc = itemEquipLoc,
+    classID = classID,
+    subclassID = subclassID,
+    bindType = bindType,
+    isCraftingReagent = isCraftingReagent,
+  }
   return itemInfo
 end
 
@@ -57,8 +69,6 @@ end
 function o:GetItemBySlotID(slotID)
   local itemLink, itemID
   itemLink = GetInventoryItemLink('player', slotID)
-  if itemLink then
-    itemID = self:GetItemIDByLink(itemLink)
-  end
+  if itemLink then itemID = self:GetItemIDByLink(itemLink) end
   return itemID, itemLink
 end

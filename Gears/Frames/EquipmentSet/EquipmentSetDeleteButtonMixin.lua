@@ -15,7 +15,7 @@ local p = ns:log('EquipmentSetDeleteButtonMixin')
 --- @param dlg Frame @The static popup frame
 --- @param equipmentSetID Identifier
 local function Delete_OnAccept(dlg, equipmentSetID)
-  C_DeleteEquipmentSet(equipmentSetID);
+  C_DeleteEquipmentSet(equipmentSetID)
   ns:esfm():HideFlyouts()
 end
 
@@ -24,8 +24,12 @@ Support Functions
 ---------------------------------------------------------------------]]
 StaticPopupDialogs[GEARS_CONFIRM_DELETE_EQUIPMENT_SET] = {
   text = _G['CONFIRM_DELETE_EQUIPMENT_SET'],
-  button1 = YES, button2 = NO,
-  hideOnEscape = 1, timeout = 0, exclusive = 1, whileDead = 1,
+  button1 = YES,
+  button2 = NO,
+  hideOnEscape = 1,
+  timeout = 0,
+  exclusive = 1,
+  whileDead = 1,
   OnAccept = Delete_OnAccept,
   OnCancel = function(dlg, data) end,
 }
@@ -47,7 +51,7 @@ Gears_EquipmentSetDeleteButtonMixin = {}
 Methods
 ---------------------------------------------------------------------]]
 
-local o  = Gears_EquipmentSetDeleteButtonMixin
+local o = Gears_EquipmentSetDeleteButtonMixin
 o.DeleteButton = true
 
 function o:OnLoad()

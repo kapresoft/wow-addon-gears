@@ -51,7 +51,6 @@ InventorySlotInfo
 --- @field iconID IconIDOrPath
 --- @field checkRelic boolean
 
-
 --- @class BlizzCharacterSlotItemButton : Button
 --- @field ignoreSlotOverlay Texture
 --- @field popoutButton Button
@@ -62,5 +61,3 @@ Aliases
 ---------------------------------------------------------------------]]
 --- @alias EquipSetID number @The EquipmentSet Identifier
 --- @alias SlotID number @The equipment slot ID
-
-

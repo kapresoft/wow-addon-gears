@@ -84,7 +84,7 @@ end
 
 --- @param self Gears_MainFrameMixin|Gears_MainFrame
 local function MainFrame_PaperDollFrameHooks(self)
-  PaperDollFrame:HookScript("OnShow", function(pdf)
+  PaperDollFrame:HookScript('OnShow', function(pdf)
     self:OnShow_PaperDollFrame()
     self:SendMessage(ns:msg('ShowPaperDollFrame'), self, pdf)
   end)
@@ -94,21 +94,21 @@ end
 local function MainFrameMixin_AnchorToPaperDoll(frame)
   local anchorFrame = CharacterFrameCloseButton
   local osx, osy = -6, -4
-  
+
   if EngravingFrame then
     if EngravingFrame:IsShown() then
       anchorFrame = EngravingFrame.Border.NineSlice
       osx, osy = -4, 1
     else
-      osx, osy    = -8, -3
+      osx, osy = -8, -3
     end
   elseif ns:IsMainline() then
     osx, osy = -2, 0
     if frame.__origHeight then frame:SetHeight(frame.__origHeight - 3) end
   end
-  
+
   frame:ClearAllPoints()
-  frame:SetPoint("TOPLEFT", anchorFrame, "TOPRIGHT", osx, osy)
+  frame:SetPoint('TOPLEFT', anchorFrame, 'TOPRIGHT', osx, osy)
   ns.toggleButton:AnchorToPaperDoll()
 end
 
@@ -133,12 +133,16 @@ local function MainFrameMixin_EquipmentSet(self, index) return self.framePool[in
 local function MainFrameMixin_GetFrame(self, eqInfo)
   local index = eqInfo.index
   if not self.framePool[index] then
-    self.framePool[index] = CreateFrame("Button", ("$parent_EquipmentSet%s"):format(eqInfo.id),
-            self.ScrollFrame.ScrollChild, "Gears_EquipmentSetTemplate" --[[@as Template ]])
+    self.framePool[index] = CreateFrame(
+      'Button',
+      ('$parent_EquipmentSet%s'):format(eqInfo.id),
+      self.ScrollFrame.ScrollChild,
+      'Gears_EquipmentSetTemplate' --[[@as Template ]]
+    )
   end
   self.framePool[index].owner = self
   self.framePool[index]:SetInfo(eqInfo)
-  
+
   return self.framePool[index]
 end
 
@@ -148,23 +152,20 @@ local function MainFrameMixin_OnEquipmentChanged(self)
   self:ForEachEquipment(function(info)
     local equipSet = MainFrameMixin_EquipmentSet(self, info.index)
     if not equipSet then return end
-    
+
     equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
-      if equipSet.selected then
-        self:UpdateActionsEnabledState(not isFullyEquipped)
-      end
+      if equipSet.selected then self:UpdateActionsEnabledState(not isFullyEquipped) end
     end)
-    
   end)
 end
 
 --- @param self Gears_MainFrameMixin
 local function MainFrameMixin_EngravingFrameHook(self)
   if self.__engravingFrameHook or not EngravingFrame then return end
-  
-  hooksecurefunc(EngravingFrame, "Show", function() MainFrameMixin_AnchorToPaperDoll(self) end)
-  hooksecurefunc(EngravingFrame, "Hide", function() MainFrameMixin_AnchorToPaperDoll(self) end)
-  
+
+  hooksecurefunc(EngravingFrame, 'Show', function() MainFrameMixin_AnchorToPaperDoll(self) end)
+  hooksecurefunc(EngravingFrame, 'Hide', function() MainFrameMixin_AnchorToPaperDoll(self) end)
+
   self.__engravingFrameHook = true
 end
 
@@ -179,7 +180,7 @@ local function MainFrameMixin_AlignCharacterLevelText()
   --- @type FontString
   local c = CharacterLevelText; if not c then return end
   c:ClearAllPoints()
-  c:SetPoint("BOTTOM", PaperDollInnerBorderTop, 'TOP', 0, 0)
+  c:SetPoint('BOTTOM', PaperDollInnerBorderTop, 'TOP', 0, 0)
 end
 
 --- In Retail (as of 12.x), CharStats/Titles/EquipmentSet is
@@ -187,7 +188,7 @@ end
 --- @param self Gears_MainFrameMixin|Gears_MainFrame
 local function MainFrameMixin_CharacterFrameHooks(self)
   local cfeb = CharacterFrameExpandButton; if not cfeb then return end
-  cfeb:HookScript("OnClick", MainFrameMixin_AlignCharacterLevelText)
+  cfeb:HookScript('OnClick', MainFrameMixin_AlignCharacterLevelText)
 end
 
 --- Fired when equipment set is created, updated, deleted
@@ -200,56 +201,52 @@ Methods: Gears_MainFrameMixin
 ---------------------------------------------------------------------]]
 function o:OnLoad()
   ns:RegisterMainFrame(self)
-  
+
   BackdropTemplateMixin.OnBackdropLoaded(self)
   self:SetBackdrop(BACKDROP_TOAST_12_12)
-  
+
   -- Reassert draw layer after SetBackdrop(); backdrop textures are created
   -- after XML construction and can overlap this texture due to same layer/sublevel.
   -- Calling SetDrawLayer here ensures HeaderIconLeft renders on top.
-  self.HeaderIconLeft:SetDrawLayer("OVERLAY")
-  
+  self.HeaderIconLeft:SetDrawLayer('OVERLAY')
+
   -- set same parent so frame is scaled automatically
   self:SetParent(PaperDollFrame)
   -- set high so it is above other addons attached to char frame
   self:SetFrameLevel(100)
-  
+
   local sb = self.ScrollFrame.ScrollBar
   local up = sb.ScrollUpButton
   local down = sb.ScrollDownButton
-  
+
   up:SetAlpha(0)
   down:SetAlpha(0)
   up:EnableMouse(false)
   down:EnableMouse(false)
-  
+
   --- @type Texture
   local thumb = sb:GetThumbTexture()
   local thumbAlpha, highlightAlpha = 0.4, 0.8
-  
-  thumb:SetTexture("Interface\\Buttons\\WHITE8X8")
+
+  thumb:SetTexture('Interface\\Buttons\\WHITE8X8')
   thumb:SetVertexColor(0.75, 0.65, 0.25, thumbAlpha)
   thumb:SetSize(7, 160)
-  
-  sb:HookScript("OnEnter", function()
-    thumb:SetAlpha(highlightAlpha)
-  end)
-  sb:HookScript("OnLeave", function()
-    thumb:SetAlpha(thumbAlpha)
-  end)
-  
+
+  sb:HookScript('OnEnter', function() thumb:SetAlpha(highlightAlpha) end)
+  sb:HookScript('OnLeave', function() thumb:SetAlpha(thumbAlpha) end)
+
   --- @type ScrollFrame
   local scrollFrame = self.ScrollFrame
   -- set scrollChild here to enable scrolling
   scrollFrame:SetScrollChild(scrollFrame.ScrollChild)
-  
+
   --- @type FontString
   local headerText = self.HeaderTitle
   headerText:SetText(ns.addon)
-  
+
   MainFrameMixin_CharacterFrameHooks(self)
   MainFrameMixin_OnLoadButtons(self)
-  
+
   self:Show()
   self:RegisterMessage(ns:msg('OnInit'), 'OnInit')
 end
@@ -259,7 +256,7 @@ function o:OnShow_PaperDollFrame()
   MainFrameMixin_EngravingFrameHook(self)
 
   MainFrameMixin_AlignCharacterLevelText()
-  
+
   self:ClearSelection()
 end
 
@@ -276,7 +273,7 @@ function o:OnInit()
   self.__origHeight = self:GetHeight()
   self:InitEquipmentSet()
   ns:esfm():CreateSlotFlyouts()
-  
+
   MainFrame_PaperDollFrameHooks(self)
   self:SendMessage(ns:msg('OnAfterInit'), self)
 end
@@ -290,18 +287,20 @@ end
 --- When the mouse is out of the EquipmentSetFrame and into the main frame,
 --- hide other EquipmentSet specific action buttons
 function o:OnEnter()
-  self:ForEachEquipmentFrame(function(eqs)
-    eqs:HideActionButtons()
-  end)
+  self:ForEachEquipmentFrame(function(eqs) eqs:HideActionButtons() end)
 end
 
 --- @private
 function o:InitEquipmentSet()
   self:RefreshEquipmentSet()
   self:UpdateActionsEnabledState(false)
-  
+
   -- bucket because [PLAYER_EQUIPMENT_CHANGED] fires a few times
-  self:RegisterBucketEvent('PLAYER_EQUIPMENT_CHANGED', 0.01, fn(MainFrameMixin_OnEquipmentChanged, self))
+  self:RegisterBucketEvent(
+    'PLAYER_EQUIPMENT_CHANGED',
+    0.01,
+    fn(MainFrameMixin_OnEquipmentChanged, self)
+  )
   self:RegisterEvent('EQUIPMENT_SETS_CHANGED', fn(MainFrameMixin_OnEquipmentSetsChanged, self))
 
   -- Catches a currently-equipped set item being destroyed/dropped; fires after
@@ -309,7 +308,11 @@ function o:InitEquipmentSet()
   self:RegisterEvent('PORTRAITS_UPDATED', fn(MainFrameMixin_OnEquipmentSetsChanged, self))
 
   -- Catches a bagged set item being dropped, sold, or mailed.
-  self:RegisterBucketEvent('BAG_UPDATE_DELAYED', 0.2, fn(MainFrameMixin_OnEquipmentSetsChanged, self))
+  self:RegisterBucketEvent(
+    'BAG_UPDATE_DELAYED',
+    0.2,
+    fn(MainFrameMixin_OnEquipmentSetsChanged, self)
+  )
 end
 
 function o:HideGears()
@@ -323,7 +326,7 @@ function o:RefreshEquipmentSet()
     local f = self:BuildEquipmentSet(info)
     f.__used = true
   end)
-  
+
   for _, frame in pairs(self.framePool) do
     if not frame.__used then
       frame.info = nil
@@ -333,7 +336,7 @@ function o:RefreshEquipmentSet()
     end
     frame.__used = nil
   end
-  
+
   self:UpdateScrollHeight(usedCount)
   if usedCount == 0 then self.DragTip:Hide() end
 end
@@ -344,17 +347,18 @@ end
 --- @return number The number of accepted equipment sets
 function o:ForEachEquipment(callback, acceptFn)
   local rowCount = 0
-  local eq       = C_EquipmentSet
-  local acceptEquipmentSet = acceptFn or function() return true  end
-  
+  local eq = C_EquipmentSet
+  local acceptEquipmentSet = acceptFn or function() return true end
+
   --- @type table<number,number>
   local ids = eq.GetEquipmentSetIDs()
   for i, id in ipairs(ids) do
     local name, icon, _, _, _, _, _, numLost = eq.GetEquipmentSetInfo(id)
-    local info       = { id = id, index = i, name = name, icon = icon, numLost = numLost }
+    local info = { id = id, index = i, name = name, icon = icon, numLost = numLost }
     if acceptEquipmentSet(info) then
       rowCount = rowCount + 1
-      callback(info) end
+      callback(info)
+    end
   end
   return rowCount
 end
@@ -364,9 +368,10 @@ end
 --- @param acceptFn nil|fun(eqsInfo:EquipmentSetInfo) : boolean @Optional: The filter function | "function(eqs) return true end"
 --- @return number The number of accepted equipment sets
 function o:ForEachEquipmentFrame(callback, acceptFn)
-  local rowCount = self:ForEachEquipment(function(info)
-    callback(self.framePool[info.index])
-  end, acceptFn)
+  local rowCount = self:ForEachEquipment(
+    function(info) callback(self.framePool[info.index]) end,
+    acceptFn
+  )
   return rowCount
 end
 
@@ -374,9 +379,9 @@ end
 function o:BuildEquipmentSet(eqInfo)
   local equipmentSet = MainFrameMixin_GetFrame(self, eqInfo)
   if eqInfo.index > 1 then
-    equipmentSet:SetPoint("TOPLEFT", self.framePool[eqInfo.index - 1], "BOTTOMLEFT")
+    equipmentSet:SetPoint('TOPLEFT', self.framePool[eqInfo.index - 1], 'BOTTOMLEFT')
   end
-  
+
   --- @type Button
   local iconBtn = equipmentSet.IconButton
   iconBtn:SetNormalTexture(eqInfo.icon)
@@ -392,7 +397,7 @@ function o:BuildEquipmentSet(eqInfo)
 
   equipmentSet:Show()
   equipmentSet:UpdateFullyEquippedState()
-  
+
   return equipmentSet
 end
 
@@ -400,32 +405,30 @@ end
 function o:UpdateScrollHeight(numRows)
   local scrollFrame = self.ScrollFrame
   local child = scrollFrame.ScrollChild
-  
+
   local rowHeight = 48
-  local spacing   = 2
-  local padding   = 0 -- adjust if you add top/bottom padding
-  
-  local height = (numRows * rowHeight)
-          + ((numRows - 1) * spacing)
-          + padding
-  
+  local spacing = 2
+  local padding = 0 -- adjust if you add top/bottom padding
+
+  local height = (numRows * rowHeight) + ((numRows - 1) * spacing) + padding
+
   child:SetHeight(height)
 end
 
 --- @param equipSet EquipmentSetFrame
 function o:SelectEquipmentSet(equipSet)
-  assert(type(equipSet) == 'table', "The param equipSet is required.")
-  
+  assert(type(equipSet) == 'table', 'The param equipSet is required.')
+
   --- @type EquipmentSetFrame
   local otherEquipSet
   local id = equipSet:GetID()
-  
+
   equipSet:SetSelected(true)
   equipSet:UpdateFullyEquippedState(function(isFullyEquipped)
     self:UpdateActionsEnabledState(not isFullyEquipped)
     self:SendMessage(ns:msg('EquipmentSetSelected'), equipSet.info)
   end)
-  
+
   -- uncheck the rest
   self:ForEachEquipment(function(info)
     otherEquipSet = self.framePool[info.index]
@@ -469,8 +472,9 @@ end
 function o:OnClick_AddButton(button)
   ns:PlaySound(SOUNDKIT.IG_CHARACTER_INFO_OPEN)
   local opt = {
-    icon = self.__lastIcon, showTextInput = true,
-    textInput = { label = L['New Equipment Set'] .. ':', max = ns.MAX_CHARS_SET_NAME }
+    icon = self.__lastIcon,
+    showTextInput = true,
+    textInput = { label = L['New Equipment Set'] .. ':', max = ns.MAX_CHARS_SET_NAME },
   }
   LibIconPickerUtil:Get(function(lip)
     lip:Open(function(sel)
@@ -479,7 +483,7 @@ function o:OnClick_AddButton(button)
       C_CreateEquipmentSet(esName, sel.icon)
       ns:PlaySound(SOUNDKIT.IG_MAINMENU_QUIT)
       self.__lastIcon = sel.icon
-      
+
       -- After creating a new equipment set, the ignore-for-save state is NOT automatically
       -- applied to it. Blizzard stores ignored slots in a temporary “save buffer”.
       -- Calling SaveEquipmentSet(newSetID) commits the current buffer (including ignored slots)
@@ -501,15 +505,9 @@ function o:UpdateActionsEnabledState(isEnabledState)
   self:GetSaveButton():SetEnabled(isEnabledState)
 end
 
-function o:GetEquipButton()
-  return self.ButtonsContainerFrame.EquipButton
-end
-function o:GetSaveButton()
-  return self.ButtonsContainerFrame.SaveButton
-end
-function o:GetAddButton()
-  return self.ButtonsContainerFrame.AddButton
-end
+function o:GetEquipButton() return self.ButtonsContainerFrame.EquipButton end
+function o:GetSaveButton() return self.ButtonsContainerFrame.SaveButton end
+function o:GetAddButton() return self.ButtonsContainerFrame.AddButton end
 
 --- @return boolean
 function o:IsPaperDollFrameVisible() return PaperDollFrame:IsVisible() end
