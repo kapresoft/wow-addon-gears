@@ -1,7 +1,9 @@
-# Gears 
-> A World of Warcraft Add-On
+[![Release Build](https://github.com/kapresoft/wow-addon-gears/actions/workflows/release-build.yml/badge.svg)](https://github.com/kapresoft/wow-addon-gears/actions/workflows/release-build.yml)
 
-# **Your gear, your rules—instantly equipped.**
+# Gears :: Your gear, your rules—instantly equipped. 
+> ▶ A [World of Warcraft](https://worldofwarcraft.com/) AddOn
+
+![download-count](https://cf.way2muchnoise.eu/full_1421181_downloads.svg?badge_style=for_the_badge) ![supported-wow-versions](https://cf.way2muchnoise.eu/versions/World%20of%20Warcraft%20Versions_1421181_all.svg?badge_style=for_the_badge)
 
 This addon provides a clean, efficient way to manage and switch equipment sets in World of Warcraft. It relies exclusively on Blizzard’s official WoW APIs to store and restore equipment sets safely, ensuring your configurations persist reliably across sessions.
 
