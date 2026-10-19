@@ -6,5 +6,8 @@
     <!--@do-not-package@-->
     <Script file="Developer\DeveloperSetup.lua" />
     <!--@end-do-not-package@-->
+    <Script file="Widgets\Ace3WidgetConfig.lua"/>
+    <Script file="Widgets\Ace3WidgetUtil.lua"/>
+    <Script file="Widgets\SettingsCheckboxWidget.lua"/>
     <Script file="OptionsUI.lua"/>
 </Ui>

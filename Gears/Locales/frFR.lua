@@ -68,6 +68,7 @@ L['Shift-Click'] = 'Maj-clic'
 L['Ignore All Slots'] = 'Ignorer tous les emplacements'
 L['Include All Slots'] = 'Inclure tous les emplacements'
 L['General'] = 'Général'
+L['General::DESC'] = 'Paramètres partagés par tous vos personnages'
 L['Announce Equip in Chat'] = 'Annoncer l’équipement dans le chat'
 L['Announce Equip in Chat::DESC'] =
   'Affiche un message de confirmation dans la fenêtre de discussion lors de l’utilisation de /gears equip'

@@ -66,6 +66,7 @@ L['Shift-Click'] = 'Shift+클릭'
 L['Ignore All Slots'] = '모든 슬롯 무시'
 L['Include All Slots'] = '모든 슬롯 포함'
 L['General'] = '일반'
+L['General::DESC'] = '모든 캐릭터가 공유하는 설정'
 L['Announce Equip in Chat'] = '채팅에 장착 알리기'
 L['Announce Equip in Chat::DESC'] =
   '/gears equip 사용 시 채팅창에 확인 메시지를 표시합니다'
