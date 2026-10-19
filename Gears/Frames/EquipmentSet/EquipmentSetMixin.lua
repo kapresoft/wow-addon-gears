@@ -310,6 +310,7 @@ end
 
 function o:OnLeave()
   GameTooltip:Hide()
+  self:HideActionButtonsIfMouseOut()
   if self.selected == true then return end
   self:HideBorder()
 end
@@ -325,6 +326,11 @@ end
 function o:HideActionButtons()
   self.DeleteButton:Hide()
   self.ChangeButton:Hide()
+end
+--- The buttons sit inside the row; moving onto one keeps them
+function o:HideActionButtonsIfMouseOut()
+  if self:IsMouseOver() then return end
+  self:HideActionButtons()
 end
 
 --- @NotCombatSafe
