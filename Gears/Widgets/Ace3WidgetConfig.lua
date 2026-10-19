@@ -1,10 +1,9 @@
 --[[-----------------------------------------------------------------------------
 Local Vars
 -------------------------------------------------------------------------------]]
---- @type Gears_OptionsUI_Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
-local _, O = ns:cns()
-local t_merge = O.Table.MergeRecursive
+local t_merge = ns.O.Table.MergeRecursive
 
 --[[-----------------------------------------------------------------------------
 Types
@@ -42,9 +41,12 @@ local DEFAULT_LAYOUT = {
 --[[-----------------------------------------------------------------------------
 New Instance
 -------------------------------------------------------------------------------]]
+--- @see NamespaceObjects
+local libName = 'Ace3WidgetConfig'
+
 --- Shared by our AceGUI widgets so their rows line up
 --- @class Gears_Ace3WidgetConfig
-local o = {}; ns.Ace3WidgetConfig = o
+local o = {}; ns:register(libName, o)
 
 --[[-----------------------------------------------------------------------------
 Support Functions

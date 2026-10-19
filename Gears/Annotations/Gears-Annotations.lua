@@ -13,6 +13,8 @@ GEARS_OPTIONSUI = {}
 GEARS_OPTIONSUI_NS = {}
 
 --- @class NamespaceObjects
+--- @field Ace3WidgetConfig Gears_Ace3WidgetConfig
+--- @field Ace3WidgetUtil Gears_Ace3WidgetUtil
 --- @field GameVersion GameVersion
 --- @field LibIconPickerUtil LibIconPickerUtil
 --- @field CharacterFrameUtil CharacterFrameUtil

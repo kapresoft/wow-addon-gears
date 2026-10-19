@@ -6,8 +6,6 @@ local addon, xns = ...
 --- @class Gears_OptionsUI_Namespace
 --- @field addon Name The addon name
 --- @field private logHolder Gears_LogHolder
---- @field Ace3WidgetConfig Gears_Ace3WidgetConfig
---- @field Ace3WidgetUtil Gears_Ace3WidgetUtil
 local ns = xns
 ns.addon = addon
 GEARS_OPTIONSUI_NS = ns
