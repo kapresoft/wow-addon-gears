@@ -73,4 +73,5 @@ end
 function o:OnLeave()
   IconButtonMixin.OnLeave(self)
   self.owner:HideBorder()
+  self.owner:HideActionButtonsIfMouseOut()
 end
