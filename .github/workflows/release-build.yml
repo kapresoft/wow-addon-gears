@@ -29,9 +29,8 @@ jobs:
     permissions:
       # write permission is required to create a github release
       contents: write
-      # write permission is required for autolabeler
-      # otherwise, read permission is required at least
-      pull-requests: write
+      # release-drafter reads merged PRs; no autolabeler here
+      pull-requests: read
     steps:
       ## ------------------------------------------------ ##
       ## See: https://github.com/actions/github-script
@@ -61,7 +60,6 @@ jobs:
       - name: "Set ENV Variable: buildArtifact"
         run: |
           echo buildArtifact="${releaseDir}/${buildArtifactFilename}" >> $GITHUB_ENV
-          echo sha256Script="./dev/sha256.sh" >> $GITHUB_ENV
       ## ------------------------------------------------ ##
       - name: Print Environment Variables
         run: |
@@ -76,7 +74,6 @@ jobs:
           echo buildBasePath=${buildBasePath}
           echo buildArtifactFilename=${buildArtifactFilename}
           echo artifact_retentionDays=${{ env.artifact_retentionDays }}
-          echo sha256Script=${sha256Script}
           echo "------------------------"
           echo "All ENV Vars:"
           echo "$(env|sort)"
@@ -125,16 +122,6 @@ jobs:
           files: "${{ env.buildArtifact }}"
           fail: true
       ## ------------------------------------------------ ##
-      - name: "Verify: Supporting Scripts Exists"
-        uses: andstor/file-existence-action@v3
-        with:
-          files: "${{ env.sha256Script }}"
-          fail: true
-      ## ------------------------------------------------ ##
-      - name: "Setup Build Scripts"
-        run: |
-          chmod a+x $sha256Script
-      ## ------------------------------------------------ ##
       ## Show Directory contents
       - name: "Setup Build Scripts"
         run: |
@@ -148,7 +135,7 @@ jobs:
       ## ------------------------------------------------ ##
       - name: Check Vars
         run: |
-          buildArtifactChecksum="$($sha256Script $buildArtifact)"
+          buildArtifactChecksum="$(sha256sum "$buildArtifact" | cut -d' ' -f1)"
           echo buildArtifactChecksum="${buildArtifactChecksum}" >> $GITHUB_ENV
           echo "buildArtifact is $buildArtifact"
           echo "buildArtifactChecksum is $buildArtifactChecksum"
