@@ -11,6 +11,10 @@ on:
         description: 'Upload to CurseForge'
         default: false
         type: boolean
+      createDraftRelease:
+        description: 'Create Github Release Draft'
+        default: false
+        type: boolean
 
 env:
   addonName: Gears
@@ -45,6 +49,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           echo uploadCurseForge="${{ inputs.uploadCurseForge }}" >> $GITHUB_ENV
+          echo createDraftRelease="${{ inputs.createDraftRelease }}" >> $GITHUB_ENV
       ## ------------------------------------------------ ##
       - name: "Set ENV Var Option to Skip Uploads on Branch Builds and refName"
         if: ${{ github.ref_type == 'branch' }}
