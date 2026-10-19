@@ -5,14 +5,12 @@ Use via `dialogControl = 'Gears_SettingsCheckbox'` on a 'toggle' option.
 -------------------------------------------------------------------------------]]
 local Type, Version = 'Gears_SettingsCheckbox', 1
 
---- @type Gears_OptionsUI_Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
 
-local CONFIG = ns.Ace3WidgetConfig
-local Util = ns.Ace3WidgetUtil
-local AceGUI = LibStub and LibStub('AceGUI-3.0', true)
-if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
-if not SettingsCheckboxMixin then return end
+local CONFIG = ns.O.Ace3WidgetConfig
+local Util = ns.O.Ace3WidgetUtil
+local AceGUI = ns:AceGUI()
 
 --[[-----------------------------------------------------------------------------
 Scripts

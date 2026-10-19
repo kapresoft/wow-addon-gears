@@ -1,18 +1,20 @@
 --[[-----------------------------------------------------------------------------
 Local Vars
 -------------------------------------------------------------------------------]]
---- @type Gears_OptionsUI_Namespace
+--- @type Gears_Namespace
 local ns = select(2, ...)
-local cns = ns:cns()
-local CONFIG = ns.Ace3WidgetConfig
-local ACD = cns:AceConfigDialog()
+local CONFIG = ns.O.Ace3WidgetConfig
+local ACD = ns:AceConfigDialog()
 
 --[[-----------------------------------------------------------------------------
 New Instance
 -------------------------------------------------------------------------------]]
+--- @see NamespaceObjects
+local libName = 'Ace3WidgetUtil'
+
 --- Tooltip helpers for our AceGUI widgets
 --- @class Gears_Ace3WidgetUtil
-local o = {}; ns.Ace3WidgetUtil = o
+local o = {}; ns:register(libName, o)
 
 --[[-----------------------------------------------------------------------------
 Methods
@@ -32,7 +34,7 @@ end
 --- @param context ScriptRegion
 function o:FireEnter(widget, context)
   widget:Fire('OnEnter')
-  local tooltip = ACD and ACD.tooltip
-  if not (tooltip and tooltip:IsShown() and tooltip:GetOwner() == widget.frame) then return end
+  local tooltip = ACD.tooltip
+  if not (tooltip:IsShown() and tooltip:GetOwner() == widget.frame) then return end
   self:AnchorTooltip(widget, tooltip, context)
 end

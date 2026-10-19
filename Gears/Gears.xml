@@ -13,6 +13,7 @@
     <Script file="Util\ItemUtil.lua"/>
     <Script file="Util\CharacterFrameUtil.lua"/>
     <Script file="Util\LibIconPickerUtil.lua"/>
+    <Include file="Widgets\_Widgets.xml"/>
     <Include file="Assets\Fonts\_Fonts.xml"/>
     <Include file="Frames\Help\Help.xml"/>
     <Include file="Frames\EquipmentSet\EquipmentSetUI.xml"/>
