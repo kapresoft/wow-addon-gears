@@ -24,6 +24,7 @@ Type Definitions
 --- @field announcementsShown table<string, boolean> @Keyed by announcement dbKey; true once that one-time announcement dialog has been shown
 --- @field announceEquip boolean @When true, `/gears equip` prints an "Equipped:" chat message on success
 --- @field helpTipsDismissed table<string, boolean> @Keyed by help tip tipKey; true once that tip is closed or its action is done
+--- @field actionBarEquippedSet boolean @When true, native action bar set buttons show equipped state
 
 --  ================================================
 --- @class ProfileConfig
@@ -51,6 +52,7 @@ local DEFAULT_DB = {
     announcementsShown = {},
     announceEquip = true,
     helpTipsDismissed = {},
+    actionBarEquippedSet = true,
   },
   ['profile'] = {},
   ['char'] = {},

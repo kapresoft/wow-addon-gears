@@ -67,3 +67,9 @@ L['Announce Equip in Chat'] = 'Anlegen im Chat ankündigen'
 L['Announce Equip in Chat::DESC'] =
   'Zeigt eine Bestätigungsmeldung im Chatfenster an, wenn /gears equip verwendet wird'
 L['opens the Gears options panel'] = 'öffnet das Gears-Optionsfenster'
+L['Equipped Items'] = 'Angelegte Gegenstände'
+L['In Bags'] = 'In Taschen'
+L['Missing'] = 'Fehlend'
+L['Equipped Set Indicator on Action Bars'] = 'Anzeige für angelegte Sets auf Aktionsleisten'
+L['Equipped Set Indicator on Action Bars::DESC'] =
+  'Umrandet die Aktionsleistentaste eines Ausrüstungssets, wenn das ganze Set angelegt ist, und zeigt im Tooltip die Anzahl angelegter, in Taschen liegender und fehlender Gegenstände'

@@ -71,3 +71,9 @@ L['Announce Equip in Chat'] = '채팅에 장착 알리기'
 L['Announce Equip in Chat::DESC'] =
   '/gears equip 사용 시 채팅창에 확인 메시지를 표시합니다'
 L['opens the Gears options panel'] = 'Gears 옵션 패널을 엽니다'
+L['Equipped Items'] = '장착한 아이템'
+L['In Bags'] = '가방에 있음'
+L['Missing'] = '누락'
+L['Equipped Set Indicator on Action Bars'] = '단축바 장착 세트 표시'
+L['Equipped Set Indicator on Action Bars::DESC'] =
+  '세트 전체를 장착하면 단축바의 장비 세트 버튼에 테두리를 표시하고, 툴팁에 장착한 아이템, 가방에 있는 아이템, 누락된 아이템 수를 추가합니다'

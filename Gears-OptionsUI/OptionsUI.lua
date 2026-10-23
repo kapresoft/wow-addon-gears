@@ -8,6 +8,7 @@ local cns, O, L = ns:cns()
 
 local AceConfig = cns:AceConfig()
 local AceConfigDialog = cns:AceConfigDialog()
+local ActionBarEquipmentSet = O.ActionBarEquipmentSet
 
 local CONSOLE_COMMAND_OPTIONS = 'gears-options'
 local DIALOG_WIDTH, DIALOG_HEIGHT = 600, 320
@@ -73,6 +74,20 @@ local function CreateOptions()
             desc = L['Announce Equip in Chat::DESC'],
             get = GlobalGet('announceEquip'),
             set = GlobalSet('announceEquip'),
+          },
+          actionBarEquippedSet = {
+            type = 'toggle',
+            width = 'full',
+            order = order(),
+            dialogControl = 'Gears_SettingsCheckbox',
+            arg = GENERAL_ARG,
+            name = L['Equipped Set Indicator on Action Bars'],
+            desc = L['Equipped Set Indicator on Action Bars::DESC'],
+            get = GlobalGet('actionBarEquippedSet'),
+            set = function(_, val)
+              cns:g().actionBarEquippedSet = val
+              ActionBarEquipmentSet:Refresh()
+            end,
           },
         },
       },

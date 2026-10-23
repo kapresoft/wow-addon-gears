@@ -78,3 +78,9 @@ L['Announce Equip in Chat'] = 'Оповещать в чате об экипир�
 L['Announce Equip in Chat::DESC'] =
   'Показывает подтверждающее сообщение в окне чата при использовании /gears equip'
 L['opens the Gears options panel'] = 'открывает панель настроек Gears'
+L['Equipped Items'] = 'Надетые предметы'
+L['In Bags'] = 'В сумках'
+L['Missing'] = 'Отсутствует'
+L['Equipped Set Indicator on Action Bars'] = 'Индикатор надетого комплекта на панелях действий'
+L['Equipped Set Indicator on Action Bars::DESC'] =
+  'Обводит кнопку комплекта экипировки на панели действий, когда надет весь комплект, и добавляет в подсказку число надетых, лежащих в сумках и отсутствующих предметов'

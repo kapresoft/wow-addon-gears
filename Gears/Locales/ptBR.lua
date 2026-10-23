@@ -67,3 +67,9 @@ L['Announce Equip in Chat'] = 'Anunciar equipar no chat'
 L['Announce Equip in Chat::DESC'] =
   'Exibe uma mensagem de confirmação na janela de chat ao usar /gears equip'
 L['opens the Gears options panel'] = 'abre o painel de opções do Gears'
+L['Equipped Items'] = 'Itens equipados'
+L['In Bags'] = 'Nas bolsas'
+L['Missing'] = 'Faltando'
+L['Equipped Set Indicator on Action Bars'] = 'Indicador de conjunto equipado nas barras de ação'
+L['Equipped Set Indicator on Action Bars::DESC'] =
+  'Destaca o botão da barra de ação de um conjunto de equipamento quando o conjunto inteiro está equipado, e adiciona à dica a quantidade de itens equipados, nas bolsas e faltando'
