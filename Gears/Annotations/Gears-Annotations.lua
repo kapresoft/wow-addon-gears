@@ -13,6 +13,7 @@ GEARS_OPTIONSUI = {}
 GEARS_OPTIONSUI_NS = {}
 
 --- @class NamespaceObjects
+--- @field ActionBarEquipmentSet ActionBarEquipmentSet
 --- @field Ace3WidgetConfig Gears_Ace3WidgetConfig
 --- @field Ace3WidgetUtil Gears_Ace3WidgetUtil
 --- @field GameVersion GameVersion

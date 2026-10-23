@@ -68,3 +68,9 @@ L['Announce Equip in Chat'] = true
 L['Announce Equip in Chat::DESC'] =
   'Prints a confirmation message in the chat window when using /gears equip'
 L['opens the Gears options panel'] = true
+L['Equipped Items'] = true
+L['In Bags'] = true
+L['Missing'] = true
+L['Equipped Set Indicator on Action Bars'] = true
+L['Equipped Set Indicator on Action Bars::DESC'] =
+  "Outlines an equipment set's action bar button when the whole set is equipped, and adds equipped, in-bag and missing counts to its tooltip"
