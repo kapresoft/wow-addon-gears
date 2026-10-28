@@ -9,7 +9,7 @@
 ## SavedVariablesPerCharacter: GEARS_CHARACTER_DB
 
 ## RequiredDeps: LibIconPicker
-## OptionalDeps: Ace3
+## OptionalDeps: Ace3, LibHelpTour
 
 ## Group: Gears
 ## DefaultState: enabled

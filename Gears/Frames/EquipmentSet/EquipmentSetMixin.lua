@@ -15,6 +15,7 @@ local CURRENTLY_EQUIPPED = CURRENTLY_EQUIPPED or L['Currently Equipped']
 --[[-------------------------------------------------------------------
 Local Vars
 ---------------------------------------------------------------------]]
+local HelpTour = ns.O.HelpTour
 local CHECKBOX_TEXTURE = [[Interface\Buttons\UI-CheckBox-Check]]
 local TOOLTIP_DELAY = 0.01
 local BULLET = '•'
@@ -271,7 +272,7 @@ function o:DropCursorIcon()
   local id, name = self:GetIdentity()
   C_ModifyEquipmentSet(id, name, icon)
   ClearCursor()
-  self.owner.DragTip:Dismiss()
+  HelpTour:CompleteStep('SetIconDrag')
   return true
 end
 

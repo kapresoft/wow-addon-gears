@@ -17,6 +17,8 @@ GEARS_OPTIONSUI_NS = {}
 --- @field Ace3WidgetConfig Gears_Ace3WidgetConfig
 --- @field Ace3WidgetUtil Gears_Ace3WidgetUtil
 --- @field GameVersion GameVersion
+--- @field HelpTour LibHelpTour_Controller
+--- @field TourList LibHelpTour_Tour[]
 --- @field LibIconPickerUtil LibIconPickerUtil
 --- @field CharacterFrameUtil CharacterFrameUtil
 --- @field DatabaseSchema DatabaseSchema

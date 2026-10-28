@@ -16,6 +16,7 @@ embedded-libraries:
   - Ace3
   - LibPrettyPrint
   - LibTraceKit
+  - LibHelpTour
   - LibUtil
 
 tools-used:
@@ -33,6 +34,9 @@ externals:
     tag: latest
   Gears/ThirdParty/Libs/LibTraceKit:
     url: https://github.com/kapresoft/wow-addon-LibTraceKit
+    tag: latest
+  Gears/ThirdParty/Libs/LibHelpTour:
+    url: https://github.com/kapresoft/wow-addon-LibHelpTour
     tag: latest
   Gears/ThirdParty/Libs/Kapresoft-LibUtil:
     url: https://github.com/kapresoft/wow-lib-util
@@ -64,6 +68,9 @@ ignore:
   - Gears/ThirdParty/Libs/LibTraceKit/Libs/Assets
   - Gears/ThirdParty/Libs/LibTraceKit/Libs/Developer.lua
   - Gears/ThirdParty/Libs/LibTraceKit/ThirdParty
+  - Gears/ThirdParty/Libs/LibHelpTour/dev
+  - Gears/ThirdParty/Libs/LibHelpTour/*.toc
+  - Gears/ThirdParty/Libs/LibHelpTour/ThirdParty
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/dev
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.yaml
