@@ -15,7 +15,8 @@
     <Script file="Util\LibIconPickerUtil.lua"/>
     <Include file="Widgets\_Widgets.xml"/>
     <Include file="Assets\Fonts\_Fonts.xml"/>
-    <Include file="Frames\Help\Help.xml"/>
+    <Script file="Frames\Help\TourList.lua"/>
+    <Script file="Frames\Help\HelpTour.lua"/>
     <Include file="Frames\EquipmentSet\EquipmentSetUI.xml"/>
     <Script file="Frames\ActionBar\ActionBarEquipmentSet.lua"/>
     <Include file="Frames\Announcement\AnnouncementUI.xml"/>

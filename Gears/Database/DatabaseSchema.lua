@@ -23,7 +23,8 @@ Type Definitions
 --- @field isInitialShowComplete boolean @True after Gears has been shown once on first PaperDoll open; used to prevent auto-show on subsequent opens
 --- @field announcementsShown table<string, boolean> @Keyed by announcement dbKey; true once that one-time announcement dialog has been shown
 --- @field announceEquip boolean @When true, `/gears equip` prints an "Equipped:" chat message on success
---- @field helpTipsDismissed table<string, boolean> @Keyed by help tip tipKey; true once that tip is closed or its action is done
+--- @field helpTipsDismissed table<string, boolean> @Keyed by help tour step key; true once that step is closed or its action is done
+--- @field tourBaseline number? @Feature-tour baseline; LibHelpTour saves it on first show, so new users skip older feature tours
 --- @field actionBarEquippedSet boolean @When true, native action bar set buttons show equipped state
 
 --  ================================================

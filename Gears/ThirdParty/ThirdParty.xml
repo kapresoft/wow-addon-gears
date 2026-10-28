@@ -25,6 +25,7 @@
     <Script file="Libs\LibPrettyPrint\Libs\Formatter.lua"/>
     <Script file="Libs\LibPrettyPrint\Libs\Printer.lua"/>
     <Script file="Libs\LibTraceKit\LibTraceKit.lua"/>
+    <Include file="Libs\LibHelpTour\LibHelpTour.xml"/>
 
     <Script file="Libs\Kapresoft-LibUtil\Lib-2-0\Modules\AceLib.lua"/>
     <Script file="Libs\Kapresoft-LibUtil\Lib-2-0\Modules\AceLocaleUtil.lua"/>

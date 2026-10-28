@@ -249,12 +249,6 @@
                     </Frame>
                 </Frames>
             </ScrollFrame>
-            <Frame parentKey="DragTip" inherits="Gears_HelpTipTemplate">
-                <KeyValues>
-                    <KeyValue key="tipKey" value="SetIconDrag"/>
-                    <KeyValue key="textKey" value="Set Icon::HelpTip"/>
-                </KeyValues>
-            </Frame>
         </Frames>
     </Frame>
 

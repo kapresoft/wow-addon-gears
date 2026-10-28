@@ -31,6 +31,7 @@ Local Vars
 ---------------------------------------------------------------------]]
 local libName = 'MainFrame'
 local LibIconPickerUtil = ns.O.LibIconPickerUtil
+local HelpTour = ns.O.HelpTour
 local p, t = ns:log(libName)
 
 --[[-------------------------------------------------------------------
@@ -64,7 +65,6 @@ MainFrame
 --- @field info EquipmentSetInfo
 --- @field ScrollFrame ScrollFrame
 --- @field HeaderIconLeft Texture
---- @field DragTip Gears_HelpTip
 --- @field __lastIcon IconIDOrPath
 Gears_MainFrameMixin = ns:AceEmbed({}, 'AceEvent-3.0', 'AceBucket-3.0')
 
@@ -279,9 +279,12 @@ function o:OnInit()
 end
 
 --- Deferred to the next open when there are no sets yet
-function o:OnShow()
+function o:OnShow() HelpTour:OnTargetShown('MainFrame', self) end
+
+--- @return EquipmentSetIconButton? @nil before the first set row is built
+function o:FirstSetIcon()
   local first = self.framePool[1]
-  self.DragTip:ShowOnce(first and first:IsShown() and first.IconButton or nil)
+  return first and first.IconButton
 end
 
 --- When the mouse is out of the EquipmentSetFrame and into the main frame,
@@ -338,7 +341,7 @@ function o:RefreshEquipmentSet()
   end
 
   self:UpdateScrollHeight(usedCount)
-  if usedCount == 0 then self.DragTip:Hide() end
+  if usedCount == 0 then HelpTour:OnTargetHidden(self) end
 end
 
 --- Iterate through all equipments with an optional accept function.
