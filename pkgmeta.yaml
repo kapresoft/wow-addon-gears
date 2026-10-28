@@ -70,6 +70,7 @@ ignore:
   - Gears/ThirdParty/Libs/LibTraceKit/ThirdParty
   - Gears/ThirdParty/Libs/LibHelpTour/dev
   - Gears/ThirdParty/Libs/LibHelpTour/*.toc
+  - Gears/ThirdParty/Libs/LibHelpTour/*.md
   - Gears/ThirdParty/Libs/LibHelpTour/ThirdParty
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/dev
   - Gears/ThirdParty/Libs/Kapresoft-LibUtil/*.md
