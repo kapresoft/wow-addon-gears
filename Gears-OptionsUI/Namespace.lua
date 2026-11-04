@@ -28,8 +28,9 @@ ns.printer = LibPrettyPrint:Printer({
 ns.logHolder = {}; do
   local h = ns.logHolder
   local noop_fn = function() end
+  local noop = function() return noop_fn end
   --- These are noop loggers and tracers for non-dev releases
-  h.printer, h.tracer = noop_fn, noop_fn
+  h.printer, h.tracer = noop, noop
 end
 
 --[[-------------------------------------------------------------------
