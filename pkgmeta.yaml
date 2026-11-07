@@ -26,9 +26,10 @@ tools-used:
   - Bug-Grabber
 
 externals:
+  # r1424-alpha (Release-r1403 + 21), needed for WoW Forever
   Gears/ThirdParty/Libs/Ace3:
     url: https://github.com/WoWUIDev/Ace3
-    tag: latest
+    commit: ac3d1225037e0dc74e025a72342c0f7824aae147
   Gears/ThirdParty/Libs/LibPrettyPrint:
     url: https://github.com/kapresoft/wow-addon-LibPrettyPrint
     tag: latest
